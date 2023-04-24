@@ -15,3 +15,18 @@ captain's friend will gif you fuel if you find what happed to captain
 
 hologram ads in ground, turn to philomele if you help transmit message
 
+
+
+
+
+PlayerState
+
+
+
+
+GameState - Store
+
+player position
+inventory
+preferences
+name etc
