@@ -1,6 +1,7 @@
 <script lang="ts">
 import { gameState } from '$lib/stores';
-    import Scene from './Scene.svelte';
+    import Scene1 from './Scene1.svelte';
+    import Scene2 from './Scene2.svelte';
     import Stats from 'three/examples/jsm/libs/stats.module';
     import { T, useFrame } from '@threlte/core';
     import { onMount } from 'svelte';
@@ -21,8 +22,11 @@ import { gameState } from '$lib/stores';
 
 </script>
 
-
-<Scene />
+{#if $gameState.scene === 1}
+    <Scene1 />
+{:else if $gameState.scene === 2}
+    <Scene2 />
+{/if}
 
 
 {#if $gameState.dev.camera}

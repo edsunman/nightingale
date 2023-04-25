@@ -7,8 +7,11 @@
 
     import type { PlayerState } from '$lib/types';
 
+    export let avoidArray :  Array<{ x: number, z: number }> = [];
+    export let startingPosition:  { x: number, y:number, z: number } = { x: 0, y:0 , z:0}
+
     let playerState : PlayerState = { 
-        position: { x: 4, y:0 , z:0}, 
+        position: startingPosition, 
         rotation: 0 , 
         annimation : 'idle',
         path: [],
@@ -23,11 +26,6 @@
     let selectedGridSpace : {x: number, y: number, z: number} = {x:0,y:0,z:0}; 
     let avoidObjects : any[] = [];
 
-    let avoidArray :  Array<{ x: number, z: number }> =
-        [{x: 2, z:2 },{x: 2, z:3 },{x: 2, z:4 },{x: -6, z:-4 },{x: -5, z:-5 },{x: -4, z:-6 },{x: 5, z:3 },{x: 6, z:2 },{x: 7, z:1 },
-        {x:-5,z:-4},{x:-4,z:-5}];
-
-    
 
     function floorClicked(e:any){
 

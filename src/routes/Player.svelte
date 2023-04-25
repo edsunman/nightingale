@@ -13,22 +13,24 @@
 
     const endRotation = new THREE.Quaternion().setFromEuler( new THREE.Euler( 0, 0, 0 ) )
     const rotationMatrix = new THREE.Matrix4();
-    const playerSpeed = 4;
+    let movementVector = new THREE.Vector3();
+    let deltaSpeed = 0.015;
 
     export let { gltf, actions } = useGltfAnimations();
 
-    $: $actions[playerState.annimation]?.play()
+    $: $actions[playerState.annimation]?.play();
 
-    $: transitionTo(playerState.annimation)
+    $: transitionTo(playerState.annimation);
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
 
-        const currentAction = $actions[currentActionKey]       
-        const nextAction = $actions[nextActionKey]
+        const currentAction = $actions[currentActionKey]  ;     
+        const nextAction = $actions[nextActionKey];
        
-        if (!nextAction || currentAction === nextAction) return
+        if (!nextAction || currentAction === nextAction) return;
         
-        nextAction.enabled = true
+        nextAction.enabled = true;
+
         if (currentAction) {
             currentAction.crossFadeTo(nextAction, duration, true)
         }
@@ -51,54 +53,77 @@
             const radians = Math.atan2( path[0].z-p.z,  path[0].x - p.x);
             const modifier = {x : Math.cos(radians), z : Math.sin(radians)}
 
-            if((p.x < path[0].x+0.05 && p.x > path[0].x-0.05)&&
-                (p.z < path[0].z+0.05 && p.z > path[0].z-0.05)
+            if((p.x < path[0].x+0.04 && p.x > path[0].x-0.04)&&
+                (p.z < path[0].z+0.04 && p.z > path[0].z-0.04)
             ){            
                 // dont need to move so snap to grid
-                playerState.position.z = path[0].z
-                playerState.position.x = path[0].x
+                playerState.position.z = path[0].z;
+                playerState.position.x = path[0].x;
 
+                //if($gltf){                    
+                //    $gltf.scene.position.set(path[0].x,0,path[0].z)
+                //}
+                
                 playerState.settingOff = true;
                 playerState.arrived = false;
-                playerState.path.shift()
+                playerState.path.shift();
 
-            } else { // get moving               
+            } else { // get moving 
+               
+                //console.log(v)
+                //console.log(v)
+
                 if(playerState.settingOff){
+                    
+                    deltaSpeed = delta;
                     const v = new THREE.Vector3(path[0].x,0,path[0].z );
-                    const pv = new THREE.Vector3(p.x,0,p.z)
-                    const u = new THREE.Vector3(0,1,0)
+                    const pv = new THREE.Vector3(p.x,0,p.z);
+                    const u = new THREE.Vector3(0,1,0);
                    
-                    rotationMatrix.lookAt(v,pv,u)                  
+                    rotationMatrix.lookAt(v,pv,u);          
 				    endRotation.setFromRotationMatrix( rotationMatrix );
+                   
+                    movementVector = v.sub(pv).normalize();
+                    console.log(movementVector)
+                    movementVector
                 }
                 playerState.settingOff = false;
 
                 if($gltf){ // check it has loaded
-                   $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 )
+                //console.log($gltf.scene)
+                   $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 );
+                    
+                 //  $gltf.scene.translateOnAxis(movementVector,playerSpeed);
+                 //  playerState.position.x = $gltf.scene.position.x;
+                 //  playerState.position.z = $gltf.scene.position.z;
 
                 }
 
-                playerState.position.x += modifier.x*delta*playerSpeed
-                playerState.position.z += modifier.z*delta*playerSpeed
-                playerState.annimation = 'run'
+                playerState.position.x = p.x+modifier.x*deltaSpeed*4
+                playerState.position.z = p.z+ modifier.z*deltaSpeed*4
+                playerState.annimation = 'run';
             }
         } else {
             if(!playerState.arrived) {
-                playerState.annimation = 'idle'
+                playerState.annimation = 'idle';
             }
             playerState.arrived = true;
         }
+
+        $gameState.position = playerState.position;
         
     })
 	
 </script>
 
 <GLTF bind:gltf={$gltf} on:create={(ref) => loaded(ref)} 
-    position.x={playerState.position.x}
+   position.x={playerState.position.x}
     position.y={playerState.position.y}
     position.z={playerState.position.z}
     url="/green.glb"
 />
+
+<!--  -->
 {#if !$gameState.dev.camera}
  <T.OrthographicCamera name="main camera" makeDefault 
     position={[playerState.position.x+9,playerState.position.y+9,playerState.position.z+9]}    
@@ -124,7 +149,7 @@
 </T.Mesh>
     
 
-<T.Mesh receiveShadow visible={false} scale={[1,1,1]} position={[playerState.position.x, playerState.position.y, playerState.position.z]}>
+<T.Mesh receiveShadow visible={true} scale={[1,1,1]} position={[playerState.position.x, playerState.position.y, playerState.position.z]}>
     <T.BoxGeometry args={[1, 0.1, 1]} />
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
