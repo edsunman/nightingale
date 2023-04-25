@@ -2,7 +2,7 @@
 
     import { gameState } from '$lib/stores';
     import { Canvas } from '@threlte/core';
-    import Scene from './Scene.svelte';
+    import Game from './Game.svelte';
 
 
   
@@ -10,10 +10,12 @@
 
 <div style="height:600px; width:1200px; margin:0 auto;position:relative">
     <Canvas>
-        <Scene  on:credate={(ref)=>{console.log(ref)}}/>
+        <Game />       
     </Canvas>
     <div style="position:absolute; top:20px; width:150px; white-space: nowrap;left:20px; background-color:#202020; color:azure; font-family: monospace">
-        <button on:click={() => {$gameState.devCamera = !$gameState.devCamera}} >switch camera</button><br/>
+        <button on:click={() => {$gameState.dev.camera = !$gameState.dev.camera}} >switch camera</button><br/>
+        <button on:click={() => {$gameState.dev.grid = !$gameState.dev.grid}} >switch grid</button><br/>
+        <button on:click={() => {$gameState.dev.avoidObjactsVisible = !$gameState.dev.avoidObjactsVisible}} >avoid objects</button><br/>
         
         
 

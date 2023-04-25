@@ -4,7 +4,9 @@
     import { T, useFrame } from '@threlte/core';
     import * as THREE from 'three';
 
-    export let playerState : any;  
+    import type { PlayerState } from '$lib/types';
+
+    export let playerState : PlayerState;  
 
 	let currentActionKey = playerState.annimation
     let lightTarget : any;
@@ -97,7 +99,7 @@
     position.z={playerState.position.z}
     url="/green.glb"
 />
-{#if !$gameState.devCamera}
+{#if !$gameState.dev.camera}
  <T.OrthographicCamera name="main camera" makeDefault 
     position={[playerState.position.x+9,playerState.position.y+9,playerState.position.z+9]}    
     on:create={({ ref }) => { ref.lookAt(playerState.position.x+8,playerState.position.y+8,playerState.position.z+8) }}

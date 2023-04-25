@@ -2,45 +2,27 @@
     import { gameState } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
     import { interactivity, OrbitControls  } from '@threlte/extras';
-    import Stats from 'three/examples/jsm/libs/stats.module';
-    import { onMount } from 'svelte';
+
+    
 	import { spring } from 'svelte/motion';
 
     import Floor from './Floor.svelte'
 
-    interactivity()
+   // interactivity()
 
-    const stats = new Stats()   
+
 
     let scale =  spring(1)
 
     let rotation = 0;
 
-    useFrame((state, delta) => {
-
-        stats.update()
-
-        rotation += delta;           
-    })
-
-
-    onMount(async () => {
-        document.body.appendChild(stats.dom);
-    })
-
+   useFrame((state, delta) => {
+    rotation += delta
+   })
 
 </script>  
 
 <Floor />
-
-{#if $gameState.devCamera}
-
-    <T.PerspectiveCamera makeDefault position={[5, 5, 5]}  on:create={({ ref }) => { ref.lookAt(0, 1, 0) }} >
-        <OrbitControls enablePan />
-    </T.PerspectiveCamera>
-
-{/if}
-
 
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
 

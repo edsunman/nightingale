@@ -1,18 +1,11 @@
 <script lang="ts">
-
+    import { gameState } from '$lib/stores';
     import { T } from '@threlte/core';
     import { Grid  } from '@threlte/extras';
     import Player from './Player.svelte'
     import * as THREE from 'three';
 
-    type PlayerState = {
-        position: {x: number, y: number, z: number}
-        rotation: number,
-        annimation : string,
-        path : Array<{ x: number, z: number }>,
-        arrived: boolean,
-        settingOff: boolean
-    }
+    import type { PlayerState } from '$lib/types';
 
     let playerState : PlayerState = { 
         position: { x: 4, y:0 , z:0}, 
@@ -23,10 +16,11 @@
         settingOff:true
     };
 
+    const levelSize = 100;
+
     let direction = new THREE.Vector3();
     const raycaster = new THREE.Raycaster();
     let selectedGridSpace : {x: number, y: number, z: number} = {x:0,y:0,z:0}; 
-
     let avoidObjects : any[] = [];
 
     let avoidArray :  Array<{ x: number, z: number }> =
@@ -98,32 +92,35 @@
 
 <Player playerState={playerState}  />
 
-<T.Mesh position={[0.5, -0.01, 0.5]} name="floor" receiveShadow  on:click={(e) => floorClicked(e)} > 
-  <T.BoxGeometry  args={[20, 0.01, 20]}   />
+<T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" receiveShadow  on:click={(e) => floorClicked(e)} > 
+  <T.BoxGeometry  args={[levelSize, 0.01, levelSize]}   />
   <T.MeshStandardMaterial color="#705f47" />
 </T.Mesh>
 
 {#each avoidArray as block}
-    <T.Mesh name={"jimmy"} scale={[1,1,1]} visible={true} position={[block.x, 0, block.z]}  on:create={({ ref }) => { avoidObjects.push(ref) }}>
+    <T.Mesh name={"avoid object"} scale={[1,1,1]} visible={$gameState.dev.avoidObjactsVisible} position={[block.x, 0, block.z]}  on:create={({ ref }) => { avoidObjects.push(ref) }}>
         <T.BoxGeometry args={[1, 0.1, 1]} />
         <T.MeshStandardMaterial color="#161616" />
     </T.Mesh>
 {/each}
 
 <!-- Selected grid square -->
-<T.Mesh  receiveShadow visible={true}
+<T.Mesh  receiveShadow visible={false}
     scale={[1,1,1]}
     position={[selectedGridSpace.x, selectedGridSpace.y, selectedGridSpace.z]}>
   <T.BoxGeometry args={[1, 0.05, 1]} />
   <T.MeshStandardMaterial color="MediumSlateBlue" />
 </T.Mesh>
 
+{#if $gameState.dev.grid}
 <Grid
-    visible={false}
+    visible={true}
     position={[0.5,0.001,0.5]}
     cellColor="#ffffff"
     sectionColor="#ffffff"
     sectionThickness={0}
-    fadeDistance={20}
+    fadeDistance={25}
     cellSize={1}
+    gridSize={[levelSize, levelSize]}
 />
+{/if}
