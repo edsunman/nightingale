@@ -9,7 +9,11 @@ export const gameState = writable({
     },
     scene : 1,
     position : {x:0,y:0,z:0},
-    inventory : {}
+    moveLock : false,
+    inventory : {},
+    
 
 
 })
+
+export const selectedObject = writable({});

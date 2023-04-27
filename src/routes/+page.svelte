@@ -22,8 +22,11 @@
             y: {$gameState.position.y.toFixed(3)}<br/>
             z: {$gameState.position.z.toFixed(3)}
         </p>
-        
-        
+        <p>
+            Movement locked:
+            <input type=checkbox bind:checked={$gameState.moveLock}>
+        </p>
+                
         
 
     </div>

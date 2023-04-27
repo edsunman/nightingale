@@ -1,6 +1,6 @@
 <script lang="ts">
     import { gameState } from '$lib/stores';
-    import { T } from '@threlte/core';
+    import { T, useFrame } from '@threlte/core';
     import { Grid  } from '@threlte/extras';
     import Player from './Player.svelte'
     import * as THREE from 'three';
@@ -25,15 +25,19 @@
     const raycaster = new THREE.Raycaster();
     let selectedGridSpace : {x: number, y: number, z: number} = {x:0,y:0,z:0}; 
     let avoidObjects : any[] = [];
+    let selectedOpacity = 1;
+    let selectedColour = 'White';
 
 
     function floorClicked(e:any){
+
+        selectedOpacity = 1;
 
         const p = playerState.position
 
         playerState.path = [];
 
-        if (e.intersections[0].eventObject.name==="floor"){
+        if (e.intersections[0].eventObject.name==="floor"&&$gameState.moveLock==false){
 
             const point = e.intersections[0].point;
             const grid = { x : Math.round(point.x), z : Math.round(point.z)}
@@ -71,13 +75,16 @@
                 }
 
                 if( intersects[0].distance > dist ) {                               
-                    playerState.path.push({ x: grid.x, z: grid.z });              
+                    playerState.path.push({ x: grid.x, z: grid.z }); 
+                    selectedColour = 'White'               
                 } else {         
                     playerState.path.push({ x: gridIp.x, z: gridIp.z });
+                    selectedColour = 'Red'   
                 }
 
             } else {               
-                playerState.path.push({ x: grid.x, z: grid.z });             
+                playerState.path.push({ x: grid.x, z: grid.z });    
+                selectedColour = 'White'         
             }
 
             selectedGridSpace = { x: grid.x, y: 0, z: grid.z };
@@ -85,6 +92,11 @@
             
         }
     }
+
+    useFrame((state, delta) => {
+
+        selectedOpacity -= delta*1.5;
+    })
     
 </script>
 
@@ -92,7 +104,6 @@
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" receiveShadow  on:click={(e) => floorClicked(e)} > 
   <T.BoxGeometry  args={[levelSize, 0.01, levelSize]}   />
-  <T.MeshStandardMaterial color="#705f47" />
 </T.Mesh>
 
 {#each avoidArray as block}
@@ -103,11 +114,11 @@
 {/each}
 
 <!-- Selected grid square -->
-<T.Mesh  receiveShadow visible={false}
+<T.Mesh  receiveShadow visible={true} 
     scale={[1,1,1]}
     position={[selectedGridSpace.x, selectedGridSpace.y, selectedGridSpace.z]}>
-  <T.BoxGeometry args={[1, 0.05, 1]} />
-  <T.MeshStandardMaterial color="MediumSlateBlue" />
+  <T.CylinderGeometry args={[0.5, 0.5, 0.06]}  />
+  <T.MeshStandardMaterial color="{selectedColour}" opacity={selectedOpacity} transparent={true} />
 </T.Mesh>
 
 {#if $gameState.dev.grid}
