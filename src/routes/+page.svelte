@@ -6,7 +6,9 @@
     import Game from './Game.svelte';
 	import DialogueOptions from '../components/DialogueOptions.svelte';
 	import Dialogue from '../components/Dialogue.svelte';
+    import Inventory from '../components/Inventory.svelte';
     import { script } from '$lib/script';
+	import Settings from '../components/Settings.svelte';
     
 
     let clientWidth, clientHeight;
@@ -42,7 +44,7 @@
             }  else {
                 
                 const nextLine = g[1]+0.1;
-                setTimeout(() => {$gameConversation = [g[0],nextLine]}, 2500)
+                setTimeout(() => {$gameConversation = [g[0],nextLine]}, 2000)
             }
         }
     }
@@ -55,8 +57,8 @@
     bind:clientWidth={clientWidth} bind:clientHeight={clientHeight} >
 
 
-        <div class="absolute bottom-0"><h3 class="text-neutral-100 bg-neutral-950 rounded-md px-3 py-2 select-none m-2">settings</h3></div>
-        <div class="absolute right-0 bottom-0"><h3 class="text-neutral-100 bg-neutral-950 rounded-md px-3 py-2 select-none m-2" >inventory</h3></div>
+        <Settings />
+        <Inventory />
         
         {#if showDialogueOptions}
             <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
