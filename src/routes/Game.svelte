@@ -1,5 +1,5 @@
 <script lang="ts">
-import { gameState, selectedObject } from '$lib/stores';
+import { gameState } from '$lib/stores';
     import Scene1 from './Scene1.svelte';
     import Scene2 from './Scene2.svelte';
     import Stats from 'three/examples/jsm/libs/stats.module';
@@ -24,7 +24,7 @@ import { gameState, selectedObject } from '$lib/stores';
 
     const { scene, renderer, camera } = useThrelte();
 
-    renderer?.setPixelRatio(1);
+    //renderer?.setPixelRatio(2);
     //console.log(renderer?.getPixelRatio())
 
 
@@ -97,12 +97,12 @@ import { gameState, selectedObject } from '$lib/stores';
         )   */
     }
 
-    $: setupEffectComposer($camera,$selectedObject)
+    //$: setupEffectComposer($camera,$selectedObject)
 
     
-    useRender((_, delta) => {
-        composer.render(delta)
-    })
+  //  useRender((_, delta) => {
+  //      composer.render(delta)
+   // })
 
     useFrame((state, delta) => {
        // console.log(state)

@@ -4,16 +4,15 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 -->
 
 <script lang="ts">
-    import { gameState } from '$lib/stores';
-    import { Group } from 'three'
-    import { T, useFrame } from '@threlte/core'
-    import { useGltf, useGltfAnimations } from '@threlte/extras'
-    import * as THREE from 'three';
+    import { gameState, gamePosition, gameMessage } from '$lib/stores';
+    import { T, useFrame } from '@threlte/core';
+    import { useGltf, useGltfAnimations } from '@threlte/extras';
+    import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
 
-    export const ref = new Group()
+    export const ref = new Group();
 
-    const gltf = useGltf('/purple-transformed.glb', { useDraco: true })
-    export const { actions, mixer } = useGltfAnimations(gltf, ref)
+    const gltf = useGltf('/purple-transformed.glb', { useDraco: true });
+    export const { actions, mixer } = useGltfAnimations(gltf, ref);
 
     let currentActionKey = "idle"
     let position = { x: 3, y:0 , z:-2};
@@ -21,10 +20,10 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
     let armature : any;
     let spinning = false;
 
-    const endRotation = new THREE.Quaternion().setFromEuler( new THREE.Euler( 0, 0, 0 ) )
-    const rotationMatrix = new THREE.Matrix4();
+    const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) );
+    const rotationMatrix = new Matrix4();
     
-    const currentPosition = new THREE.Vector3(3,0,-2);
+    const currentPosition = new Vector3(3,0,-2);
 
 
     $: $actions[currentActionKey]?.play();
@@ -64,18 +63,26 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 
     function clicked(e : any){
 
-        const player = $gameState.position;
+        const player = $gamePosition;
 
         if((player.x >= position.x-1 && player.x <= position.x+1)&&(player.z >= position.z-1 && player.z <= position.z+1)) {
             
-            const lookAtVector = new THREE.Vector3(player.x,0,player.z);
-            rotationMatrix.lookAt(lookAtVector,currentPosition,new THREE.Vector3(0,1,0));          
+            const lookAtVector = new Vector3(player.x,0,player.z);
+            rotationMatrix.lookAt(lookAtVector,currentPosition,new Vector3(0,1,0));          
             endRotation.setFromRotationMatrix( rotationMatrix );
 
             if(!endRotation.equals(armature.quaternion)){
                 spinning = true;
                 transitionTo("walk");
             }
+
+            $gameState.inConvo = true;
+            $gameState.moveLock = true;
+
+        } else {
+
+            $gameMessage = 'A purple character'
+
         }
     }
     

@@ -1,9 +1,12 @@
 <script lang="ts">
-   import { selectedObject } from '$lib/stores';
+    import { gameState } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
+    import { HTML } from '@threlte/extras'
+    import { fade } from 'svelte/transition';
     import Floor from './Floor.svelte';
 	import Purple from '../objects/Purple.svelte';
+
 
 
 
@@ -26,11 +29,13 @@
 <Floor avoidArray={avoidArray} startingPosition={startingPosition} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow > 
-  <T.BoxGeometry  args={[16, 0.01, 16]}   />
+  <T.BoxGeometry  args={[36, 0.01, 36]}   />
   <T.MeshStandardMaterial color="#705f47" />
 </T.Mesh>
 
 <Purple />
+
+
 
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
 
@@ -46,21 +51,22 @@
   <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>
 
-<T.Mesh castShadow name="spinny box" on:click={(e) => e.stopPropagation()} 
-    
-    
-    
-position={[-2,1,-2]}>
+<T.Mesh
+    castShadow
+    name="spinny box"
+    on:click={(e) => e.stopPropagation()}    
+    position={[-2,1,-2]}
+>
   <T.BoxGeometry args={[1, 2, 1]} />
   <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>
 
-<!--on:pointerover={(e) => {
-        $selectedObject = e.eventObject;
-    }} 
-    on:pointerout={(e) => {
-        $selectedObject = {};
-    }} -->
 
 
-
+{#if $gameState.inConvo}
+    <HTML position={[3,2.7,-2]} center>
+        <h3 transition:fade={{duration: 100}} class="text-neutral-100 bg-neutral-950 hidden md:block rounded-md px-3 py-2 select-none whitespace-nowrap">
+           <small>Philomele:</small><br/>Why would you say that? So shocking...
+        </h3>
+    </HTML>
+{/if}

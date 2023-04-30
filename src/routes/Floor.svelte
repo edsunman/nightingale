@@ -31,8 +31,6 @@
 
     function floorClicked(e:any){
 
-        selectedOpacity = 1;
-
         const p = playerState.position
 
         playerState.path = [];
@@ -89,6 +87,7 @@
 
             selectedGridSpace = { x: grid.x, y: 0, z: grid.z };
             playerState.settingOff = true;
+            selectedOpacity = 1;
             
         }
     }

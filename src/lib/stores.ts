@@ -3,17 +3,35 @@ import { writable } from 'svelte/store';
 export const gameState = writable({
 
     dev : {
+        status: false,
         camera : false,
-        grid : true,
-        avoidObjactsVisible: true
+        grid : false,
+        avoidObjactsVisible: false
     },
     scene : 1,
-    position : {x:0,y:0,z:0},
     moveLock : false,
-    inventory : {},
+    inConvo : false,
+    conversationState : [0,0],
+    inventory : {
+        open : false,
+        cardboardBox : {
+            owned : false,
+            equipped : false
+        },
+        bacchaeMask : {
+            owned : false,
+            equipped : false
+        }
+    },
+    settings : {
+        open : false,
+        lowerRes : false
+    }
     
 
 
 })
 
-export const selectedObject = writable({});
+export const gamePosition = writable({x:0,y:0,z:0});
+
+export const gameMessage = writable('Game loaded');
