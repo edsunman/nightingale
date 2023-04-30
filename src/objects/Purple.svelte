@@ -4,18 +4,18 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 -->
 
 <script lang="ts">
-    import { gameState, gamePosition, gameMessage } from '$lib/stores';
+    import { gameState, gamePosition, gameMessage, gameConversation } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
     import { useGltf, useGltfAnimations } from '@threlte/extras';
     import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
 
     export const ref = new Group();
+    export let position = { x: 1, y:0 , z:1};
 
     const gltf = useGltf('/purple-transformed.glb', { useDraco: true });
     export const { actions, mixer } = useGltfAnimations(gltf, ref);
 
-    let currentActionKey = "idle"
-    let position = { x: 3, y:0 , z:-2};
+    let currentActionKey = "idle";
     let rotation = 2;
     let armature : any;
     let spinning = false;
@@ -23,7 +23,7 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
     const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) );
     const rotationMatrix = new Matrix4();
     
-    const currentPosition = new Vector3(3,0,-2);
+    const currentPosition = new Vector3(position.x,0,position.z);
 
 
     $: $actions[currentActionKey]?.play();
@@ -65,24 +65,29 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 
         const player = $gamePosition;
 
-        if((player.x >= position.x-1 && player.x <= position.x+1)&&(player.z >= position.z-1 && player.z <= position.z+1)) {
-            
-            const lookAtVector = new Vector3(player.x,0,player.z);
-            rotationMatrix.lookAt(lookAtVector,currentPosition,new Vector3(0,1,0));          
-            endRotation.setFromRotationMatrix( rotationMatrix );
+        if($gameConversation[0]===0) {
 
-            if(!endRotation.equals(armature.quaternion)){
-                spinning = true;
-                transitionTo("walk");
+            if((player.x >= position.x-1 && player.x <= position.x+1)&&(player.z >= position.z-1 && player.z <= position.z+1)) {
+                
+                const lookAtVector = new Vector3(player.x,0,player.z);
+                rotationMatrix.lookAt(lookAtVector,currentPosition,new Vector3(0,1,0));          
+                endRotation.setFromRotationMatrix( rotationMatrix );
+
+                if(!endRotation.equals(armature.quaternion)){
+                    spinning = true;
+                    transitionTo("walk");
+                }
+
+                $gameState.speakingCharacterPosition = position
+                $gameState.moveLock = true;
+                $gameConversation = [1,1]
+               // $gameState.dialogueOptions = true;
+
+            } else {
+
+                $gameMessage = 'A purple character'
+
             }
-
-            $gameState.inConvo = true;
-            $gameState.moveLock = true;
-
-        } else {
-
-            $gameMessage = 'A purple character'
-
         }
     }
     

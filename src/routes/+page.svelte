@@ -1,19 +1,19 @@
 <script lang="ts">
 
-    import { gameState, gameMessage, gamePosition } from '$lib/stores';
+    import { gameState, gameMessage, gamePosition,gameConversation } from '$lib/stores';
     import { Canvas } from '@threlte/core';
     import { fade } from 'svelte/transition';
     import Game from './Game.svelte';
+	import DialogueOptions from '../components/DialogueOptions.svelte';
+	import Dialogue from '../components/Dialogue.svelte';
+    import { script } from '$lib/script';
     
 
     let clientWidth, clientHeight;
-
+    let showDialogueOptions = false;
     let messageVisible = false;
 
-    function selectedSpeech(n : number) {
-        $gameState.inConvo = false;
-        $gameState.moveLock = false;
-    }
+
 
     $ : fadeInMessage($gameMessage);
 
@@ -27,6 +27,27 @@
         }
     }
 
+    $ : updateDialogue($gameConversation);
+
+    function updateDialogue(g : any){
+
+        showDialogueOptions = false;
+        
+        if (g[0]!==0) {
+
+            if(script[g[0]-1].speech.find(x => x.id === g[1])?.showOptions) {
+                
+                setTimeout(() => {showDialogueOptions = true}, 1500);
+                
+            }  else {
+                
+                const nextLine = g[1]+0.1;
+                setTimeout(() => {$gameConversation = [g[0],nextLine]}, 2500)
+            }
+        }
+    }
+
+
 
 </script>
 
@@ -37,20 +58,19 @@
         <div class="absolute bottom-0"><h3 class="text-neutral-100 bg-neutral-950 rounded-md px-3 py-2 select-none m-2">settings</h3></div>
         <div class="absolute right-0 bottom-0"><h3 class="text-neutral-100 bg-neutral-950 rounded-md px-3 py-2 select-none m-2" >inventory</h3></div>
         
-        {#if $gameState.inConvo}
-            <div in:fade={{duration: 100, delay: 2000 }} out:fade={{duration: 100 }} class="absolute text-center w-full pt-1 bottom-12">
+        {#if showDialogueOptions}
+            <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
                 <div class="inline-block text-neutral-100 bg-neutral-950 rounded-md p-3 m-3 ">
-                    <h3 class="mb-3" >Why's that?</h3>
-                    <h3 class="mb-3" >You'll be seeing the inside of an ambulence if you're not careful.</h3>
-                    <button on:click={() => selectedSpeech(3)} >Ok bud. See you later.</button>
+                    <DialogueOptions />
                 </div>
             </div>
-         
-            <div  class="absolute text-center w-full" style="bottom:{(clientHeight/2)+100}px ">
-                <h3 transition:fade={{duration: 100}} class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-md px-3 py-2 select-none ">
-                    <small>Philomele:</small><br/>Why would you say that? So shocking...
+         {/if}
+         {#if $gameConversation[0]!==0}
+            <div class="absolute text-center w-full" style="bottom:{(clientHeight/2)+100}px ">
+                <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-md px-3 py-2 select-none ">
+                   <Dialogue/>
                 </h3>
-            </div> 
+            </div>
         {/if}
         {#if messageVisible}
             <div in:fade={{duration: 100 }} out:fade={{duration: 500 }}  class="absolute text-center w-full top-16" >
@@ -59,11 +79,10 @@
                 </div>
             </div>
         {/if}
+
     <Canvas>
         <Game />       
     </Canvas>
-
-
 
 </div>
 {#if $gameState.dev.status}
@@ -81,6 +100,7 @@
             Movement locked:
             <input type=checkbox bind:checked={$gameState.moveLock}>
         </p>
-
+        <p>Conversation State:</p>
+        <p>{$gameConversation[0]} - {$gameConversation[1]}</p>
     </div>
  {/if}
