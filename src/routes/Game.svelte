@@ -1,11 +1,12 @@
 <script lang="ts">
-import { gameState } from '$lib/stores';
+import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition } from '$lib/stores';
     import Scene1 from './Scene1.svelte';
     import Scene2 from './Scene2.svelte';
     import Stats from 'three/examples/jsm/libs/stats.module';
     import { T, useFrame, useThrelte, useRender  } from '@threlte/core';
     import { onMount } from 'svelte';
-    import { interactivity, OrbitControls  } from '@threlte/extras';
+    import { interactivity, OrbitControls, HTML  } from '@threlte/extras';
+    import Dialogue from '../components/Dialogue.svelte';
     import {
     BlendFunction,
     EffectComposer,
@@ -27,19 +28,28 @@ import { gameState } from '$lib/stores';
     //renderer?.setPixelRatio(2);
     //console.log(renderer?.getPixelRatio())
 
-
-
     const composer = new EffectComposer(renderer);
 
     const smaaEffect = new SMAAEffect();
 
     const fxaaEffect = new FXAAEffect();
 
-   
+    let dialogueHeight = 0;
+
+    $ : nudgeDialogue($gameSelectedCharacterPosition)
+
+    function nudgeDialogue(sc :any){
+
+        if ($gamePosition.x<=sc.x && $gamePosition.z<=sc.z) {
+
+            dialogueHeight = 3.1;
+        } else {
+            dialogueHeight = 2.8;
+        }
+
+    }
 
     //$: selectObject($selectedObject, $camera)
-    
-  
 
     const setupEffectComposer = (camera : any, object: any) => {
 
@@ -105,13 +115,13 @@ import { gameState } from '$lib/stores';
    // })
 
     useFrame((state, delta) => {
-       // console.log(state)
+       // console.log(scene)
         stats.update()
     })
 
     onMount(async () => {
         document.body.appendChild(stats.dom);
-        console.log(composer)
+        console.log(scene)
     })
 
 </script>
@@ -120,6 +130,14 @@ import { gameState } from '$lib/stores';
     <Scene1 />
 {:else if $gameState.scene === 2}
     <Scene2 />
+{/if}
+
+{#if $gameConversation[0]!==0}
+    <HTML position={[$gameSelectedCharacterPosition.x,dialogueHeight,$gameSelectedCharacterPosition.z]} center>
+        <h3  class="text-neutral-100 bg-neutral-950 hidden md:block rounded-md px-3 py-2 select-none whitespace-nowrap">
+           <Dialogue />
+        </h3>
+    </HTML>
 {/if}
 
 

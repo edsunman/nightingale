@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gamePosition } from '$lib/stores';
+    import { gameState, gamePosition, gameSelectedCharacterPosition } from '$lib/stores';
 	import { GLTF, useGltfAnimations } from '@threlte/extras'
     import { T, useFrame } from '@threlte/core';
     import { Vector3, Matrix4, Euler, Quaternion } from 'three';
@@ -19,7 +19,7 @@
 
     $: $actions[playerState.annimation]?.play();
 
-    //$: transitionTo(playerState.annimation);
+    $: lookAt($gameSelectedCharacterPosition)
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
 
@@ -45,26 +45,38 @@
         
     }
 
+    function lookAt(sc : {x:number,y:number,z:number}){
+        
+        if(sc.x!==0 && sc.z!==0) {
+
+            const p = playerState.position
+            const v = new Vector3(sc.x,0,sc.z );
+            const pv = new Vector3(p.x,0,p.z);
+
+            console.log('hello?')
+
+            rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));          
+			endRotation.setFromRotationMatrix( rotationMatrix );
+        }
+
+    }
+
     useFrame((state, delta) => { // player movement
 
-        const p = playerState.position
-        const path = playerState.path
+        const p = playerState.position;
+        const path = playerState.path;
        
         if(path.length > 0){ 
 
             const radians = Math.atan2( path[0].z-p.z,  path[0].x - p.x);
-            const modifier = {x : Math.cos(radians), z : Math.sin(radians)}
+            const modifier = {x : Math.cos(radians), z : Math.sin(radians)};
 
-            if((p.x < path[0].x+0.04 && p.x > path[0].x-0.04)&&
+            if((p.x < path[0].x+0.04 && p.x > path[0].x-0.04) &&
                 (p.z < path[0].z+0.04 && p.z > path[0].z-0.04)
             ){            
                 // dont need to move so snap to grid
                 playerState.position.z = path[0].z;
                 playerState.position.x = path[0].x;
-
-                //if($gltf){                    
-                //    $gltf.scene.position.set(path[0].x,0,path[0].z)
-                //}
                 
                 playerState.settingOff = true;
                 playerState.arrived = false;
@@ -75,27 +87,15 @@
                 if(playerState.settingOff){
                     
                     const v = new Vector3(path[0].x,0,path[0].z );
-                    const pv = new Vector3(p.x,0,p.z);
-                    
+                    const pv = new Vector3(p.x,0,p.z);                  
                    
                     rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));          
 				    endRotation.setFromRotationMatrix( rotationMatrix );
                    
-                    movementVector = v.sub(pv).normalize();
-                    
-                    movementVector
+                    movementVector = v.sub(pv).normalize();                   
                 }
+
                 playerState.settingOff = false;
-
-                if($gltf){ // check it has loaded
-
-                   $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 );
-                    
-                 //  $gltf.scene.translateOnAxis(movementVector,playerSpeed);
-                 //  playerState.position.x = $gltf.scene.position.x;
-                 //  playerState.position.z = $gltf.scene.position.z;
-
-                }
 
                 if(delta<0.5){ // check for one off spikes caused by switching tabs etc
                     playerState.position.x = p.x+modifier.x*delta*4
@@ -103,7 +103,6 @@
                 }
 
                 transitionTo('run');
-
             }
 
         } else {
@@ -113,6 +112,10 @@
             }
 
             playerState.arrived = true;
+        }
+
+        if($gltf){ 
+            $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 );
         }
 
         $gamePosition = playerState.position;

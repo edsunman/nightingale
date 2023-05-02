@@ -4,15 +4,16 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 -->
 
 <script lang="ts">
-    import { gameState, gamePosition, gameMessage, gameConversation } from '$lib/stores';
+    import { gameState, gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
     import { useGltf, useGltfAnimations } from '@threlte/extras';
     import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
 
     export const ref = new Group();
     export let position = { x: 1, y:0 , z:1};
+    let x = Math.random() * 10
 
-    const gltf = useGltf('/purple-transformed.glb', { useDraco: true });
+    const gltf = useGltf('/purple-transformed.glb?v='+x, { useDraco: true });
     export const { actions, mixer } = useGltfAnimations(gltf, ref);
 
     let currentActionKey = "idle";
@@ -78,9 +79,9 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
                     transitionTo("walk");
                 }
 
-                $gameState.speakingCharacterPosition = position
+                $gameSelectedCharacterPosition = position
                 $gameState.moveLock = true;
-                $gameConversation = [1,1]
+                $gameConversation = [2,1]
                // $gameState.dialogueOptions = true;
 
             } else {
@@ -93,7 +94,7 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
     
 </script>
 
-<T is={ref} position={[position.x,position.y,position.z]}  dispose={false} {...$$restProps}>
+<T is={ref} position={[position.x,position.y,position.z]} name="purple" dispose={false} {...$$restProps}>
   {#if $gltf}
     <T.Group name="Scene" >
       <T.Group name="Armature" bind:ref={armature} scale={0.01}  >
@@ -118,6 +119,6 @@ Command: npx @threlte/gltf@1.0.0-next.9 purple.glb --transform
 </T>
 <T.Mesh position={[position.x,position.y+0.75,position.z]} name="collision box" visible={false}
     on:click={(e) => {e.stopPropagation();clicked(e);}}  >
-    <T.BoxGeometry args={[1, 1.5, 1]} />
+    <T.BoxGeometry args={[0.5, 1.5, 0.5]} />
     <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>

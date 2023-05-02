@@ -37,7 +37,7 @@
         
         if (g[0]!==0) {
 
-            if(script[g[0]-1].speech.find(x => x.id === g[1])?.showOptions) {
+            if(script[g[0]-1].speech.find(x => x.id === g[1])?.options) {
                 
                 setTimeout(() => {showDialogueOptions = true}, 1500);
                 
@@ -68,7 +68,7 @@
             </div>
          {/if}
          {#if $gameConversation[0]!==0}
-            <div class="absolute text-center w-full" style="bottom:{(clientHeight/2)+100}px ">
+            <div class="absolute text-center w-full" style="bottom:{(clientHeight/2)+120}px ">
                 <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-md px-3 py-2 select-none ">
                    <Dialogue/>
                 </h3>

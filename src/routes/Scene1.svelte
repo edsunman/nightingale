@@ -1,25 +1,34 @@
 <script lang="ts">
-    import { gameState, gameConversation } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
-    import { HTML } from '@threlte/extras'
-    import { fade } from 'svelte/transition';
     import Floor from './Floor.svelte';
 	import Purple from '../objects/Purple.svelte';
-    import Dialogue from '../components/Dialogue.svelte';
+	import Blue from '../objects/Blue.svelte';
+
 
     let scale =  spring(1)
 
     let rotation = 0;
 
+    let blue : any;
+    let blue2 : any;
+
+   
+
     const startingPosition = {x: 9, y: 0, z: 7};
 
     const avoidArray :  Array<{ x: number, z: number }> =
         [{x: 2, z:2 },{x: 2, z:3 },{x: 2, z:4 },{x: -6, z:-4 },{x: -5, z:-5 },{x: -4, z:-6 },{x: 5, z:3 },{x: 6, z:2 },{x: 7, z:1 },
-        {x:-5,z:-4},{x:-4,z:-5},{x:5,z:-14},{x:3,z:-2}];
+        {x:-5,z:-4},{x:-4,z:-5},{x:5,z:-14},{x:3,z:-2},{x:4,z:-3}];
+
+   /* for (let i = 0; i < 1000; i++) {
+
+        avoidArray.push({x:10,z:7})
+    } */
 
     useFrame((state, delta) => {
         rotation += delta
+        // console.log(blue)
     })
 
 </script>  
@@ -32,6 +41,15 @@
 </T.Mesh>
 
 <Purple position={{x: 4, y: 0, z: -3}} />
+
+<Purple position={{x: 4, y: 0, z: 3}} />
+
+<Blue name="blue" position={[ 7,  0,  -3]} />
+
+<Blue name="blue 2" position={[ 9,  0,  -3]} />
+
+<Blue name="blue 3" position={[ 11,  0,  -3]} />
+
 
 
 
@@ -63,10 +81,4 @@
 
 
 
-{#if $gameConversation[0]!==0}
-    <HTML position={[$gameState.speakingCharacterPosition.x,2.5,$gameState.speakingCharacterPosition.z]} center>
-        <h3  class="text-neutral-100 bg-neutral-950 hidden md:block rounded-md px-3 py-2 select-none whitespace-nowrap">
-           <Dialogue />
-        </h3>
-    </HTML>
-{/if}
+

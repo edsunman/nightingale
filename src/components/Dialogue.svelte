@@ -6,7 +6,7 @@
 
  </script>
  
-{#if $gameConversation[0]===1}
+{#if $gameConversation[0]!==0}
 
     <small>{script[$gameConversation[0]-1].name}:</small><br/>
 

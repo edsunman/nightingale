@@ -6,6 +6,13 @@
 
 }
 
+*,
+*:before,
+*:after {
+  @apply cursor-default;
+}
+
+
 /* Hide scroll bar mobile safari */
 @supports (-webkit-touch-callout: none) {
   .h-screen {
