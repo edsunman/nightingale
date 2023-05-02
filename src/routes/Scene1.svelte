@@ -2,20 +2,13 @@
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
     import Floor from './Floor.svelte';
-	import Purple from '../objects/Purple.svelte';
-	import Blue from '../objects/Blue.svelte';
-
+    import Character from '../objects/Character.svelte';
 
     let scale =  spring(1)
 
     let rotation = 0;
 
-    let blue : any;
-    let blue2 : any;
-
-   
-
-    const startingPosition = {x: 9, y: 0, z: 7};
+    const startingPosition = {x: 4, y: 0, z: 4};
 
     const avoidArray :  Array<{ x: number, z: number }> =
         [{x: 2, z:2 },{x: 2, z:3 },{x: 2, z:4 },{x: -6, z:-4 },{x: -5, z:-5 },{x: -4, z:-6 },{x: 5, z:3 },{x: 6, z:2 },{x: 7, z:1 },
@@ -40,19 +33,14 @@
   <T.MeshStandardMaterial color="#705f47" />
 </T.Mesh>
 
-<Purple position={{x: 4, y: 0, z: -3}} />
+<!--
+<Purple name="purple" position={{x: 4, y: 0, z: -3}} />npm
 
-<Purple position={{x: 4, y: 0, z: 3}} />
+-->
 
-<Blue name="blue" position={[ 7,  0,  -3]} />
+<Character position={{ x: 1, y:0 , z:1}} url={'/blue-transformed.glb'} characterId={2} />
 
-<Blue name="blue 2" position={[ 9,  0,  -3]} />
-
-<Blue name="blue 3" position={[ 11,  0,  -3]} />
-
-
-
-
+<Character position={{ x: 5, y:0 , z:1}} url={'/purple-transformed.glb'} characterId={1} />
 
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
 

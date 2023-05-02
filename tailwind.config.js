@@ -4,7 +4,8 @@ export default {
     theme: {
         extend: {
             cursor : {
-                default: 'url(/cursor.png), default'
+                default: 'url(/cursor.png), default',
+                pointer: 'url(/cursorHover.png), pointer'
             },
             fontFamily: {
                 sans: ['Comfortaa']

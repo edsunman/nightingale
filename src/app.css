@@ -12,6 +12,10 @@
   @apply cursor-default;
 }
 
+a, button {
+  @apply cursor-pointer;
+}
+
 
 /* Hide scroll bar mobile safari */
 @supports (-webkit-touch-callout: none) {
