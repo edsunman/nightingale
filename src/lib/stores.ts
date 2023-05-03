@@ -3,10 +3,10 @@ import { writable } from 'svelte/store';
 export const gameState = writable({
 
     dev : {
-        status: false,
+        status: true,
         camera : false,
         grid : false,
-        avoidObjactsVisible: true
+        avoidObjactsVisible: false
     },
     scene : 1,
     moveLock : false,

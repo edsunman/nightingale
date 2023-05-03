@@ -145,10 +145,10 @@
 
 <T.DirectionalLight name="sun"
     intensity={0.8} castShadow 
-    shadow.mapSize.width={1500}
-    shadow.mapSize.height={1500}
+    shadow.mapSize.width={1800}
+    shadow.mapSize.height={1800}
     shadow.camera.top={9}
-    shadow.camera.right={4}
+    shadow.camera.right={8}
     shadow.camera.left={-14}
     shadow.camera.bottom={-6}
     position={[playerState.position.x+9,playerState.position.y+10,playerState.position.z+10]} 

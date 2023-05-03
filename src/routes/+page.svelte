@@ -37,6 +37,8 @@
         
         if (g[0]!==0) {
 
+            $gameState.moveLock = true;
+
             if(script[g[0]-1].speech.find(x => x.id === g[1])?.options) {
                 
                 setTimeout(() => {showDialogueOptions = true}, 1500);

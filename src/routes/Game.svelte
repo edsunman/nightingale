@@ -25,8 +25,10 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
 
     const { scene, renderer, camera } = useThrelte();
 
-    //renderer?.setPixelRatio(2);
+    //renderer?.setPixelRatio(1);
     //console.log(renderer?.getPixelRatio())
+
+    console.log(renderer?.capabilities.getMaxAnisotropy())
 
     const composer = new EffectComposer(renderer);
 

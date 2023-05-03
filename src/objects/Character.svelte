@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition } from '$lib/stores';
+    import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
     import { useGltf, useGltfAnimations } from '@threlte/extras';
     import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
@@ -77,14 +77,12 @@
                     transitionTo("walk");
                 }
 
-                $gameSelectedCharacterPosition = position
-                $gameState.moveLock = true;
-                $gameConversation = [characterId,1]
-               // $gameState.dialogueOptions = true;
+                $gameSelectedCharacterPosition = position;
+                $gameConversation = [characterId,1];
 
             } else {
 
-                $gameMessage = 'A purple character'
+                $gameMessage = 'A purple character';
 
             }
         }

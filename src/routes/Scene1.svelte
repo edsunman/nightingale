@@ -1,52 +1,85 @@
 <script lang="ts">
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
+    import { useTexture, GLTF } from '@threlte/extras'
     import Floor from './Floor.svelte';
     import Character from '../objects/Character.svelte';
+    import Rock from '../components/Rock.svelte';
+	import { Texture, RepeatWrapping, ShaderMaterial, ImageUtils, TextureLoader, UniformsUtils, UniformsLib, ShaderChunk, sRGBEncoding } from 'three';
 
     let scale =  spring(1)
 
     let rotation = 0;
 
+    const wrap = RepeatWrapping;
+
     const startingPosition = {x: 4, y: 0, z: 4};
 
     const avoidArray :  Array<{ x: number, z: number }> =
-        [{x: 2, z:2 },{x: 2, z:3 },{x: 2, z:4 },{x: -6, z:-4 },{x: -5, z:-5 },{x: -4, z:-6 },{x: 5, z:3 },{x: 6, z:2 },{x: 7, z:1 },
-        {x:-5,z:-4},{x:-4,z:-5},{x:5,z:-14},{x:3,z:-2},{x:4,z:-3}];
+        [{x: 1, z:1 },{x: 5, z:1 }];
 
-   /* for (let i = 0; i < 1000; i++) {
 
-        avoidArray.push({x:10,z:7})
-    } */
+
 
     useFrame((state, delta) => {
         rotation += delta
         // console.log(blue)
     })
 
+
 </script>  
 
 <Floor avoidArray={avoidArray} startingPosition={startingPosition} />
 
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow > 
-  <T.BoxGeometry  args={[36, 0.01, 36]}   />
-  <T.MeshStandardMaterial color="#705f47" />
+<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
+  <T.BoxGeometry  args={[128, 0.01, 128]}   />
+   {#await useTexture('/desert-tile.png') then texture}
+        <T.MeshLambertMaterial >
+            <T is={texture} attach="map" repeat={8} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
+        </T.MeshLambertMaterial>
+    {/await}
+   <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>
 
-<!--
-<Purple name="purple" position={{x: 4, y: 0, z: -3}} />npm
+<T.Mesh position={[5, 0.02, 0]} rotation.x={-1.5708} visible={true} name="cracks" receiveShadow  > 
+<T.PlaneGeometry  args={[8, 8]}   />
+ {#await useTexture('/desert-cracks.png') then texture}
+        <T.MeshStandardMaterial transparent={true} opacity={0.4}>
+            <T is={texture} attach="map" anisotropy={16} encoding={sRGBEncoding} />
+        </T.MeshStandardMaterial>
+    {/await}
+</T.Mesh>
+<T.Mesh position={[-1, 0.01, 3]} rotation.x={-1.5708} rotation.z={-1} visible={true} name="cracks" receiveShadow  > 
+<T.PlaneGeometry  args={[8, 8]}   />
+ {#await useTexture('/desert-cracks.png') then texture}
+        <T.MeshStandardMaterial transparent={true} opacity={0.4}>
+            <T is={texture} attach="map" anisotropy={16} encoding={sRGBEncoding} />
+        </T.MeshStandardMaterial>
+    {/await}
+</T.Mesh>
 
+<Rock position={[-1,0,1]}  scale={0.4}/>
+
+<Rock position={[-1.5,0,1]} rotation.x={-1.5708} rotation.z={1.6} scale={0.6}/>
+
+
+<!--
+<T.Mesh position={[4, 2, 4]} visible={true} name="ball"  > 
+<T.SphereGeometry  args={[1, 32, 16 ]}   />
+<T.ShaderMaterial vertexShader={vShader} fragmentShader={fShader} uniforms={uniforms} />
+</T.Mesh>
 -->
+
 
 <Character position={{ x: 1, y:0 , z:1}} url={'/blue-transformed.glb'} characterId={2} />
 
 <Character position={{ x: 5, y:0 , z:1}} url={'/purple-transformed.glb'} characterId={1} />
-
+<!--
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
+-->
+<T.AmbientLight  intensity={0.1} />
 
-<T.AmbientLight  intensity={0.2} />
-
-<!-- pink spinny box -->
+<!-- pink spinny box 
 <T.Mesh  castShadow name="grow box" 
     scale={$scale}
     on:pointerenter={() => scale.set(1.5)}
@@ -56,17 +89,7 @@
   <T.BoxGeometry args={[1, 2, 1]} />
   <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>
-
-<T.Mesh
-    castShadow
-    name="spinny box"
-    on:click={(e) => e.stopPropagation()}    
-    position={[-2,1,-2]}
->
-  <T.BoxGeometry args={[1, 2, 1]} />
-  <T.MeshStandardMaterial color="hotpink" />
-</T.Mesh>
-
+-->
 
 
 
