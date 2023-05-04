@@ -10,6 +10,8 @@
 
     export let url : string;
     export let characterId : number;
+    export let message : string;
+
 
     const gltf = useGltf(url, { useDraco: true });
     export const { actions, mixer } = useGltfAnimations(gltf, ref);
@@ -82,7 +84,7 @@
 
             } else {
 
-                $gameMessage = 'A purple character';
+                $gameMessage = message;
 
             }
         }

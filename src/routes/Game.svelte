@@ -21,11 +21,13 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
 
     interactivity();
 
+    export let selectedScene = 1;
+
     const stats = new Stats();
 
     const { scene, renderer, camera } = useThrelte();
 
-    //renderer?.setPixelRatio(1);
+    //renderer?.setPixelRatio(2);
     //console.log(renderer?.getPixelRatio())
 
     console.log(renderer?.capabilities.getMaxAnisotropy())
@@ -123,14 +125,14 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
 
     onMount(async () => {
         document.body.appendChild(stats.dom);
-        console.log(scene)
+        //console.log(scene)
     })
 
 </script>
 
-{#if $gameState.scene === 1}
+{#if selectedScene === 1}
     <Scene1 />
-{:else if $gameState.scene === 2}
+{:else if selectedScene === 2}
     <Scene2 />
 {/if}
 

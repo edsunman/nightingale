@@ -11,8 +11,11 @@
 	let currentActionKey = playerState.annimation
     let lightTarget : any;
 
-    const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) )
-    const rotationMatrix = new Matrix4();
+    
+    const rotationMatrix = new Matrix4().lookAt(
+        new Vector3(playerState.rotation.x,0,playerState.rotation.z ),
+        new Vector3(playerState.position.x,0,playerState.position.z ),new Vector3(0,1,0));;
+    const endRotation = new Quaternion().setFromRotationMatrix( rotationMatrix );
     let movementVector = new Vector3();
 
     export let { gltf, actions } = useGltfAnimations();
@@ -53,10 +56,11 @@
             const v = new Vector3(sc.x,0,sc.z );
             const pv = new Vector3(p.x,0,p.z);
 
-            console.log('hello?')
+            
 
             rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));          
 			endRotation.setFromRotationMatrix( rotationMatrix );
+            
         }
 
     }

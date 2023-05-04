@@ -7,25 +7,27 @@
 
     import type { PlayerState } from '$lib/types';
 
+    export let levelSize = { x: 100, z: 100 };
     export let avoidArray :  Array<{ x: number, z: number }> = [];
-    export let startingPosition:  { x: number, y:number, z: number } = { x: 0, y:0 , z:0}
+    export let startingPosition = { x:0, y:0 , z:0 }
+    export let startingRotation = { x:0, y:0 , z:0 };
 
     let playerState : PlayerState = { 
         position: startingPosition, 
-        rotation: 0 , 
+        rotation: startingRotation , 
         annimation : 'idle',
         path: [],
         arrived:false,
         settingOff:true
     };
 
-    const levelSize = 100;
+    
 
     let direction = new THREE.Vector3();
     const raycaster = new THREE.Raycaster();
     let selectedGridSpace : {x: number, y: number, z: number} = {x:0,y:0,z:0}; 
     let avoidObjects : any[] = [];
-    let selectedOpacity = 1;
+    let selectedOpacity = 0;
     let selectedColour = 'White';
 
 
@@ -102,7 +104,7 @@
 <Player playerState={playerState}  />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" receiveShadow  on:click={(e) => floorClicked(e)} > 
-  <T.BoxGeometry  args={[levelSize, 0.01, levelSize]}   />
+  <T.BoxGeometry  args={[levelSize.x, 0.01, levelSize.z]}   />
 </T.Mesh>
 
 {#each avoidArray as block}
@@ -129,6 +131,6 @@
     sectionThickness={0}
     fadeDistance={25}
     cellSize={1}
-    gridSize={[levelSize, levelSize]}
+    gridSize={[levelSize.x, levelSize.z]}
 />
 {/if}

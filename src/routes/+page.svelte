@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { gameState, gameMessage, gamePosition,gameConversation } from '$lib/stores';
+    import { gameState, gameMessage, gamePosition, gameConversation, gameScene } from '$lib/stores';
     import { Canvas } from '@threlte/core';
     import { fade } from 'svelte/transition';
     import Game from './Game.svelte';
@@ -9,13 +9,24 @@
     import Inventory from '../components/Inventory.svelte';
     import { script } from '$lib/script';
 	import Settings from '../components/Settings.svelte';
+    import { useProgress } from '@threlte/extras';
+    import { tweened } from 'svelte/motion';
     
 
     let clientWidth, clientHeight;
     let showDialogueOptions = false;
     let messageVisible = false;
+    let gameLoaded = false;
+    let selectedScene = 2;
 
+    const { progress,  item } = useProgress()
 
+    const tweenedProgress = tweened($progress, {
+		duration: 200
+	})
+	$: tweenedProgress.set($progress)
+
+    $ : console.log($item)
 
     $ : fadeInMessage($gameMessage);
 
@@ -51,6 +62,25 @@
         }
     }
 
+    $ : checkLoaded($progress);
+
+    function checkLoaded(p : number){
+
+        if(p === 1){
+            gameLoaded = true;
+        }
+    }
+
+    $ : loadScene($gameScene)
+
+    function loadScene(id: number){
+
+        gameLoaded = false;
+        setTimeout(() => (selectedScene = id), 300);
+        setTimeout(() => checkLoaded($progress), 600)
+        
+    }
+
 
 
 </script>
@@ -58,7 +88,16 @@
 <div class="h-screen lg:h-[700px] lg:aspect-[16/9] m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden"
     bind:clientWidth={clientWidth} bind:clientHeight={clientHeight} >
 
+        {#if !gameLoaded}
+            <div in:fade={{ duration: 300 }} out:fade={{ duration: 300, delay : 300 }}  class="w-full h-full bg-neutral-950 z-10 absolute text-white">
+                {#if $progress < 1}
+                    <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700"  out:fade={{ duration: 100 }}>
+                        <div class="bg-white h-full" style="width: {$progress * 100}%" ></div>
+                    </div>
+                {/if}
 
+            </div>
+        {/if}
         <Settings />
         <Inventory />
         
@@ -85,12 +124,12 @@
         {/if}
 
     <Canvas>
-        <Game />       
+        <Game selectedScene={selectedScene} />       
     </Canvas>
 
 </div>
 {#if $gameState.dev.status}
-    <div class="mt-12" style="position:absolute; top:20px; width:150px; white-space: nowrap;left:20px; background-color:#202020; color:azure; font-family: monospace">
+    <div class="mt-12 invisible md:visible" style="position:absolute; top:20px; width:150px; white-space: nowrap;left:20px; background-color:#202020; color:azure; font-family: monospace">
         <button on:click={() => {$gameState.dev.camera = !$gameState.dev.camera}} >switch camera</button><br/>
         <button on:click={() => {$gameState.dev.grid = !$gameState.dev.grid}} >switch grid</button><br/>
         <button on:click={() => {$gameState.dev.avoidObjactsVisible = !$gameState.dev.avoidObjactsVisible}} >avoid objects</button><br/><br/>
@@ -106,5 +145,8 @@
         </p>
         <p>Conversation State:</p>
         <p>{$gameConversation[0]} - {$gameConversation[1]}</p>
+        <p>Load scene:</p>
+        <button on:click={() => { $gameScene = 1}}>1</button><br/>
+        <button on:click={() => { $gameScene = 2}}>2</button>
     </div>
  {/if}

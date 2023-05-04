@@ -1,11 +1,14 @@
 <script lang="ts">
+    import { gameMessage, gamePosition, gameScene } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
     import { useTexture, GLTF } from '@threlte/extras'
     import Floor from './Floor.svelte';
     import Character from '../objects/Character.svelte';
-    import Rock from '../components/Rock.svelte';
+    import Rock from '../objects/Rock.svelte';
+    import Door from '../objects/Door.svelte';
 	import { Texture, RepeatWrapping, ShaderMaterial, ImageUtils, TextureLoader, UniformsUtils, UniformsLib, ShaderChunk, sRGBEncoding } from 'three';
+	import Page from './+page.svelte';
 
     let scale =  spring(1)
 
@@ -13,13 +16,9 @@
 
     const wrap = RepeatWrapping;
 
-    const startingPosition = {x: 4, y: 0, z: 4};
 
     const avoidArray :  Array<{ x: number, z: number }> =
         [{x: 1, z:1 },{x: 5, z:1 }];
-
-
-
 
     useFrame((state, delta) => {
         rotation += delta
@@ -27,36 +26,31 @@
     })
 
 
+
+
 </script>  
 
-<Floor avoidArray={avoidArray} startingPosition={startingPosition} />
+<Floor avoidArray={avoidArray} startingPosition={{x: 4, y: 0, z: 4}} startingRotation={{x: 4, y:0, z:5}} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[128, 0.01, 128]}   />
    {#await useTexture('/desert-tile.png') then texture}
         <T.MeshLambertMaterial >
-            <T is={texture} attach="map" repeat={8} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
+            <T is={texture} attach="map" repeat={6} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
         </T.MeshLambertMaterial>
     {/await}
-   <T.MeshStandardMaterial color="hotpink" />
 </T.Mesh>
 
-<T.Mesh position={[5, 0.02, 0]} rotation.x={-1.5708} visible={true} name="cracks" receiveShadow  > 
-<T.PlaneGeometry  args={[8, 8]}   />
+<T.Mesh position={[0, 0.02, 2]} rotation.x={-1.5708} visible={true} name="cracks" receiveShadow  > 
+<T.PlaneGeometry  args={[6, 6]}   />
  {#await useTexture('/desert-cracks.png') then texture}
         <T.MeshStandardMaterial transparent={true} opacity={0.4}>
             <T is={texture} attach="map" anisotropy={16} encoding={sRGBEncoding} />
         </T.MeshStandardMaterial>
     {/await}
 </T.Mesh>
-<T.Mesh position={[-1, 0.01, 3]} rotation.x={-1.5708} rotation.z={-1} visible={true} name="cracks" receiveShadow  > 
-<T.PlaneGeometry  args={[8, 8]}   />
- {#await useTexture('/desert-cracks.png') then texture}
-        <T.MeshStandardMaterial transparent={true} opacity={0.4}>
-            <T is={texture} attach="map" anisotropy={16} encoding={sRGBEncoding} />
-        </T.MeshStandardMaterial>
-    {/await}
-</T.Mesh>
+
+<Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2}/>
 
 <Rock position={[-1,0,1]}  scale={0.4}/>
 
@@ -71,9 +65,19 @@
 -->
 
 
-<Character position={{ x: 1, y:0 , z:1}} url={'/blue-transformed.glb'} characterId={2} />
+<Character
+    message="A blue character"
+    position={{ x: 1, y:0 , z:1}}
+    url={'/blue-transformed.glb'}
+    characterId={2}
+/>
 
-<Character position={{ x: 5, y:0 , z:1}} url={'/purple-transformed.glb'} characterId={1} />
+<Character 
+    message="A purple character"
+    position={{ x: 5, y:0 , z:1}}
+    url={'/purple-transformed.glb'}
+    characterId={1}
+/>
 <!--
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
 -->
