@@ -1,4 +1,3 @@
-
 export const script = [
     {
         name: 'Border Guard',

@@ -1,63 +1,49 @@
 <script lang="ts">
-    import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition } from '$lib/stores';
-    import { T, useFrame } from '@threlte/core';
-    import { useGltf, useGltfAnimations } from '@threlte/extras';
-    import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
-    import { useCursor } from "$lib/useCursor";
+    import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition } from '$lib/stores'
+    import { T, useFrame } from '@threlte/core'
+    import { useGltf, useGltfAnimations } from '@threlte/extras'
+    import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three'
+    import { useCursor } from "$lib/useCursor"
 
-    export const ref = new Group();
-    export let position = { x: 1, y:0 , z:1};
-    let x = Math.random() * 10
+    export const ref = new Group()
+    export let position = { x: 1, y:0 , z:1}
+    export let url : string
+    export let characterId : number
+    export let message : string
 
-    export let url : string;
-    export let characterId : number;
-    export let message : string;
+    const gltf = useGltf(url, { useDraco: true })
+    export const { actions, mixer } = useGltfAnimations(gltf, ref)
+    const { onPointerEnter, onPointerLeave } = useCursor()
 
-    
-    const gltf = useGltf(url, { useDraco: true });
-    export const { actions, mixer } = useGltfAnimations(gltf, ref);
-    const { onPointerEnter, onPointerLeave } = useCursor();
+    let currentActionKey = "idle"
+    let rotation = 2
+    let armature : any
+    let spinning = false
 
-    let currentActionKey = "idle";
-    let rotation = 2;
-    let armature : any;
-    let spinning = false;
-
-    const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) );
-    const rotationMatrix = new Matrix4();
-    
-    const currentPosition = new Vector3(position.x,0,position.z);
-
+    const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) )
+    const rotationMatrix = new Matrix4()
+    const currentPosition = new Vector3(position.x,0,position.z)
 
     $: $actions[currentActionKey]?.play();
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
-
-        const currentAction = $actions[currentActionKey]  ;     
-        const nextAction = $actions[nextActionKey];
-       
-        if (!nextAction || currentAction === nextAction) return;
-        
-        nextAction.enabled = true;
-
+        const currentAction = $actions[currentActionKey]  
+        const nextAction = $actions[nextActionKey]
+        if (!nextAction || currentAction === nextAction) return
+        nextAction.enabled = true
         if (currentAction) {
             currentAction.crossFadeTo(nextAction, duration, true)
         }
-
         nextAction.play()
         currentActionKey = nextActionKey
     }
 
     useFrame((state, delta) => {
-
         if ($gltf){
-            
-            armature.quaternion.rotateTowards( endRotation, delta*10 );
+            armature.quaternion.rotateTowards( endRotation, delta*10 )
             if (endRotation.equals(armature.quaternion)&&spinning) {
-                
                 transitionTo("idle")
                 spinning = false;
-                
             }
         }
 
@@ -65,29 +51,20 @@
     })
 
     function clicked(e : any){
-
-        const player = $gamePosition;
-
+        const player = $gamePosition
         if($gameConversation[0]===0) {
-
             if((player.x >= position.x-1 && player.x <= position.x+1)&&(player.z >= position.z-1 && player.z <= position.z+1)) {
-                
-                const lookAtVector = new Vector3(player.x,0,player.z);
-                rotationMatrix.lookAt(lookAtVector,currentPosition,new Vector3(0,1,0));          
-                endRotation.setFromRotationMatrix( rotationMatrix );
-
+                const lookAtVector = new Vector3(player.x,0,player.z)
+                rotationMatrix.lookAt(lookAtVector,currentPosition,new Vector3(0,1,0));         
+                endRotation.setFromRotationMatrix( rotationMatrix )
                 if(!endRotation.equals(armature.quaternion)){
-                    spinning = true;
-                    transitionTo("walk");
+                    spinning = true
+                    transitionTo("walk")
                 }
-
-                $gameSelectedCharacterPosition = position;
-                $gameConversation = [characterId,1];
-
+                $gameSelectedCharacterPosition = position
+                $gameConversation = [characterId,1]
             } else {
-
                 $gameMessage = message;
-
             }
         }
     }

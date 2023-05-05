@@ -1,15 +1,10 @@
 <script lang="ts">
    
-    import { T, useFrame } from '@threlte/core';
-
+    import { T, useFrame } from '@threlte/core'
     import Floor from './Floor.svelte'
-    import Door from '../objects/Door.svelte';
+    import Door from '../objects/Door.svelte'
 
-    const avoidArray :  Array<{ x: number, z: number }> = [];
-
-    useFrame((state, delta) => {
-     
-    })
+    const avoidArray :  Array<{ x: number, z: number }> = []
 
 </script>  
 
@@ -20,9 +15,7 @@
    <T.MeshStandardMaterial color="green" />
 </T.Mesh>
 
-
 <T.AmbientLight  intensity={0.2} />
-
 
 <Door position={[10.5,1,1]} rotation.y={1.57} activeSquare={{x:10,z:1}} scene={1} nextScenePosition={{x:-5,z:3}}/>
 

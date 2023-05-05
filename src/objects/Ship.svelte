@@ -13,7 +13,6 @@ Command: npx @threlte/gltf@1.0.0-next.12 ship.glb --transform
 
     export const ref = new Group()
 
-    
     const gltf = useGltf('/ship-transformed.glb', { useDraco: true })
     const component = forwardEventHandlers()
     const { onPointerEnter, onPointerLeave } = useCursor()

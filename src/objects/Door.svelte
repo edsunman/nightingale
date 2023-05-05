@@ -1,15 +1,14 @@
 <script lang="ts" >
 
-    import { gameScene, gameMessage, gamePosition, gameState } from "$lib/stores";
-    import { T } from "@threlte/core";
-    import { useCursor } from "$lib/useCursor";
+    import { gameScene, gameMessage, gamePosition, gameState } from "$lib/stores"
+    import { T } from "@threlte/core"
+    import { useCursor } from "$lib/useCursor"
 
-    export let nextScenePosition = {x: 0, z: 0};
-    export let activeSquare = {x: 0, z: 0};
-    export let scene : number;
+    export let nextScenePosition = {x: 0, z: 0}
+    export let activeSquare = {x: 0, z: 0}
+    export let scene : number
 
-     const { onPointerEnter, onPointerLeave } = useCursor()
-
+    const { onPointerEnter, onPointerLeave } = useCursor()
 
     function doorClicked(e : any){
         if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z) {

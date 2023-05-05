@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
 
 export const gameState = writable({
-
     dev : {
         status: true,
         camera : false,
@@ -21,8 +20,8 @@ export const gameState = writable({
     }
 })
 
-export const gamePosition = writable({x:0,z:0});
-export const gameSelectedCharacterPosition = writable({x:0,y:0,z:0});
-export const gameMessage = writable('');
-export const gameConversation = writable([0,0]);
-export const gameScene = writable(1);
+export const gamePosition = writable({x:0,z:0})
+export const gameSelectedCharacterPosition = writable({x:0,y:0,z:0})
+export const gameMessage = writable('')
+export const gameConversation = writable([0,0])
+export const gameScene = writable(1)

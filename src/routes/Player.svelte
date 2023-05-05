@@ -1,129 +1,96 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition } from '$lib/stores';
+    import { gameState, gamePosition, gameSelectedCharacterPosition } from '$lib/stores'
 	import { GLTF, useGltfAnimations } from '@threlte/extras'
-    import { T, useFrame } from '@threlte/core';
-    import { Vector3, Matrix4, Euler, Quaternion } from 'three';
+    import { T, useFrame } from '@threlte/core'
+    import { Vector3, Matrix4, Euler, Quaternion } from 'three'
 
-    import type { PlayerState } from '$lib/types';
+    import type { PlayerState } from '$lib/types'
 
-    export let playerState : PlayerState;  
+    export let playerState : PlayerState
+    let { gltf, actions } = useGltfAnimations()
 
 	let currentActionKey = playerState.annimation
-    let lightTarget : any;
+    let lightTarget : any
+    let movementVector = new Vector3()
 
-    
     const rotationMatrix = new Matrix4().lookAt(
         new Vector3(playerState.rotation.x,0,playerState.rotation.z ),
-        new Vector3(playerState.position.x,0,playerState.position.z ),new Vector3(0,1,0));;
-    const endRotation = new Quaternion().setFromRotationMatrix( rotationMatrix );
-    let movementVector = new Vector3();
+        new Vector3(playerState.position.x,0,playerState.position.z ),new Vector3(0,1,0))
+    const endRotation = new Quaternion().setFromRotationMatrix( rotationMatrix )
 
-    export let { gltf, actions } = useGltfAnimations();
 
     $: $actions[playerState.annimation]?.play();
 
-    $: lookAt($gameSelectedCharacterPosition)
+    $: rotateTowards($gameSelectedCharacterPosition)
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
 
-        const currentAction = $actions[currentActionKey]  ;     
-        const nextAction = $actions[nextActionKey];
-        //console.log('current => '+currentActionKey)
-        //console.log('next => '+nextActionKey)
-       
-        if (!nextAction || currentAction === nextAction) return;
-        
-        nextAction.enabled = true;
-
+        const currentAction = $actions[currentActionKey]  
+        const nextAction = $actions[nextActionKey]
+        if (!nextAction || currentAction === nextAction) return
+        nextAction.enabled = true
         if (currentAction) {
             currentAction.crossFadeTo(nextAction, duration, true)
         }
-
         nextAction.play()
         currentActionKey = nextActionKey
     }
 
     function loaded(ref: any) {
-        ref.ref.traverse( function ( object : any  ) { object.castShadow = true; object.receiveShadow = false; } );
-        
+        ref.ref.traverse( function ( object : any  ) { object.castShadow = true; object.receiveShadow = false; } )
     }
 
-    function lookAt(sc : {x:number,y:number,z:number}){
-        
+    function rotateTowards(sc : {x:number,y:number,z:number}){     
         if(sc.x!==0 && sc.z!==0) {
-
             const p = playerState.position
-            const v = new Vector3(sc.x,0,sc.z );
-            const pv = new Vector3(p.x,0,p.z);
-
-            
-
-            rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));          
-			endRotation.setFromRotationMatrix( rotationMatrix );
-            
+            const v = new Vector3(sc.x,0,sc.z )
+            const pv = new Vector3(p.x,0,p.z)
+            rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));         
+			endRotation.setFromRotationMatrix( rotationMatrix )
         }
 
     }
 
     useFrame((state, delta) => { // player movement
-
-        const p = playerState.position;
-        const path = playerState.path;
-       
+        const p = playerState.position
+        const path = playerState.path
         if(path.length > 0){ 
-
-            const radians = Math.atan2( path[0].z-p.z,  path[0].x - p.x);
-            const modifier = {x : Math.cos(radians), z : Math.sin(radians)};
-
+            const radians = Math.atan2( path[0].z-p.z,  path[0].x - p.x)
+            const modifier = {x : Math.cos(radians), z : Math.sin(radians)}
             if((p.x < path[0].x+0.04 && p.x > path[0].x-0.04) &&
                 (p.z < path[0].z+0.04 && p.z > path[0].z-0.04)
             ){            
                 // dont need to move so snap to grid
-                playerState.position.z = path[0].z;
-                playerState.position.x = path[0].x;
-                
-                playerState.settingOff = true;
-                playerState.arrived = false;
-                playerState.path.shift();
-
+                playerState.position.z = path[0].z
+                playerState.position.x = path[0].x;        
+                playerState.settingOff = true
+                playerState.arrived = false
+                playerState.path.shift()
             } else { // get moving 
-
                 if(playerState.settingOff){
-                    
-                    const v = new Vector3(path[0].x,0,path[0].z );
-                    const pv = new Vector3(p.x,0,p.z);                  
-                   
-                    rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));          
-				    endRotation.setFromRotationMatrix( rotationMatrix );
-                   
-                    movementVector = v.sub(pv).normalize();                   
+                    const v = new Vector3(path[0].x,0,path[0].z )
+                    const pv = new Vector3(p.x,0,p.z)     
+                    rotationMatrix.lookAt(v,pv,new Vector3(0,1,0))     
+				    endRotation.setFromRotationMatrix( rotationMatrix )
+                    movementVector = v.sub(pv).normalize()         
                 }
-
-                playerState.settingOff = false;
-
+                playerState.settingOff = false
                 if(delta<0.5){ // check for one off spikes caused by switching tabs etc
                     playerState.position.x = p.x+modifier.x*delta*4
                     playerState.position.z = p.z+ modifier.z*delta*4
                 }
-
-                transitionTo('run');
+                transitionTo('run')
             }
-
         } else {
-
             if(!playerState.arrived) {
-                transitionTo('idle');
+                transitionTo('idle')
             }
-
-            playerState.arrived = true;
+            playerState.arrived = true
         }
-
         if($gltf){ 
-            $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 );
+            $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 )
         }
-
-        $gamePosition = playerState.position;
-        
+        $gamePosition = playerState.position
     })
 	
 </script>
@@ -166,7 +133,6 @@
     position={[playerState.position.x+8,8,playerState.position.z+8]}>
 </T.Mesh>
     
-
 <T.Mesh name="player grid square"
     receiveShadow
     visible={false}
