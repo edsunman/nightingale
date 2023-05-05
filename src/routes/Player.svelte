@@ -132,7 +132,7 @@
     bind:gltf={$gltf}
     on:create={(ref) => loaded(ref)} 
     position.x={playerState.position.x}
-    position.y={playerState.position.y}
+    position.y={0}
     position.z={playerState.position.z}
     url="/green.glb"
 />
@@ -141,8 +141,8 @@
 {#if !$gameState.dev.camera}
     <T.OrthographicCamera name="main camera"
         makeDefault
-        position={[playerState.position.x+9,playerState.position.y+10,playerState.position.z+9]}    
-        on:create={({ ref }) => { ref.lookAt(playerState.position.x+8,playerState.position.y+9,playerState.position.z+8) }}
+        position={[playerState.position.x+9,10,playerState.position.z+9]}    
+        on:create={({ ref }) => { ref.lookAt(playerState.position.x+8,9,playerState.position.z+8) }}
         zoom={80}
     />
 {/if}
@@ -155,7 +155,7 @@
     shadow.camera.right={8}
     shadow.camera.left={-14}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x+9,playerState.position.y+10,playerState.position.z+10]} 
+    position={[playerState.position.x+9,10,playerState.position.z+10]} 
     target={lightTarget} 
 />
 
@@ -163,7 +163,7 @@
     bind:ref={lightTarget}
     visible={false}   
     scale={[1,1,1]}
-    position={[playerState.position.x+8,playerState.position.y+8,playerState.position.z+8]}>
+    position={[playerState.position.x+8,8,playerState.position.z+8]}>
 </T.Mesh>
     
 
@@ -171,7 +171,7 @@
     receiveShadow
     visible={false}
     scale={[1,1,1]}
-    position={[playerState.position.x, playerState.position.y, playerState.position.z]}
+    position={[playerState.position.x, 0, playerState.position.z]}
 >
     <T.BoxGeometry args={[1, 0.1, 1]} />
     <T.MeshStandardMaterial color="#9932CC" />

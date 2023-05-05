@@ -26,7 +26,7 @@
 	})
 	$: tweenedProgress.set($progress)
 
-    $ : console.log($item)
+    //$ : console.log($item)
 
     $ : fadeInMessage($gameMessage);
 
@@ -116,7 +116,7 @@
             </div>
         {/if}
         {#if messageVisible}
-            <div in:fade={{duration: 100 }} out:fade={{duration: 500 }}  class="absolute text-center w-full top-16" >
+            <div in:fade={{duration: 100 }} out:fade={{duration: 500 }}  class="absolute text-center w-full top-12" >
                 <div class="inline-block text-neutral-900 bg-neutral-300 rounded-md px-3 py-2 select-none m-2">
                     <h3>{$gameMessage}</h3>
                 </div>
@@ -136,7 +136,6 @@
         <p>Player position:</p>
         <p>
             x: {$gamePosition.x.toFixed(3)}<br/>
-            y: {$gamePosition.y.toFixed(3)}<br/>
             z: {$gamePosition.z.toFixed(3)}
         </p>
         <p>

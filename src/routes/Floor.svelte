@@ -9,11 +9,13 @@
 
     export let levelSize = { x: 100, z: 100 };
     export let avoidArray :  Array<{ x: number, z: number }> = [];
-    export let startingPosition = { x:0, y:0 , z:0 }
-    export let startingRotation = { x:0, y:0 , z:0 };
+    export let startingPosition = { x:0, z:0 }
+    export let startingRotation = { x:0, z:0 };
+
+    let next = $gameState.nextScenePosition;
 
     let playerState : PlayerState = { 
-        position: startingPosition, 
+        position: (next.x===0&&next.z===0) ? startingPosition : next, 
         rotation: startingRotation , 
         annimation : 'idle',
         path: [],

@@ -12,7 +12,7 @@
   @apply cursor-default;
 }
 
-a, button {
+a, button, .cursorHover {
   @apply cursor-pointer;
 }
 

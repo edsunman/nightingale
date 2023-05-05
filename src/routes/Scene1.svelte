@@ -2,13 +2,14 @@
     import { gameMessage, gamePosition, gameScene } from '$lib/stores';
     import { T, useFrame } from '@threlte/core';
 	import { spring } from 'svelte/motion';
-    import { useTexture, GLTF } from '@threlte/extras'
+    import { useTexture } from '@threlte/extras'
+	import { RepeatWrapping, sRGBEncoding } from 'three';
+	
     import Floor from './Floor.svelte';
     import Character from '../objects/Character.svelte';
     import Rock from '../objects/Rock.svelte';
     import Door from '../objects/Door.svelte';
-	import { Texture, RepeatWrapping, ShaderMaterial, ImageUtils, TextureLoader, UniformsUtils, UniformsLib, ShaderChunk, sRGBEncoding } from 'three';
-	import Page from './+page.svelte';
+    import Ship from '../objects/Ship.svelte';
 
     let scale =  spring(1)
 
@@ -25,12 +26,12 @@
         // console.log(blue)
     })
 
-
+    //injectPlugin(itemsPlugin)
 
 
 </script>  
 
-<Floor avoidArray={avoidArray} startingPosition={{x: 4, y: 0, z: 4}} startingRotation={{x: 4, y:0, z:5}} />
+<Floor avoidArray={avoidArray} startingPosition={{x: 14, z:-1}} startingRotation={{x: 14, z:2}} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[128, 0.01, 128]}   />
@@ -50,11 +51,17 @@
     {/await}
 </T.Mesh>
 
-<Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2}/>
+
+<Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2} message="A door" />
+
+<Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
+
 
 <Rock position={[-1,0,1]}  scale={0.4}/>
 
 <Rock position={[-1.5,0,1]} rotation.x={-1.5708} rotation.z={1.6} scale={0.6}/>
+
+<Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
 
 
 <!--

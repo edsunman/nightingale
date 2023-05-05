@@ -3,6 +3,7 @@
     import { T, useFrame } from '@threlte/core';
     import { useGltf, useGltfAnimations } from '@threlte/extras';
     import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three';
+    import { useCursor } from "$lib/useCursor";
 
     export const ref = new Group();
     export let position = { x: 1, y:0 , z:1};
@@ -12,9 +13,10 @@
     export let characterId : number;
     export let message : string;
 
-
+    
     const gltf = useGltf(url, { useDraco: true });
     export const { actions, mixer } = useGltfAnimations(gltf, ref);
+    const { onPointerEnter, onPointerLeave } = useCursor();
 
     let currentActionKey = "idle";
     let rotation = 2;
@@ -115,7 +117,10 @@
 
   <slot {ref} />
 </T>
-<T.Mesh position={[position.x,position.y+0.75,position.z]} name="collision box" visible={false}
+<T.Mesh name="collision box" visible={false}
+    position={[position.x,position.y+0.75,position.z]} 
+    on:pointerenter={onPointerEnter} 
+    on:pointerleave={onPointerLeave}
     on:click={(e) => {e.stopPropagation();clicked(e);}}  >
     <T.BoxGeometry args={[0.5, 1.5, 0.5]} />
     <T.MeshStandardMaterial color="hotpink" />

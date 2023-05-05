@@ -8,7 +8,7 @@ export const gameState = writable({
         grid : false,
         avoidObjactsVisible: false
     },
-    scene : 2,
+    nextScenePosition: {x: 0, z: 0},
     moveLock : false,
     inventory : {
         open : false,
@@ -19,17 +19,10 @@ export const gameState = writable({
         open : false,
         lowerRes : false
     }
-    
-
-
 })
 
-export const gamePosition = writable({x:0,y:0,z:0});
-
+export const gamePosition = writable({x:0,z:0});
 export const gameSelectedCharacterPosition = writable({x:0,y:0,z:0});
-
 export const gameMessage = writable('');
-
 export const gameConversation = writable([0,0]);
-
 export const gameScene = writable(1);
