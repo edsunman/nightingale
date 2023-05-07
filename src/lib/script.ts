@@ -65,4 +65,4 @@ export const script = [
                 text: "Right-o"
             }]
         }]
-    }];
+    }]

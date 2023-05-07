@@ -1,56 +1,17 @@
 import { onDestroy } from 'svelte'
-import { get, writable, type Writable } from 'svelte/store'
+import { writable, type Writable } from 'svelte/store'
 import { useThrelte } from '@threlte/core'
-import type { LiteralUnion } from 'type-fest'
 
-type Cursor = LiteralUnion<
-    | 'alias'
-    | 'all-scroll'
-    | 'auto'
-    | 'cell'
-    | 'context-menu'
-    | 'col-resize'
-    | 'copy'
-    | 'crosshair'
-    | 'default'
-    | 'e-resize'
-    | 'ew-resize'
-    | 'grab'
-    | 'grabbing'
-    | 'help'
-    | 'move'
-    | 'n-resize'
-    | 'ne-resize'
-    | 'nesw-resize'
-    | 'ns-resize'
-    | 'nw-resize'
-    | 'nwse-resize'
-    | 'no-drop'
-    | 'none'
-    | 'not-allowed'
-    | 'pointer'
-    | 'progress'
-    | 'row-resize'
-    | 's-resize'
-    | 'se-resize'
-    | 'sw-resize'
-    | 'text'
-    | 'w-resize'
-    | 'wait'
-    | 'zoom-in'
-    | 'zoom-out',
-    string
->
 
 export const useCursor = (
-    onPointerOver: Cursor | Writable<Cursor> = 'pointer',
-    onPointerOut: Cursor | Writable<Cursor> = 'auto'
+   // onPointerOver: Cursor | Writable<Cursor> = 'pointer',
+   // onPointerOut: Cursor | Writable<Cursor> = 'auto'
 ): {
     onPointerEnter: () => void
     onPointerLeave: () => void
     hovering: Writable<boolean>
 } => {
-    let hovering = false
+   // let hovering = false
     const hoveringStore = writable(false)
 
     const onPointerEnter = () => {
@@ -73,14 +34,14 @@ export const useCursor = (
     const rootCtx = useThrelte()
     if (rootCtx && rootCtx.renderer) el = rootCtx.renderer.domElement
 
-    let onPointerOverValue = typeof onPointerOver === 'string' ? onPointerOver : get(onPointerOver)
+   /* let onPointerOverValue = typeof onPointerOver === 'string' ? onPointerOver : get(onPointerOver)
     if (typeof onPointerOver !== 'string') {
         const unsubscribeOnPointerOver = onPointerOver.subscribe((cursorStyle) => {
-        onPointerOverValue = cursorStyle
-        if (hovering) {
-        // el.style.cursor = cursorStyle
-            el.classList.add("cursorHover")
-        }
+           // onPointerOverValue = cursorStyle
+            if (hovering) {
+            // el.style.cursor = cursorStyle
+                el.classList.add("cursorHover")
+            }
         })
         onDestroy(unsubscribeOnPointerOver)
     }
@@ -95,10 +56,10 @@ export const useCursor = (
         }
         })
         onDestroy(unsubscribeOnPointerOut)
-    }
+    }*/
 
     const unsubscribeHovering = hoveringStore.subscribe((isHovering) => {
-        hovering = isHovering
+        //hovering = isHovering
         if (isHovering) {
         // el.style.cursor = onPointerOverValue
         el.classList.add("cursorHover")

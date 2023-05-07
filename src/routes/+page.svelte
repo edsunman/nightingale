@@ -32,9 +32,9 @@
 
     function fadeInMessage(m : string) {
         if($gameMessage) {
-            messageVisible = true;
+            messageVisible = true
             setTimeout(function() {
-                messageVisible = false;
+                messageVisible = false
                 $gameMessage = ''
             }, 3500)
         }
@@ -43,19 +43,12 @@
     $ : updateDialogue($gameConversation);
 
     function updateDialogue(g : any){
-
         showDialogueOptions = false;
-        
         if (g[0]!==0) {
-
             $gameState.moveLock = true;
-
             if(script[g[0]-1].speech.find(x => x.id === g[1])?.options) {
-                
                 setTimeout(() => {showDialogueOptions = true}, 1500);
-                
             }  else {
-                
                 const nextLine = g[1]+0.1;
                 setTimeout(() => {$gameConversation = [g[0],nextLine]}, 2000)
             }
@@ -65,7 +58,6 @@
     $ : checkLoaded($progress);
 
     function checkLoaded(p : number){
-
         if(p === 1){
             gameLoaded = true;
         }
@@ -74,14 +66,10 @@
     $ : loadScene($gameScene)
 
     function loadScene(id: number){
-
         gameLoaded = false;
         setTimeout(() => (selectedScene = id), 300);
         setTimeout(() => checkLoaded($progress), 600)
-        
     }
-
-
 
 </script>
 

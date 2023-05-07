@@ -23,13 +23,11 @@ Command: npx @threlte/gltf@1.0.0-next.12 ship.glb --transform
 
 </script>
 
-<T is={ref} dispose={false} {...$$restProps} bind:this={$component}  on:click={(e) => {e.stopPropagation(); clicked(e)}}  >
+<T is={ref} dispose={false} {...$$restProps} bind:this={$component} >
   {#await gltf}
     <slot name="fallback" />
   {:then gltf}
     <T.Mesh
-        on:pointerenter={onPointerEnter} 
-        on:pointerleave={onPointerLeave}
         castShadow
         geometry={gltf.nodes.Striker.geometry}
         material={gltf.materials['Texture.002']}
@@ -39,4 +37,12 @@ Command: npx @threlte/gltf@1.0.0-next.12 ship.glb --transform
   {/await}
 
   <slot {ref} />
+
+  <T.Mesh name="collision box" visible={false}
+    on:pointerenter={onPointerEnter} 
+    on:pointerleave={onPointerLeave}
+    on:click={(e) => {e.stopPropagation();clicked(e);}}  >
+    <T.BoxGeometry args={[4, 1, 3]} />
+    <T.MeshStandardMaterial color="hotpink" />
+</T.Mesh>
 </T>

@@ -23,7 +23,7 @@
   <T.BoxGeometry  args={[128, 0.01, 128]}   />
    {#await useTexture('/desert-tile.png') then texture}
         <T.MeshLambertMaterial >
-            <T is={texture} attach="map" repeat={6} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
+            <T is={texture} attach="map" repeat={12} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
         </T.MeshLambertMaterial>
     {/await}
 </T.Mesh>
