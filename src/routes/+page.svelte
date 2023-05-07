@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import { gameState, gameMessage, gamePosition, gameConversation, gameScene } from '$lib/stores';
-    import { Canvas } from '@threlte/core';
+    import { Canvas, useThrelte } from '@threlte/core';
     import { fade } from 'svelte/transition';
     import Game from './Game.svelte';
 	import DialogueOptions from '../components/DialogueOptions.svelte';
@@ -12,21 +12,16 @@
     import { useProgress } from '@threlte/extras';
     import { tweened } from 'svelte/motion';
     
-
     let clientWidth, clientHeight;
     let showDialogueOptions = false;
     let messageVisible = false;
     let gameLoaded = false;
-    let selectedScene = 2;
+    let selectedScene : number = $gameScene;
+    let sceneFinishedLoading = false;
 
     const { progress,  item } = useProgress()
 
-    const tweenedProgress = tweened($progress, {
-		duration: 200
-	})
-	$: tweenedProgress.set($progress)
-
-    //$ : console.log($item)
+    $ : console.log($item)
 
     $ : fadeInMessage($gameMessage);
 
@@ -55,20 +50,25 @@
         }
     }
 
-    $ : checkLoaded($progress);
+    $ : checkLoaded($progress)
 
     function checkLoaded(p : number){
         if(p === 1){
-            gameLoaded = true;
+            gameLoaded = true
+            sceneFinishedLoading = true
         }
     }
 
     $ : loadScene($gameScene)
 
     function loadScene(id: number){
-        gameLoaded = false;
-        setTimeout(() => (selectedScene = id), 300);
-        setTimeout(() => checkLoaded($progress), 600)
+       // show black screen
+        gameLoaded = false
+        sceneFinishedLoading = false
+        // then load scene so any slight lag is hidden
+        setTimeout(() => (selectedScene = id), 50)
+        // are we already loaded? then remove black screen
+        setTimeout(() => checkLoaded($progress), 500)
     }
 
 </script>
@@ -77,7 +77,7 @@
     bind:clientWidth={clientWidth} bind:clientHeight={clientHeight} >
 
         {#if !gameLoaded}
-            <div in:fade={{ duration: 300 }} out:fade={{ duration: 300, delay : 300 }}  class="w-full h-full bg-neutral-950 z-10 absolute text-white">
+            <div class="w-full h-full bg-neutral-950 z-10 absolute text-white">
                 {#if $progress < 1}
                     <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700"  out:fade={{ duration: 100 }}>
                         <div class="bg-white h-full" style="width: {$progress * 100}%" ></div>
@@ -112,7 +112,7 @@
         {/if}
 
     <Canvas>
-        <Game selectedScene={selectedScene} />       
+        <Game selectedScene={selectedScene} {sceneFinishedLoading} />       
     </Canvas>
 
 </div>

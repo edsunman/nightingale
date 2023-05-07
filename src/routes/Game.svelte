@@ -5,18 +5,21 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte  } from '@threlte/core'
     import { onMount } from 'svelte'
-    import { interactivity, OrbitControls, HTML  } from '@threlte/extras'
+    import { interactivity, OrbitControls, HTML, useProgress  } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
 
     interactivity()
 
-    export let selectedScene = 1
+    export let selectedScene : number
+    export let sceneFinishedLoading : boolean
 
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
 
     //renderer?.setPixelRatio(2);
     //console.log(renderer?.getPixelRatio())
+
+    //console.log(renderer)
 
     let dialogueHeight = 0;
     $ : nudgeDialogue($gameSelectedCharacterPosition)
@@ -28,6 +31,15 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
         }
     }
 
+    $ : compileScene(sceneFinishedLoading)
+
+    function compileScene(s : boolean){
+        if(s){
+            // compile shaders when scene is loaded
+            renderer?.compile(scene,$camera)
+        }
+    }
+    
     useFrame(() => {
         stats.update()
     })
