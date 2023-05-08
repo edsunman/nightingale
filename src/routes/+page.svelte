@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { gameState, gameMessage, gamePosition, gameConversation, gameScene } from '$lib/stores';
+    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameVolume } from '$lib/stores';
     import { Canvas, useThrelte } from '@threlte/core';
     import { fade } from 'svelte/transition';
     import Game from './Game.svelte';
@@ -11,7 +11,7 @@
 	import Settings from '../components/Settings.svelte';
     import { useProgress } from '@threlte/extras';
     import { tweened } from 'svelte/motion';
-    
+
     let clientWidth, clientHeight;
     let showDialogueOptions = false;
     let messageVisible = false;
@@ -21,7 +21,7 @@
 
     const { progress,  item } = useProgress()
 
-    $ : console.log($item)
+    // $ : console.log($item)
 
     $ : fadeInMessage($gameMessage);
 
@@ -135,5 +135,9 @@
         <p>Load scene:</p>
         <button on:click={() => { $gameScene = 1}}>1</button><br/>
         <button on:click={() => { $gameScene = 2}}>2</button>
+        <p>
+            Volume:<br/>
+            <input type="range" min=0 max=1 step=0.1 bind:value={$gameVolume}  />
+        </p>
     </div>
  {/if}

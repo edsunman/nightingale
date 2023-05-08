@@ -1,6 +1,6 @@
 <script lang="ts">
     import { gameState, gamePosition, gameSelectedCharacterPosition } from '$lib/stores'
-	import { GLTF, useGltfAnimations } from '@threlte/extras'
+	import { GLTF, useGltfAnimations, Audio } from '@threlte/extras'
     import { T, useFrame } from '@threlte/core'
     import { Vector3, Matrix4, Euler, Quaternion } from 'three'
 
@@ -12,11 +12,19 @@
 	let currentActionKey = playerState.annimation
     let lightTarget : any
     let movementVector = new Vector3()
+    let runAudio : any
+    let audioSrc : string
 
     const rotationMatrix = new Matrix4().lookAt(
         new Vector3(playerState.rotation.x,0,playerState.rotation.z ),
         new Vector3(playerState.position.x,0,playerState.position.z ),new Vector3(0,1,0))
     const endRotation = new Quaternion().setFromRotationMatrix( rotationMatrix )
+
+    if (playerState.floorType==="stone"){
+        audioSrc = '/run-stone.mp3'
+    } else {
+        audioSrc = '/run-sand.mp3'
+    }
 
 
     $: $actions[playerState.annimation]?.play();
@@ -72,7 +80,8 @@
                     const pv = new Vector3(p.x,0,p.z)     
                     rotationMatrix.lookAt(v,pv,new Vector3(0,1,0))     
 				    endRotation.setFromRotationMatrix( rotationMatrix )
-                    movementVector = v.sub(pv).normalize()         
+                    movementVector = v.sub(pv).normalize()
+                    runAudio.play()
                 }
                 playerState.settingOff = false
                 if(delta<0.5){ // check for one off spikes caused by switching tabs etc
@@ -80,10 +89,12 @@
                     playerState.position.z = p.z+ modifier.z*delta*4
                 }
                 transitionTo('run')
+                
             }
         } else {
             if(!playerState.arrived) {
                 transitionTo('idle')
+                runAudio.stop()
             }
             playerState.arrived = true
         }
@@ -111,7 +122,9 @@
         position={[playerState.position.x+9,10,playerState.position.z+9]}    
         on:create={({ ref }) => { ref.lookAt(playerState.position.x+8,9,playerState.position.z+8) }}
         zoom={80}
-    />
+    >
+       
+    </T.OrthographicCamera>
 {/if}
 
 <T.DirectionalLight name="sun"
@@ -143,4 +156,6 @@
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
 
+
+<Audio src={audioSrc} bind:ref={runAudio}  on:create={({ ref })=>{}} autoplay={false} loop={true} volume={0.1}/>
 

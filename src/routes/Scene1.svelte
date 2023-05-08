@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { T, useFrame } from '@threlte/core'
-	import { spring } from 'svelte/motion'
+    import { T } from '@threlte/core'
     import { useTexture } from '@threlte/extras'
 	import { RepeatWrapping, sRGBEncoding } from 'three'
+    import { Audio } from '@threlte/extras'
 	
     import Floor from './Floor.svelte';
     import Character from '../objects/Character.svelte'
@@ -61,5 +61,7 @@
 -->
 <T.AmbientLight  intensity={0.1} />
 
+
+<Audio src={'/wind2.mp3'}  on:create={({ ref })=>{}} autoplay={true} loop={true} volume={1}/>
 
 

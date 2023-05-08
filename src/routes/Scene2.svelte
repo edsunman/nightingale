@@ -8,7 +8,13 @@
 
 </script>  
 
-<Floor levelSize={{x:20,z:10}} avoidArray={avoidArray} startingPosition={{x: 9, z:1}} startingRotation={{x: 0, z:1}}  />
+<Floor
+    levelSize={{x:20,z:10}}
+    avoidArray={avoidArray}
+    startingPosition={{x: 9, z:1}}
+    startingRotation={{x: 0, z:1}}
+    floorType="stone"
+/>
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[20, 0.01, 10]}   />
@@ -18,5 +24,7 @@
 <T.AmbientLight  intensity={0.2} />
 
 <Door position={[10.5,1,1]} rotation.y={1.57} activeSquare={{x:10,z:1}} scene={1} nextScenePosition={{x:-5,z:3}}/>
+
+
 
 

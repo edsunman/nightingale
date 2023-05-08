@@ -1,17 +1,18 @@
 <script lang="ts">
-import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition } from '$lib/stores'
+import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition, gameVolume } from '$lib/stores'
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte  } from '@threlte/core'
     import { onMount } from 'svelte'
-    import { interactivity, OrbitControls, HTML, useProgress  } from '@threlte/extras'
+    import { interactivity, OrbitControls, HTML, useProgress, AudioListener  } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
 
     interactivity()
 
     export let selectedScene : number
     export let sceneFinishedLoading : boolean
+    let audio : any
 
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
@@ -31,12 +32,17 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
         }
     }
 
+ 
+
     $ : compileScene(sceneFinishedLoading)
 
     function compileScene(s : boolean){
         if(s){
             // compile shaders when scene is loaded
             renderer?.compile(scene,$camera)
+
+             audio.context.resume()
+             console.log(audio)
         }
     }
     
@@ -50,11 +56,15 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
 
 </script>
 
+ <AudioListener  bind:ref={audio} masterVolume={$gameVolume} on:create={({ ref }) => { console.log(ref) }} />
+
 {#if selectedScene === 1}
     <Scene1 />
 {:else if selectedScene === 2}
     <Scene2 />
 {/if}
+
+
 
 {#if $gameConversation[0]!==0}
     <HTML position={[$gameSelectedCharacterPosition.x,dialogueHeight,$gameSelectedCharacterPosition.z]} center>

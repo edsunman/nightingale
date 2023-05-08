@@ -6,5 +6,6 @@ export type PlayerState = {
         annimation : string,
         path : Array<{ x: number, z: number }>,
         arrived: boolean,
-        settingOff: boolean
+        settingOff: boolean,
+        floorType : string
     }

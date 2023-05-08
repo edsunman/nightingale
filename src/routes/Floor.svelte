@@ -11,6 +11,7 @@
     export let avoidArray :  Array<{ x: number, z: number }> = []
     export let startingPosition = { x:0, z:0 }
     export let startingRotation = { x:0, z:0 }
+    export let floorType = "sand"
 
     let next = $gameState.nextScenePosition
     let playerState : PlayerState = { 
@@ -19,7 +20,8 @@
         annimation : 'idle',
         path: [],
         arrived:false,
-        settingOff:true
+        settingOff:true,
+        floorType : floorType
     }
 
     let direction = new Vector3()
