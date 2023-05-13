@@ -1,5 +1,11 @@
 <script lang="ts">
-import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition, gameVolume } from '$lib/stores'
+    import {
+        gameState,
+        gameConversation,
+        gameSelectedCharacterPosition,
+        gamePosition,
+        gameVolume,
+        gamePixelRatio } from '$lib/stores'
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Stats from 'three/examples/jsm/libs/stats.module'
@@ -13,14 +19,21 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
     export let selectedScene : number
     export let sceneFinishedLoading : boolean
     let audio : any
-
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
+    const defaultPixelRatio = renderer?.getPixelRatio()
 
-    //renderer?.setPixelRatio(2);
-    //console.log(renderer?.getPixelRatio())
+    $ : changePixelRatio($gamePixelRatio)
 
-    //console.log(renderer)
+    function changePixelRatio(p : number){
+        if (p>0) {
+            renderer?.setPixelRatio(p)
+           // console.log('set to :'+p)
+        } else {
+            renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
+            //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)
+        }
+    }
 
     let dialogueHeight = 0;
     $ : nudgeDialogue($gameSelectedCharacterPosition)
@@ -32,17 +45,14 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
         }
     }
 
- 
-
     $ : compileScene(sceneFinishedLoading)
 
     function compileScene(s : boolean){
         if(s){
             // compile shaders when scene is loaded
             renderer?.compile(scene,$camera)
-
-             audio.context.resume()
-             console.log(audio)
+            //console.log('shader compile')
+            audio.context.resume()
         }
     }
     
@@ -56,7 +66,7 @@ import { gameState, gameConversation, gameSelectedCharacterPosition, gamePositio
 
 </script>
 
- <AudioListener  bind:ref={audio} masterVolume={$gameVolume} on:create={({ ref }) => { console.log(ref) }} />
+ <AudioListener  bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x+2, 3, $gamePosition.z+2]}  />
 
 {#if selectedScene === 1}
     <Scene1 />

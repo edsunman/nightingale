@@ -3,16 +3,24 @@
     import { T, useFrame } from '@threlte/core'
     import Floor from './Floor.svelte'
     import Door from '../objects/Door.svelte'
+    import { PositionalAudio } from '@threlte/extras'
+	import { onMount } from 'svelte';
 
     const avoidArray :  Array<{ x: number, z: number }> = []
+
+    let audio : any
+
+    onMount(()=>{
+        //console.log(audio)
+    })
 
 </script>  
 
 <Floor
-    levelSize={{x:20,z:10}}
+    levelSize={{x:200,z:100}}
     avoidArray={avoidArray}
     startingPosition={{x: 9, z:1}}
-    startingRotation={{x: 0, z:1}}
+    startingRotation={{x: 0, z:0}}
     floorType="stone"
 />
 
@@ -25,6 +33,14 @@
 
 <Door position={[10.5,1,1]} rotation.y={1.57} activeSquare={{x:10,z:1}} scene={1} nextScenePosition={{x:-5,z:3}}/>
 
-
+ <PositionalAudio
+    autoplay
+    loop
+    refDistance={3}
+    volume={0.1}
+    src={'/music.mp3'}
+    position={[0,0,0]}
+    bind:ref={audio}
+/>
 
 

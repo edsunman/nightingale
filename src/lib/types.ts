@@ -7,5 +7,6 @@ export type PlayerState = {
         path : Array<{ x: number, z: number }>,
         arrived: boolean,
         settingOff: boolean,
-        floorType : string
+        floorType : string,
+        running : boolean
     }

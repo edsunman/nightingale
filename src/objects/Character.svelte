@@ -10,17 +10,17 @@
     export let url : string
     export let characterId : number
     export let message : string
+    export let rotation = 0
 
     const gltf = useGltf(url, { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
     const { onPointerEnter, onPointerLeave } = useCursor()
 
     let currentActionKey = "idle"
-    let rotation = 2
     let armature : any
     let spinning = false
 
-    const endRotation = new Quaternion().setFromEuler( new Euler( 0, 0, 0 ) )
+    const endRotation = new Quaternion().setFromEuler( new Euler( 0, rotation, 0 ) )
     const rotationMatrix = new Matrix4()
     const currentPosition = new Vector3(position.x,0,position.z)
 
@@ -38,16 +38,22 @@
         currentActionKey = nextActionKey
     }
 
+    $ : rotateBack($gameConversation)
+
+    function rotateBack(gc : any){
+        if(gc[0] === 0){
+            endRotation.setFromEuler( new Euler( 0, rotation, 0 ) )
+        }
+    }
+
     useFrame((state, delta) => {
         if ($gltf){
-            armature.quaternion.rotateTowards( endRotation, delta*10 )
+            armature.quaternion.rotateTowards( endRotation, delta*20 )
             if (endRotation.equals(armature.quaternion)&&spinning) {
                 transitionTo("idle")
                 spinning = false;
             }
         }
-
-        rotation += delta
     })
 
     function clicked(e : any){
@@ -59,7 +65,7 @@
                 endRotation.setFromRotationMatrix( rotationMatrix )
                 if(!endRotation.equals(armature.quaternion)){
                     spinning = true
-                    transitionTo("walk")
+                    //transitionTo("walk")
                 }
                 $gameSelectedCharacterPosition = position
                 $gameConversation = [characterId,1]

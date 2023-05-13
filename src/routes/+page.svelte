@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameVolume } from '$lib/stores';
+    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition } from '$lib/stores';
     import { Canvas, useThrelte } from '@threlte/core';
     import { fade } from 'svelte/transition';
     import Game from './Game.svelte';
@@ -65,6 +65,7 @@
        // show black screen
         gameLoaded = false
         sceneFinishedLoading = false
+        $gameSelectedCharacterPosition = {x:0,y:0,z:0}
         // then load scene so any slight lag is hidden
         setTimeout(() => (selectedScene = id), 50)
         // are we already loaded? then remove black screen
@@ -135,9 +136,6 @@
         <p>Load scene:</p>
         <button on:click={() => { $gameScene = 1}}>1</button><br/>
         <button on:click={() => { $gameScene = 2}}>2</button>
-        <p>
-            Volume:<br/>
-            <input type="range" min=0 max=1 step=0.1 bind:value={$gameVolume}  />
-        </p>
+
     </div>
  {/if}

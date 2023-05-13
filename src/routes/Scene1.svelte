@@ -13,7 +13,7 @@
     const wrap = RepeatWrapping
 
     const avoidArray :  Array<{ x: number, z: number }> =
-        [{x: 1, z:1 },{x: 5, z:1 }]
+        [{x: -9, z:-13 },{x: 8, z:-1 }]
 
 </script>  
 
@@ -44,17 +44,18 @@
 <Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
 
 <Character
-    message="A blue character"
-    position={{ x: 1, y:0 , z:1}}
+    message="A large man guards the door"
+    position={{ x: -9, y:0 , z:-13}}
     url={'/blue-transformed.glb'}
     characterId={2}
 />
 
 <Character 
-    message="A purple character"
-    position={{ x: 5, y:0 , z:1}}
+    message="A hologram flickers through the dust"
+    position={{ x: 8, y:0 , z:-1}}
     url={'/purple-transformed.glb'}
     characterId={1}
+    rotation={1.5708}
 />
 <!--
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
@@ -62,6 +63,6 @@
 <T.AmbientLight  intensity={0.1} />
 
 
-<Audio src={'/wind2.mp3'}  on:create={({ ref })=>{}} autoplay={true} loop={true} volume={1}/>
+<Audio src={'/wind.ogg'}  on:create={({ ref })=>{}} autoplay={true} loop={true} volume={1}/>
 
 

@@ -21,7 +21,8 @@
         path: [],
         arrived:false,
         settingOff:true,
-        floorType : floorType
+        floorType : floorType,
+        running : false
     }
 
     let direction = new Vector3()
