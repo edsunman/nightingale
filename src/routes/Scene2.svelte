@@ -5,6 +5,7 @@
     import Door from '../objects/Door.svelte'
     import { PositionalAudio } from '@threlte/extras'
 	import { onMount } from 'svelte';
+	import Item from '../objects/Item.svelte';
 
     const avoidArray :  Array<{ x: number, z: number }> = []
 
@@ -17,7 +18,7 @@
 </script>  
 
 <Floor
-    levelSize={{x:200,z:100}}
+    levelSize={{x:20,z:10}}
     avoidArray={avoidArray}
     startingPosition={{x: 9, z:1}}
     startingRotation={{x: 0, z:0}}
@@ -32,6 +33,8 @@
 <T.AmbientLight  intensity={0.2} />
 
 <Door position={[10.5,1,1]} rotation.y={1.57} activeSquare={{x:10,z:1}} scene={1} nextScenePosition={{x:-5,z:3}}/>
+
+<Item id={1} position={{x:5,y:0.5,z:5}}/>
 
  <PositionalAudio
     autoplay

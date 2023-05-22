@@ -10,3 +10,16 @@ export type PlayerState = {
         floorType : string,
         running : boolean
     }
+
+export type Script = Array<{
+    name: string,
+    speech :Array<{
+        id: number,
+        text: string,
+        options?: Array<{
+            text: string,
+            linkId? : number,
+            item?: number
+        }>
+    }>,
+}>

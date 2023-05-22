@@ -2,8 +2,15 @@
 
     import { gameState, gamePixelRatio, gameVolume } from "$lib/stores"
 
+    function onKeyDown(e : any){
+        if(e.keyCode==27) {
+            toggleSettings()
+        }
+    }
+
     function toggleSettings(){
-        if(!$gameState.inventory.open && !$gameState.moveLock){
+        if(!$gameState.moveLock){
+            $gameState.inventory.open = false
             $gameState.settings.open = !$gameState.settings.open
         }
     }
@@ -11,28 +18,31 @@
 </script>
 
 {#if $gameState.settings.open}
-    <div class="absolute bottom-0 mb-16 text-neutral-100 bg-neutral-950 rounded-md px-3 py-2 select-none m-2">
-        <p>
-            Resolution<br/>
-            <select>
-                <option value=0 >Default</option>
-                <option value=1 >Force Low</option>
-                <option value=2 >Force High</option>
+    <div class="absolute w-80 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 bg-neutral-950 rounded-md px-8 py-6 select-none m-2 z-20">
+        <h3 class="text-2xl text-center mb-4">settings</h3>
+        <p class="my-3">
+            resolution<br/>
+            <select class="my-3 p-2 border-neutral-800 border-2 text-neutral-100 bg-neutral-950 w-full">
+                <option value=0 >default</option>
+                <option value=1 >low</option>
+                <option value=2 >high</option>
             </select>
         </p>
-        <p>
-            Volume<br/>
-            <input type="range" min=0 max=1 step=0.1 bind:value={$gameVolume}  />
+        <p class="my-3">
+            volume<br/>
+            <input class="my-3 w-full" type="range" min=0 max=1 step=0.1 bind:value={$gameVolume}  />
         </p>
         
     </div>
+     <div class="w-full h-full bg-black opacity-50 z-10 absolute" on:click={() => toggleSettings()} on:keydown={() => toggleSettings()}></div>
 {/if}
 
 
 <div class="absolute bottom-0">
     <button on:click={() => toggleSettings()} class="
-        {!$gameState.inventory.open && !$gameState.moveLock ? 'text-neutral-100' : 'text-neutral-600 pointer-events-none'}
+        {!$gameState.settings.open && !$gameState.moveLock ? 'text-neutral-100' : 'text-neutral-600 pointer-events-none'}
          bg-neutral-950 rounded-md px-3 py-2 select-none m-2" >
         settings
     </button>
 </div>
+<svelte:window on:keyup|preventDefault={onKeyDown} />

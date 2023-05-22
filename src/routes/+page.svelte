@@ -1,23 +1,23 @@
 <script lang="ts">
 
-    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition } from '$lib/stores';
-    import { Canvas, useThrelte } from '@threlte/core';
-    import { fade } from 'svelte/transition';
-    import Game from './Game.svelte';
-	import DialogueOptions from '../components/DialogueOptions.svelte';
-	import Dialogue from '../components/Dialogue.svelte';
-    import Inventory from '../components/Inventory.svelte';
-    import { script } from '$lib/script';
-	import Settings from '../components/Settings.svelte';
-    import { useProgress } from '@threlte/extras';
-    import { tweened } from 'svelte/motion';
+    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition } from '$lib/stores'
+    import { Canvas, useThrelte } from '@threlte/core'
+    import { fade } from 'svelte/transition'
+    import Game from './Game.svelte'
+	import DialogueOptions from '../components/DialogueOptions.svelte'
+	import Dialogue from '../components/Dialogue.svelte'
+    import Inventory from '../components/Inventory.svelte'
+    import ItemDescription from '../components/ItemDescription.svelte'
+    import { script } from '$lib/script'
+	import Settings from '../components/Settings.svelte'
+    import { useProgress } from '@threlte/extras'
 
-    let clientWidth, clientHeight;
-    let showDialogueOptions = false;
-    let messageVisible = false;
-    let gameLoaded = false;
-    let selectedScene : number = $gameScene;
-    let sceneFinishedLoading = false;
+    let clientWidth, clientHeight
+    let showDialogueOptions = false
+    let messageVisible = false
+    let gameLoaded = false
+    let selectedScene : number = $gameScene
+    let sceneFinishedLoading = false
 
     const { progress,  item } = useProgress()
 
@@ -89,7 +89,7 @@
         {/if}
         <Settings />
         <Inventory />
-        
+        <ItemDescription />
         {#if showDialogueOptions}
             <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
                 <div class="inline-block text-neutral-100 bg-neutral-950 rounded-md p-3 m-3 ">
