@@ -1,41 +1,41 @@
 <script lang="ts">
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume } from '$lib/stores'
-	import { GLTF, useGltfAnimations, Audio } from '@threlte/extras'
+    import { GLTF, useGltfAnimations, Audio } from '@threlte/extras'
     import { T, useFrame } from '@threlte/core'
     import { Vector3, Matrix4, Euler, Quaternion } from 'three'
 
     import type { PlayerState } from '$lib/types'
 
-    export let playerState : PlayerState
+    export let playerState: PlayerState
     let { gltf, actions } = useGltfAnimations()
 
-	let currentActionKey = playerState.annimation
-    let lightTarget : any
+    let currentActionKey = playerState.annimation
+    let lightTarget: any
     let movementVector = new Vector3()
-    let runAudio : any
-    let audioSrc : string
-    let footstepInterval : number
+    let runAudio: any
+    let audioSrc: string
+    let footstepInterval: number
     let footstepVolume = 0.2
 
     const rotationMatrix = new Matrix4().lookAt(
-        new Vector3(playerState.rotation.x,0,playerState.rotation.z ),
-        new Vector3(playerState.position.x,0,playerState.position.z ),new Vector3(0,1,0))
-    const endRotation = new Quaternion().setFromRotationMatrix( rotationMatrix )
+        new Vector3(playerState.rotation.x, 0, playerState.rotation.z),
+        new Vector3(playerState.position.x, 0, playerState.position.z),
+        new Vector3(0, 1, 0)
+    )
+    const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
 
-    if (playerState.floorType==="stone"){
+    if (playerState.floorType === 'stone') {
         audioSrc = '/footstep-stone.mp3'
     } else {
         audioSrc = '/footstep-sand.mp3'
     }
 
-
-    $: $actions[playerState.annimation]?.play();
+    $: $actions[playerState.annimation]?.play()
 
     $: rotateTowards($gameSelectedCharacterPosition)
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
-
-        const currentAction = $actions[currentActionKey]  
+        const currentAction = $actions[currentActionKey]
         const nextAction = $actions[nextActionKey]
         if (!nextAction || currentAction === nextAction) return
         nextAction.enabled = true
@@ -47,94 +47,95 @@
     }
 
     function loaded(ref: any) {
-        ref.ref.traverse( function ( object : any  ) { object.castShadow = true; object.receiveShadow = false; } )
+        ref.ref.traverse(function (object: any) {
+            object.castShadow = true
+            object.receiveShadow = false
+        })
     }
 
-    function rotateTowards(sc : {x:number,y:number,z:number}){     
-        if(sc.x!==0 && sc.z!==0) {
+    function rotateTowards(sc: { x: number; y: number; z: number }) {
+        if (sc.x !== 0 && sc.z !== 0) {
             const p = playerState.position
-            const v = new Vector3(sc.x,0,sc.z )
-            const pv = new Vector3(p.x,0,p.z)
-            rotationMatrix.lookAt(v,pv,new Vector3(0,1,0));         
-			endRotation.setFromRotationMatrix( rotationMatrix )
+            const v = new Vector3(sc.x, 0, sc.z)
+            const pv = new Vector3(p.x, 0, p.z)
+            rotationMatrix.lookAt(v, pv, new Vector3(0, 1, 0))
+            endRotation.setFromRotationMatrix(rotationMatrix)
         }
-
     }
 
-    function playFootstep(){
+    function playFootstep() {
         const source = runAudio.context.createBufferSource()
         const gainNode = runAudio.context.createGain()
         let randomGain = Math.random()
-        let step = Math.floor( Math.random() * 3 )
+        let step = Math.floor(Math.random() * 3)
         if (randomGain < 0.5) randomGain += 0.5
         randomGain = randomGain * $gameVolume * footstepVolume
-        source.detune.value = Math.floor( Math.random() * 400 ) ;
+        source.detune.value = Math.floor(Math.random() * 400)
         source.buffer = runAudio.buffer
         gainNode.gain.value = randomGain
         source.connect(gainNode)
         gainNode.connect(runAudio.context.destination)
-        source.start(runAudio.context.currentTime +0, step , 1)
+        source.start(runAudio.context.currentTime + 0, step, 1)
     }
 
-    useFrame((state, delta) => { // player movement
+    useFrame((state, delta) => {
+        // player movement
         const p = playerState.position
         const path = playerState.path
-        if(path.length > 0){ 
-            const radians = Math.atan2( path[0].z-p.z,  path[0].x - p.x)
-            const modifier = {x : Math.cos(radians), z : Math.sin(radians)}
-            if((p.x < path[0].x+0.04 && p.x > path[0].x-0.04) &&
-                (p.z < path[0].z+0.04 && p.z > path[0].z-0.04)
-            ){            
+        if (path.length > 0) {
+            const radians = Math.atan2(path[0].z - p.z, path[0].x - p.x)
+            const modifier = { x: Math.cos(radians), z: Math.sin(radians) }
+            if (p.x < path[0].x + 0.04 && p.x > path[0].x - 0.04 && p.z < path[0].z + 0.04 && p.z > path[0].z - 0.04) {
                 // dont need to move so snap to grid
                 playerState.position.z = path[0].z
-                playerState.position.x = path[0].x;        
+                playerState.position.x = path[0].x
                 playerState.settingOff = true
                 playerState.arrived = false
                 playerState.path.shift()
-            } else { // get moving 
-                if(playerState.settingOff){
-                    const v = new Vector3(path[0].x,0,path[0].z )
-                    const pv = new Vector3(p.x,0,p.z)     
-                    rotationMatrix.lookAt(v,pv,new Vector3(0,1,0))     
-				    endRotation.setFromRotationMatrix( rotationMatrix )
+            } else {
+                // get moving
+                if (playerState.settingOff) {
+                    const v = new Vector3(path[0].x, 0, path[0].z)
+                    const pv = new Vector3(p.x, 0, p.z)
+                    rotationMatrix.lookAt(v, pv, new Vector3(0, 1, 0))
+                    endRotation.setFromRotationMatrix(rotationMatrix)
                     movementVector = v.sub(pv).normalize()
                     transitionTo('run')
-                    if(!playerState.running) {
-                        clearInterval(footstepInterval) 
+                    if (!playerState.running) {
+                        clearInterval(footstepInterval)
                         playFootstep()
-                        footstepInterval = window.setInterval(function(){
+                        footstepInterval = window.setInterval(function () {
                             playFootstep()
-                        }, 330);
+                        }, 330)
                     }
-                    playerState.running = true;
+                    playerState.running = true
                 }
-
                 playerState.settingOff = false
-                if(delta<0.5){ // check for one off spikes caused by switching tabs etc
-                    playerState.position.x = p.x+modifier.x*delta*4
-                    playerState.position.z = p.z+ modifier.z*delta*4
+                if (delta < 0.5) {
+                    // check for one off spikes caused by switching tabs etc
+                    playerState.position.x = p.x + modifier.x * delta * 4
+                    playerState.position.z = p.z + modifier.z * delta * 4
                 }
             }
         } else {
-            if(!playerState.arrived) {
-                playerState.running = false;
+            if (!playerState.arrived) {
+                playerState.running = false
                 transitionTo('idle')
-               // runAudio.stop()
-               clearInterval(footstepInterval) 
+                // runAudio.stop()
+                clearInterval(footstepInterval)
             }
             playerState.arrived = true
         }
-        if($gltf){ 
-            $gltf.scene.children[0].quaternion.rotateTowards( endRotation, delta*10 )
+        if ($gltf) {
+            $gltf.scene.children[0].quaternion.rotateTowards(endRotation, delta * 10)
         }
         $gamePosition = playerState.position
     })
-	
 </script>
 
 <GLTF
     bind:gltf={$gltf}
-    on:create={(ref) => loaded(ref)} 
+    on:create={(ref) => loaded(ref)}
     position.x={playerState.position.x}
     position.y={0}
     position.z={playerState.position.z}
@@ -143,45 +144,47 @@
 
 <!--  -->
 {#if !$gameState.dev.camera}
-    <T.OrthographicCamera name="main camera"
+    <T.OrthographicCamera
+        name="main camera"
         makeDefault
-        position={[playerState.position.x+9,10,playerState.position.z+9]}    
-        on:create={({ ref }) => { ref.lookAt(playerState.position.x+8,9,playerState.position.z+8) }}
+        position={[playerState.position.x + 9, 10, playerState.position.z + 9]}
+        on:create={({ ref }) => {
+            ref.lookAt(playerState.position.x + 8, 9, playerState.position.z + 8)
+        }}
         zoom={80}
-    >
-       
-    </T.OrthographicCamera>
+    />
 {/if}
 
-<T.DirectionalLight name="sun"
-    intensity={0.8} castShadow 
+<T.DirectionalLight
+    name="sun"
+    intensity={0.8}
+    castShadow
     shadow.mapSize.width={1800}
     shadow.mapSize.height={1800}
     shadow.camera.top={9}
     shadow.camera.right={8}
     shadow.camera.left={-14}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x+9,10,playerState.position.z+10]} 
-    target={lightTarget} 
+    position={[playerState.position.x + 9, 10, playerState.position.z + 10]}
+    target={lightTarget}
 />
 
 <T.Mesh
     bind:ref={lightTarget}
-    visible={false}   
-    scale={[1,1,1]}
-    position={[playerState.position.x+8,8,playerState.position.z+8]}>
-</T.Mesh>
-    
-<T.Mesh name="player grid square"
+    visible={false}
+    scale={[1, 1, 1]}
+    position={[playerState.position.x + 8, 8, playerState.position.z + 8]}
+/>
+
+<T.Mesh
+    name="player grid square"
     receiveShadow
     visible={false}
-    scale={[1,1,1]}
+    scale={[1, 1, 1]}
     position={[playerState.position.x, 0, playerState.position.z]}
 >
     <T.BoxGeometry args={[1, 0.1, 1]} />
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
 
-
-<Audio src={audioSrc} bind:ref={runAudio}   on:create={({ ref })=>{  }} autoplay={false} loop={true} volume={0}/>
-
+<Audio src={audioSrc} bind:ref={runAudio} on:create={({ ref }) => {}} autoplay={false} loop={true} volume={0} />

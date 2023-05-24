@@ -23,16 +23,16 @@
         <div class="flex flex-wrap">
             {#each $gameState.inventory.owned as item}
                 {#if item > 0}
-                     <div class="m-2 w-14 h-14 bg-neutral-900">
+                     <div class="m-2 w-14 h-14 bg-neutral-900 rounded-md p-1">
                         <img 
-                            class="h-14"
-                            src="/{items.find(x => x.id === $gameState.selectedItemId)?.image}"
-                            alt={items.find(x => x.id === $gameState.selectedItemId)?.name}/>
+                            class="h-12"
+                            src="/{items.find(x => x.id === item)?.image}"
+                            alt={items.find(x => x.id === item)?.name}/>
                      </div>
                 {/if}
             {/each}
             {#each {length: 6-($gameState.inventory.owned.length-1)} as _, i}
-            <div class="m-2 w-14 h-14 bg-neutral-900"></div>
+            <div class="m-2 w-14 h-14 bg-neutral-900 rounded-md"></div>
             {/each}
         </div>
     </div>

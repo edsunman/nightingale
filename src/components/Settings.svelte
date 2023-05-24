@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { gameState, gamePixelRatio, gameVolume } from "$lib/stores"
+    import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition } from "$lib/stores"
 
     function onKeyDown(e : any){
         if(e.keyCode==27) {
@@ -15,11 +15,32 @@
         }
     }
 
+    function saveGame(){
+        const s = btoa(JSON.stringify({scene: $gameScene, position: $gamePosition, inventory: $gameState.inventory}))
+        localStorage.setItem("Nightingale Save Data", s)
+        $gameState.settings.open = false
+    }
+
+    function loadGame(){
+        const s = localStorage.getItem("Nightingale Save Data")
+        if(s) {
+            const j = JSON.parse(atob(s))
+            $gameState.nextScenePosition = j.position
+            $gameState.inventory = j.inventory
+            $gameScene = j.scene
+            $gameState.settings.open = false
+        }
+    }
+
 </script>
 
 {#if $gameState.settings.open}
     <div class="absolute w-80 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 bg-neutral-950 rounded-md px-8 py-6 select-none m-2 z-20">
         <h3 class="text-2xl text-center mb-4">settings</h3>
+        <p class="my-3">
+            <button on:click={() => saveGame()}>Save</button>
+            <button on:click={() => loadGame()}>Load</button>
+        </p>
         <p class="my-3">
             resolution<br/>
             <select class="my-3 p-2 border-neutral-800 border-2 text-neutral-100 bg-neutral-950 w-full">
