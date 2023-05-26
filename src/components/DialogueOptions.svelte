@@ -18,6 +18,7 @@
             const o = s[g[0]-1].speech.find(x => x.id === g[1])?.options
             if (o) {
                 o.forEach(option => {
+                    // @ts-ignore
                     if(option.item===undefined||$gameState.inventory.owned.includes(option.item)){
                         options.push(option)
                     }
