@@ -3,7 +3,7 @@
     import { T, useFrame } from '@threlte/core'
     import { useGltf, useGltfAnimations } from '@threlte/extras'
     import { Vector3, Matrix4, Euler, Quaternion, Group } from 'three'
-    import { useCursor } from "$lib/useCursor"
+    import { useCursor } from "$lib/util/useCursor"
 
     export const ref = new Group()
     export let position = { x: 1, y:0 , z:1}

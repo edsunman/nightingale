@@ -9,7 +9,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 ship.glb --transform
     import { Group } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf } from '@threlte/extras'
-    import { useCursor } from "$lib/useCursor"
+    import { useCursor } from "$lib/util/useCursor"
 
     export const ref = new Group()
 

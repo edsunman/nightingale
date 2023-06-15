@@ -9,6 +9,7 @@
     import Rock from '../objects/Rock.svelte'
     import Door from '../objects/Door.svelte'
     import Ship from '../objects/Ship.svelte'
+    import Girl from '../objects/Girl.svelte'
 
     const wrap = RepeatWrapping
 
@@ -42,7 +43,9 @@
 <Rock position={[-1,0,1]}  scale={0.4}/>
 <Rock position={[-1.5,0,1]} rotation.x={-1.5708} rotation.z={1.6} scale={0.6}/>
 <Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
-
+<!---
+<Girl />
+-->
 <Character
     message="A large man guards the door"
     position={{ x: -9, y:0 , z:-13}}

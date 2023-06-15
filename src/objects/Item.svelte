@@ -3,7 +3,7 @@
     import { gamePosition, gameMessage, gameState } from "$lib/stores"
     import { items } from "$lib/items";
     import { T } from '@threlte/core'
-    import { useCursor } from "$lib/useCursor"
+    import { useCursor } from "$lib/util/useCursor"
 
     export let id : number
     export let position :  { x: number, y: number, z: number }

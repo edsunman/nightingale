@@ -2,7 +2,7 @@
 
     import { gameScene, gameMessage, gamePosition, gameState } from "$lib/stores"
     import { T } from "@threlte/core"
-    import { useCursor } from "$lib/useCursor"
+    import { useCursor } from "$lib/util/useCursor"
 
     export let nextScenePosition = {x: 0, z: 0}
     export let activeSquare = {x: 0, z: 0}
