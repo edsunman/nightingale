@@ -23,12 +23,12 @@
     startingPosition={{x: 9, z:1}}
     startingRotation={{x: 0, z:0}}
     floorType="stone"
-    sunIntensity={0.2}
+    sunIntensity={0.7}
 />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[20, 0.01, 10]}   />
-   <T.MeshStandardMaterial color="green" />
+   <T.MeshStandardMaterial color="#595550" />
 </T.Mesh>
 <!--
 <T.AmbientLight  intensity={0.2} />

@@ -201,10 +201,10 @@
     shadow.mapSize.width={1800}
     shadow.mapSize.height={1800}
     shadow.camera.top={9}
-    shadow.camera.right={8}
-    shadow.camera.left={-14}
+    shadow.camera.right={4}
+    shadow.camera.left={-18}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x + 9, 10, playerState.position.z + 10]}
+    position={[playerState.position.x + 8.5, 10, playerState.position.z + 10]}
     target={lightTarget}
 />
 

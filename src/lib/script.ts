@@ -1,6 +1,6 @@
 export const script = [
     {
-        name: 'Border Guard',
+        name: 'Hologram',
         speech : [{
             id: 1,
             text: 'Welcome to the outpost . . .'
