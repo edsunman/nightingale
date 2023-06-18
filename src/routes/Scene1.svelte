@@ -9,7 +9,6 @@
     import Rock from '../objects/Rock.svelte'
     import Door from '../objects/Door.svelte'
     import Ship from '../objects/Ship.svelte'
-    import Girl from '../objects/Girl.svelte'
 
     const wrap = RepeatWrapping
 
@@ -22,13 +21,16 @@
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[128, 0.01, 128]}   />
+     <T.MeshStandardMaterial color="#de7630" />
+  <!--
    {#await useTexture('/desert-tile.png') then texture}
         <T.MeshLambertMaterial >
             <T is={texture} attach="map" repeat={12} wrapS={wrap} wrapT={wrap} encoding={sRGBEncoding} />
         </T.MeshLambertMaterial>
     {/await}
+    -->
 </T.Mesh>
-
+<!--
 <T.Mesh position={[0, 0.02, 2]} rotation.x={-1.5708} visible={true} name="cracks" receiveShadow  > 
 <T.PlaneGeometry  args={[6, 6]}   />
  {#await useTexture('/desert-cracks.png') then texture}
@@ -37,12 +39,11 @@
         </T.MeshStandardMaterial>
     {/await}
 </T.Mesh>
-
+-->
 <Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2} message="A door" />
 <Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
 <Rock position={[-1,0,1]}  scale={0.4}/>
 <Rock position={[-1.5,0,1]} rotation.x={-1.5708} rotation.z={1.6} scale={0.6}/>
-<Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
 <!---
 <Girl />
 -->

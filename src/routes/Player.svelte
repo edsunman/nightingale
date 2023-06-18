@@ -1,14 +1,21 @@
 <script lang="ts">
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume } from '$lib/stores'
-    import { GLTF, useGltfAnimations, Audio } from '@threlte/extras'
-    import { T, useFrame } from '@threlte/core'
-    import { Vector3, Matrix4, Euler, Quaternion } from 'three'
+    import { useGltf, useGltfAnimations, Audio } from '@threlte/extras'
+    import { T, useFrame, forwardEventHandlers } from '@threlte/core'
+    import { Vector3, Matrix4, Group, Quaternion } from 'three'
+    import { toonMaterial } from '$lib/util/toonMaterial'
 
     import type { PlayerState } from '$lib/types'
 
     export let playerState: PlayerState
-    let { gltf, actions } = useGltfAnimations()
 
+    export const ref = new Group()
+    const gltf = useGltf('/player-transformed.glb', { useDraco: true })
+    export const { actions, mixer } = useGltfAnimations(gltf, ref)
+    const component = forwardEventHandlers()
+    const material = new toonMaterial('/playerAtlas.png').material
+
+    let mesh: any
     let currentActionKey = playerState.annimation
     let lightTarget: any
     let movementVector = new Vector3()
@@ -126,23 +133,55 @@
             }
             playerState.arrived = true
         }
-        if ($gltf) {
-            $gltf.scene.children[0].quaternion.rotateTowards(endRotation, delta * 10)
+        if (ref) {
+            // console.log(ref)
+            ref.quaternion.rotateTowards(endRotation, delta * 10)
         }
         $gamePosition = playerState.position
     })
 </script>
 
+<T
+    is={ref}
+    dispose={false}
+    {...$$restProps}
+    bind:this={$component}
+    position.x={playerState.position.x}
+    position.y={0}
+    position.z={playerState.position.z}
+>
+    {#await gltf}
+        <slot name="fallback" />
+    {:then gltf}
+        <T.Group name="Scene" >
+            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01} >
+                <T is={gltf.nodes.mixamorigHips} />
+                <T.SkinnedMesh castShadow
+                    name="Cube002"
+                    geometry={gltf.nodes.Cube002.geometry}
+                    {material}
+                    skeleton={gltf.nodes.Cube002.skeleton}
+                />
+            </T.Group>
+        </T.Group>
+    {:catch error}
+        <slot name="error" {error} />
+    {/await}
+
+    <slot {ref} />
+</T>
+
+<!--
 <GLTF
     bind:gltf={$gltf}
     on:create={(ref) => loaded(ref)}
     position.x={playerState.position.x}
     position.y={0}
     position.z={playerState.position.z}
-    url="/green.glb"
+    url="/player.glb"
 />
 
-<!--  -->
+ -->
 {#if !$gameState.dev.camera}
     <T.OrthographicCamera
         name="main camera"
@@ -157,7 +196,7 @@
 
 <T.DirectionalLight
     name="sun"
-    intensity={0.8}
+    intensity={playerState.sunIntensity}
     castShadow
     shadow.mapSize.width={1800}
     shadow.mapSize.height={1800}

@@ -7,6 +7,7 @@ export type PlayerState = {
     settingOff: boolean
     floorType: string
     running: boolean
+    sunIntensity: number
 }
 
 export type Script = Array<{

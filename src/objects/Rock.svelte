@@ -20,7 +20,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     <slot name="fallback" />
   {:then gltf}
     <T.Mesh geometry={gltf.nodes.Rock.geometry}  position={[0.04, -0.14, 0.13]} castShadow  receiveShadow>
-        <T.MeshToonMaterial color="#97582e" />
+        <T.MeshToonMaterial color="#b15b22" />
     </T.Mesh>
   {:catch error}
     <slot name="error" {error} />

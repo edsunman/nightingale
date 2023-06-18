@@ -12,6 +12,7 @@
     export let startingPosition = { x:0, z:0 }
     export let startingRotation = { x:0, z:0 }
     export let floorType = "sand"
+    export let sunIntensity = 0.8
 
     let next = $gameState.nextScenePosition
     let playerState : PlayerState = { 
@@ -22,7 +23,8 @@
         arrived:false,
         settingOff:true,
         floorType : floorType,
-        running : false
+        running : false,
+        sunIntensity : sunIntensity
     }
 
     let direction = new Vector3()
