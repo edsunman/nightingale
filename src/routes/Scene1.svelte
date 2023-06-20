@@ -13,7 +13,7 @@
     const wrap = RepeatWrapping
 
     const avoidArray :  Array<{ x: number, z: number }> =
-        [{x: -9, z:-13 },{x: 8, z:-1 }]
+        [{x: -9, z:-13 },{x: 8, z:2 }]
 
 </script>  
 
@@ -36,24 +36,36 @@
 <Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2} message="A door" />
 <Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
 <Rocks />
-
+<!---
 <Character
     message="A large man guards the door"
     position={{ x: -9, y:0 , z:-13}}
     url={'/blue-transformed.glb'}
     characterId={2}
 />
-
+-->
 <Character 
     message="A hologram flickers through the dust"
     position={{ x: 8, y:0 , z:-1}}
-    url={'/purple-transformed.glb'}
+    url={'/hologram-transformed.glb'}
     characterId={1}
     rotation={1.5708}
+    currentActionKey={"idle"}
+    occasionalActionKey={"wave"}
+    isHologram={true}
 />
-<!--
+
+<Character 
+    message="A hologram flickers through the dust"
+    position={{ x: 8, y:0 , z:2}}
+    url={'/hologram-transformed.glb?v=2'}
+    characterId={1}
+    rotation={1.5708}
+    currentActionKey={"idle"}
+/>
+
 <T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
--->
+
 <T.AmbientLight  intensity={0.1} />
 
 

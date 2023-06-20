@@ -20,7 +20,7 @@
 
     const { progress, item } = useProgress()
 
-    // $ : console.log($item)
+   // $ : console.log('Loaded : '+$item)
 
     $: fadeInMessage($gameMessage)
 

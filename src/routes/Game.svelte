@@ -44,7 +44,9 @@
     function compileScene(s: boolean) {
         if (s) {
             // compile shaders when scene is loaded
-            renderer?.compile(scene, $camera)
+           renderer?.compile(scene, $camera)
+            //scene.traverse(obj => obj.frustumCulled = false)
+           // setTimeout(()=> { scene.traverse(obj => obj.frustumCulled = true) }, 5000)
             //console.log('shader compile')
             audio.context.resume()
         }

@@ -33,13 +33,7 @@
 <!--
 <T.AmbientLight  intensity={0.2} />
 -->
-<T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} castShadow
-    shadow.mapSize.width={1800}
-    shadow.mapSize.height={1800}
-    shadow.camera.top={9}
-    shadow.camera.right={8}
-    shadow.camera.left={-14}
-    shadow.camera.bottom={-6}/>
+<T.PointLight position={[-4,1,4]} distance={4} color={"#ff80ed"} intensity={5} />
 <Door position={[10.5,1,1]} rotation.y={1.57} activeSquare={{x:10,z:1}} scene={1} nextScenePosition={{x:-5,z:3}}/>
 
 <Item id={1} position={{x:5,y:0.5,z:5}}/>
@@ -53,5 +47,4 @@
     position={[0,0,0]}
     bind:ref={audio}
 />
-
 

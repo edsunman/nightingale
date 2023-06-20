@@ -1,9 +1,8 @@
 <script lang="ts">
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume } from '$lib/stores'
-    import { useGltf, useGltfAnimations, Audio } from '@threlte/extras'
+    import { useGltf, useGltfAnimations, Audio, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
-    import { Vector3, Matrix4, Group, Quaternion } from 'three'
-    import { toonMaterial } from '$lib/util/toonMaterial'
+    import { Vector3, Matrix4, Group, Quaternion, sRGBEncoding } from 'three'
 
     import type { PlayerState } from '$lib/types'
 
@@ -13,7 +12,6 @@
     const gltf = useGltf('/player-transformed.glb', { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
     const component = forwardEventHandlers()
-    const material = new toonMaterial('/playerAtlas.png').material
 
     let mesh: any
     let currentActionKey = playerState.annimation
@@ -159,9 +157,14 @@
                 <T.SkinnedMesh castShadow
                     name="Cube002"
                     geometry={gltf.nodes.Cube002.geometry}
-                    {material}
                     skeleton={gltf.nodes.Cube002.skeleton}
-                />
+                >
+                {#await useTexture('/playerAtlas.png') then texture}
+                    <T.MeshToonMaterial color="#ffffff">
+                          <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
+                    </T.MeshToonMaterial>
+                {/await}
+                </T.SkinnedMesh>
             </T.Group>
         </T.Group>
     {:catch error}
