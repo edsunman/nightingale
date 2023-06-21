@@ -12,6 +12,7 @@ export type PlayerState = {
 
 export type Script = Array<{
     name: string
+    characterId: number
     speech: Array<{
         id: number
         text: string
@@ -19,6 +20,7 @@ export type Script = Array<{
             text: string
             linkId?: number
             item?: number
+            receiveItem?: number
         }>
     }>
 }>
@@ -29,6 +31,34 @@ export type Item = {
     message: string
     image: string
     description: string
+    isSecretKey: boolean
 }
 
 export type Items = Item[]
+
+
+export type GameState = {
+    dev : {
+        status : boolean
+        camera: boolean
+        grid: boolean
+        avoidObjactsVisible: boolean
+    }
+    nextScenePosition: { x: number, z: number }
+    moveLock: boolean
+    inventory: {
+        open: boolean
+        equipped: number
+        owned: Array<number>
+    }
+    settings: {
+        open: boolean
+    },
+    itemDescription: {
+        open: boolean
+    },
+    selectedItemId: number
+    charctersSpokenWith : Array<number>,
+    volumePreference : number
+
+}

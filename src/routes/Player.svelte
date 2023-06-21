@@ -12,6 +12,7 @@
     const gltf = useGltf('/player-transformed.glb', { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
     const component = forwardEventHandlers()
+    const texture = useTexture('/playerAtlas.png')
 
     let mesh: any
     let currentActionKey = playerState.annimation
@@ -159,9 +160,9 @@
                     geometry={gltf.nodes.Body.geometry}
                     skeleton={gltf.nodes.Body.skeleton}
                 >
-                {#await useTexture('/playerAtlas.png') then texture}
+                {#await texture then t}
                     <T.MeshToonMaterial color="#ffffff">
-                          <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
+                          <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
                     </T.MeshToonMaterial>
                 {/await}
                 </T.SkinnedMesh>

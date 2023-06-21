@@ -11,6 +11,11 @@
     import Settings from '../components/Settings.svelte'
     import { useProgress } from '@threlte/extras'
 
+    
+    import type { Script } from '$lib/types'
+    import { items } from '$lib/items'
+
+    const s : Script = script
     let clientWidth, clientHeight
     let showDialogueOptions = false
     let messageVisible = false
@@ -40,7 +45,7 @@
         showDialogueOptions = false
         if (g[0] !== 0) {
             $gameState.moveLock = true
-            if (script[g[0] - 1].speech.find((x) => x.id === g[1])?.options) {
+            if (s[g[0] - 1].speech.find((x) => x.id === g[1])?.options) {
                 setTimeout(() => {
                     showDialogueOptions = true
                 }, 1500)
@@ -160,6 +165,16 @@
             on:click={() => {
                 $gameScene = 2
             }}>2</button
+        ><br/>
+        <button
+            on:click={() => {
+                $gameScene = 3
+            }}>3</button
         >
+        <br /><br />
+        <p>Owned Items:</p>
+        {#each $gameState.inventory.owned as item}
+            <p>{item}</p>    
+        {/each}
     </div>
 {/if}

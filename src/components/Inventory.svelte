@@ -14,7 +14,7 @@
         inventory = []
         gs.inventory.owned.forEach((itemid: number) => {
             const item = i.find((x) => x.id === itemid)
-            if (item) {
+            if (item?.isSecretKey===false) {
                 if (!selectedItem) {
                     selectedItem = item
                 }
@@ -58,7 +58,7 @@
                     style="background-image:url('/{item.image}')"
                 />
             {/each}
-            {#each { length: 6 - $gameState.inventory.owned.length } as _, i}
+            {#each { length: 6 - inventory.length } as _, i}
                 <div class="m-2 w-14 h-14 bg-neutral-900 rounded-md" />
             {/each}
         </div>

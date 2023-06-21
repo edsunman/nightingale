@@ -1,12 +1,14 @@
 <script lang="ts">
     import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition, gameVolume, gamePixelRatio } from '$lib/stores'
-    import Scene1 from './Scene1.svelte'
-    import Scene2 from './Scene2.svelte'
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { onMount } from 'svelte'
     import { interactivity, OrbitControls, HTML, useProgress, AudioListener } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
+
+    import Scene1 from './Scene1.svelte'
+    import Scene2 from './Scene2.svelte'
+    import Scene3 from './Scene3.svelte'
 
     interactivity()
 
@@ -67,6 +69,8 @@
     <Scene1 />
 {:else if selectedScene === 2}
     <Scene2 />
+{:else if selectedScene === 3}
+    <Scene3 />
 {/if}
 
 {#if $gameConversation[0] !== 0}

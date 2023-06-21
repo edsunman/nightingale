@@ -1,6 +1,9 @@
 import { writable } from 'svelte/store'
 
-export const gameState = writable({
+import type { Writable } from 'svelte/store'
+import type { GameState } from './types'
+
+export const gameState : Writable<GameState> = writable({
     dev: {
         status: true,
         camera: false,
@@ -12,7 +15,8 @@ export const gameState = writable({
     inventory: {
         open: false,
         equipped: 0,
-        owned: []
+        owned: [],
+        secretKeys: []
     },
     settings: {
         open: false
@@ -21,7 +25,8 @@ export const gameState = writable({
         open: false
     },
     selectedItemId: 0,
-    charctersSpokenWith : [0]
+    charctersSpokenWith : [0],
+    volumePreference : 0
 })
 
 export const gamePosition = writable({ x: 0, z: 0 })

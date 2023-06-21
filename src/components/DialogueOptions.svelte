@@ -1,26 +1,27 @@
  <script lang="ts" >
 
-    import { gameState, gameConversation } from '$lib/stores'
+    import { gameState, gameConversation, gameMessage } from '$lib/stores'
     import { script } from '$lib/script'
+    import { items } from '$lib/items'
 
-    import type { Script } from '$lib/types'
+    import type { Script, Items } from '$lib/types'
 
     const s : Script = script
-    let options : any[] = []
+    const itemsArray : Items = items
+    const optionsArray : any[] = []
     let characterId : number = 0
 
     $ : setOptions($gameConversation)
 
     function setOptions(g : any) {
-        options = []
+        optionsArray.length = 0
         if (g[0]!==0) {
             characterId = g[0]
             const o = s[g[0]-1].speech.find(x => x.id === g[1])?.options
             if (o) {
                 o.forEach(option => {
-                    // @ts-ignore
                     if(option.item===undefined||$gameState.inventory.owned.includes(option.item)){
-                        options.push(option)
+                        optionsArray.push(option)
                     }
                 })
             }
@@ -28,15 +29,25 @@
     }
 
     function selectSpeech(n : number) {
-        if(n+1>options.length){
+        if(n+1>optionsArray.length){
             return false
         }
-        const a = options[n]
-        if(!a.linkId){
+        const option = optionsArray[n]
+        if(option.receiveItem){
+            const item = itemsArray.find(x => x.id === option.receiveItem)
+            if(item) {
+                const ownedArray = $gameState.inventory.owned
+                ownedArray.indexOf(option.receiveItem) === -1 ? ownedArray.push(option.receiveItem) : null
+                if(!item.isSecretKey){
+                    $gameMessage = 'You received ' + item.name
+                }
+            }
+        }
+        if(!option.linkId){
             $gameState.moveLock = false;
             $gameConversation = [0,0]
         } else {
-            $gameConversation = [characterId,a.linkId]
+            $gameConversation = [characterId,option.linkId]
         }
     }
 
@@ -54,8 +65,8 @@
 
  </script>
 
-{#each options as option,i}
-    <button on:click={() => selectSpeech(i)} class="block w-full {options.length === i+1 ? '' : 'mb-3'} " >
+{#each optionsArray as option,i}
+    <button on:click={() => selectSpeech(i)} class="block w-full {optionsArray.length === i+1 ? '' : 'mb-3'} " >
         <small class="text-neutral-500">{i+1}.</small> {option.text}
         {#if !option.linkId}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-6 h-6">

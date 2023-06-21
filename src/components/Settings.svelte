@@ -6,6 +6,15 @@
         if(e.keyCode==27) {
             toggleSettings()
         }
+        if(e.keyCode==77){
+            if($gameVolume === 0) {
+                const vp = $gameState.volumePreference
+                $gameVolume = vp ? vp : 1
+            } else {
+                $gameState.volumePreference = $gameVolume
+                $gameVolume = 0
+            }
+        }
     }
 
     function toggleSettings(){
