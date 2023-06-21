@@ -25,7 +25,7 @@
     }
 
     function saveGame(){
-        const s = btoa(JSON.stringify({scene: $gameScene, position: $gamePosition, inventory: $gameState.inventory}))
+        const s = btoa(JSON.stringify({scene: $gameScene, position: $gamePosition, inventory: $gameState.inventory, spokenWith: $gameState.charctersSpokenWith}))
         localStorage.setItem("Nightingale Save Data", s)
         $gameState.settings.open = false
     }
@@ -35,9 +35,15 @@
         if(s) {
             const j = JSON.parse(atob(s))
             $gameState.nextScenePosition = j.position
+            if($gameScene===j.scene){
+                $gameScene = 0
+                setTimeout(()=>{$gameScene = j.scene}, 100)
+            } else {
+                 $gameScene = j.scene
+            }
             $gameState.inventory = j.inventory
-            $gameScene = j.scene
             $gameState.settings.open = false
+            $gameState.charctersSpokenWith = j.spokenWith
         }
     }
 

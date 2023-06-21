@@ -46,6 +46,9 @@
             <div class="bg-no-repeat bg-center bg-contain w-full h-24" style="background-image:url('/{selectedItem.image}" />
             <h3 class="text-xl text-center mb-4">{selectedItem.name}</h3>
         {/if}
+        {#if inventory.length<1}
+            <h3 class="text-xl text-center mb-4">empty</h3>
+        {/if}
         <div class="flex flex-wrap">
             {#each inventory as item}
                 <button
