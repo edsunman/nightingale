@@ -61,7 +61,7 @@
     })
 </script>
 
-<AudioListener bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x + 2, 3, $gamePosition.z + 2]} />
+<AudioListener bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x , 2, $gamePosition.z ]} rotation.y={0.78} />
 
 {#if selectedScene === 1}
     <Scene1 />

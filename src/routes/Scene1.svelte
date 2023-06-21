@@ -1,6 +1,5 @@
 <script lang="ts">
     import { T  } from '@threlte/core'
-    import { useTexture } from '@threlte/extras'
 	import { RepeatWrapping, sRGBEncoding } from 'three'
     import { Audio } from '@threlte/extras'
 	
@@ -13,7 +12,7 @@
     const wrap = RepeatWrapping
 
     const avoidArray :  Array<{ x: number, z: number }> =
-        [{x: -9, z:-13 },{x: 8, z:2 }]
+        [{x:-9,z:-13},{x:8,z:4},{x:8,z:2},{x:10,z:4},{x:9,z:4},{x:8,z:5},{x:8,z:6}]
 
 </script>  
 
@@ -35,6 +34,7 @@
 -->
 <Door position={[-6.5,1,3]} rotation.y={1.57} activeSquare={{x:-6,z:3}} scene={2} message="A door" />
 <Ship position={[14, 2 , -6]} scale={1.6} rotation.y={1.3}/>
+<Ship position={[14, 2 , -9]} scale={1.6} rotation.y={1.3}/>
 <Rocks />
 <!---
 <Character
@@ -51,15 +51,16 @@
     characterId={1}
     rotation={1.5708}
     currentActionKey={"idle"}
-    occasionalActionKey={"wave"}
+    beforeDialogueActionKey={"wave"}
     isHologram={true}
+    lookatPlayer={true}
 />
 
 <Character 
     message="A hologram flickers through the dust"
     position={{ x: 8, y:0 , z:2}}
     url={'/hologram-transformed.glb?v=2'}
-    characterId={1}
+    characterId={2}
     rotation={1.5708}
     currentActionKey={"idle"}
 />

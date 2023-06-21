@@ -47,6 +47,8 @@
             selectSpeech(1) 
         } else if(e.keyCode==51) {
             selectSpeech(2) 
+        } else if(e.keyCode==52) {
+            selectSpeech(3) 
         }
     }
 

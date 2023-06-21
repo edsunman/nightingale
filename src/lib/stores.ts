@@ -20,7 +20,8 @@ export const gameState = writable({
     itemDescription: {
         open: false
     },
-    selectedItemId: 0
+    selectedItemId: 0,
+    charctersSpokenWith : [0]
 })
 
 export const gamePosition = writable({ x: 0, z: 0 })

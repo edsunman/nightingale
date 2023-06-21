@@ -20,7 +20,7 @@
     let runAudio: any
     let audioSrc: string
     let footstepInterval: number
-    let footstepVolume = 0.2
+    let footstepVolume = 0.4
 
     const rotationMatrix = new Matrix4().lookAt(
         new Vector3(playerState.rotation.x, 0, playerState.rotation.z),
@@ -155,9 +155,9 @@
             <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01} >
                 <T is={gltf.nodes.mixamorigHips} />
                 <T.SkinnedMesh castShadow
-                    name="Cube002"
-                    geometry={gltf.nodes.Cube002.geometry}
-                    skeleton={gltf.nodes.Cube002.skeleton}
+                    name="Body"
+                    geometry={gltf.nodes.Body.geometry}
+                    skeleton={gltf.nodes.Body.skeleton}
                 >
                 {#await useTexture('/playerAtlas.png') then texture}
                     <T.MeshToonMaterial color="#ffffff">

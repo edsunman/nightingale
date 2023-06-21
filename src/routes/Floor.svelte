@@ -1,7 +1,7 @@
 <script lang="ts">
     import { gameState } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
-    import { Grid } from '@threlte/extras'
+    import { Grid, Instance, InstancedMesh } from '@threlte/extras'
     import Player from './Player.svelte'
     import { Raycaster, Vector3 } from 'three'
 
@@ -38,9 +38,10 @@
     function floorClicked(e: any) {
         const p = playerState.position
         playerState.path = []
+        const point = e.intersections[0].point
+        const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {
-            const point = e.intersections[0].point
-            const grid = { x: Math.round(point.x), z: Math.round(point.z) }
+           
             const gridVec = new Vector3(grid.x, 0, grid.z)
             const playerVec = new Vector3(p.x, 0, p.z)
 
@@ -88,6 +89,20 @@
             selectedOpacity = 1
             selectedSize = 0.8
         }
+
+       if($gameState.dev.avoidObjactsVisible){
+            let obj = avoidArray.find(o => (o.x === grid.x && o.z === grid.z))
+            if(obj){
+                avoidArray = avoidArray.filter(function(o) {
+                    return !(o.x === grid.x && o.z === grid.z)
+                })
+                localStorage.setItem("Dev Avoid Array", JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
+            } else {
+                avoidArray.push(grid)
+                avoidArray = avoidArray
+                localStorage.setItem("Dev Avoid Array", JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
+            }
+        }
     }
 
     useFrame((state, delta) => {
@@ -103,22 +118,21 @@
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" receiveShadow on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
-
-{#each avoidArray as block}
-    <T.Mesh
-        name={'avoid object'}
-        scale={[1, 1, 1]}
-        visible={$gameState.dev.avoidObjactsVisible}
-        position={[block.x, 0, block.z]}
-        on:create={({ ref }) => {
-            avoidObjects.push(ref)
-        }}
-    >
-        <T.BoxGeometry args={[1, 0.1, 1]} />
-        <T.MeshStandardMaterial color="#161616" />
-    </T.Mesh>
-{/each}
-
+ <InstancedMesh visible={$gameState.dev.avoidObjactsVisible} >
+    {#each avoidArray as block}
+        <Instance
+            name={'avoid object'}
+            scale={[1, 1, 1]}
+            position={[block.x, 0, block.z]}
+            on:create={({ ref }) => {
+                avoidObjects.push(ref)
+            }}
+        >
+        </Instance>
+    {/each}
+     <T.BoxGeometry args={[1, 0.1, 1]} />
+            <T.MeshStandardMaterial color="#161616" />
+</InstancedMesh>
 <T.Mesh
     receiveShadow
     rotation.x={-1.57}
