@@ -7,6 +7,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     import { Group } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, InstancedMeshes } from '@threlte/extras'
+    import seedrandom from 'seedrandom'
 
     export const ref = new Group()
 
@@ -14,16 +15,19 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
 
     const component = forwardEventHandlers()
 
-    const items = Array.from({ length: 100 }, () => ({
-        x: Math.random() * 75 - 37.5,
-        z: Math.random() * 75 - 37.5,
-        scale: Math.random() * 0.01 + 0.1,
+    let sRandom = seedrandom('seed');
+
+    const items = Array.from({ length: 120 }, () => ({
+        x: sRandom() * 75 - 37.5,
+        z: sRandom() * 75 - 37.5,
+        scale: sRandom() * 0.01 + 0.1,
         rotation: {
-            x: Math.random() * 360,
-            y: Math.random() * 360,
-            z: Math.random() * 360
+            x: sRandom() * 360,
+            y: sRandom() * 360,
+            z: sRandom() * 360
         }
     }))
+    
 </script>
 
 {#await gltf}
