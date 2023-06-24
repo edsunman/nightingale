@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition } from '$lib/stores'
+    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition, gameMovingTo } from '$lib/stores'
     import { Canvas, useThrelte } from '@threlte/core'
     import { fade } from 'svelte/transition'
     import Game from './Game.svelte'
@@ -11,11 +11,9 @@
     import Settings from '../components/Settings.svelte'
     import { useProgress } from '@threlte/extras'
 
-    
-    import type { Script } from '$lib/types'
+
     import { items } from '$lib/items'
 
-    const s : Script = script
     let clientWidth, clientHeight
     let showDialogueOptions = false
     let messageVisible = false
@@ -45,7 +43,7 @@
         showDialogueOptions = false
         if (g[0] !== 0) {
             $gameState.moveLock = true
-            if (s[g[0] - 1].speech.find((x) => x.id === g[1])?.options) {
+            if (script[g[0] - 1].speech.find((x) => x.id === g[1])?.options) {
                 setTimeout(() => {
                     showDialogueOptions = true
                 }, 1500)
@@ -79,6 +77,7 @@
         // are we already loaded? then remove black screen
         setTimeout(() => checkLoaded($progress), 500)
     }
+
 </script>
 
 <div
@@ -149,6 +148,12 @@
             x: {$gamePosition.x.toFixed(3)}<br />
             z: {$gamePosition.z.toFixed(3)}
         </p>
+        <p>Moving To:</p>
+        <p>
+            x: {$gameMovingTo.x}<br />
+            z: {$gameMovingTo.z}
+        </p>
+        <p>
         <p>
             Movement locked:
             <input type="checkbox" bind:checked={$gameState.moveLock} />
@@ -172,9 +177,19 @@
             }}>3</button
         >
         <br /><br />
-        <p>Owned Items:</p>
+        <p>Owned Items:</p><p>
         {#each $gameState.inventory.owned as item}
-            <p>{item}</p>    
-        {/each}
+            {item},
+        {/each}   
+        </p><br /><br />
+        <button on:click={()=>{
+            items.forEach(item => {$gameState.inventory.owned.push(item.id);$gameState=$gameState})
+        }}>give all items</button>
+        <br /><br />
+        <button on:click={()=>{
+            $gameState.inventory.owned.length = 0
+            $gameState=$gameState
+        }}>clear all items</button>
+        <br /><br />
     </div>
 {/if}

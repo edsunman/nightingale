@@ -7,7 +7,7 @@
     import Character from '../objects/Character.svelte'
     import Rocks from '../objects/Rocks.svelte'
     import Door from '../objects/Door.svelte'
-    import Ship from '../objects/Ship.svelte'
+    import Spaceship from '../objects/Spaceship.svelte'
 
     const wrap = RepeatWrapping
 
@@ -15,7 +15,7 @@
 
 </script>  
 
-<Floor avoidArray={avoidArray} startingPosition={{x: 14, z:-20}} startingRotation={{x: 14, z:2}} levelSize={{x:50, z:50}} />
+<Floor avoidArray={avoidArray} startingPosition={{x: 15, z:-14}} startingRotation={{x: 14, z:2}} levelSize={{x:50, z:50}} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow  > 
   <T.BoxGeometry  args={[75, 0.01, 75]}   />
@@ -27,7 +27,7 @@
 
 <Character 
     message="A hologram flickers through the dust"
-    position={{ x: 10, y:0 , z:-20}}
+    position={{ x: 19, y:0 , z:-13}}
     url={'/hologram-transformed.glb'}
     characterId={1}
     rotation={1.5708}
@@ -61,7 +61,7 @@
 />
 
 <Rocks />
-<Ship position={[14, 2 , -26]} scale={1.6} rotation.y={1.4}/>
+<Spaceship position={[12, 2 , -17.5]} scale={1.8} rotation.y={0}/>
 
 <T.AmbientLight  intensity={0.1} />
 

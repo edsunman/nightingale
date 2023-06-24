@@ -163,7 +163,7 @@
                         {#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">
                                 <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
-                            </T.MeshToonMaterial>
+                            </T.MeshToonMaterial>                     
                         {/await}
                     {/if}
                 </T.SkinnedMesh>

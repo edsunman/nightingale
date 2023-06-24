@@ -81,7 +81,7 @@
         gainNode.gain.value = randomGain
         source.connect(gainNode)
         gainNode.connect(runAudio.context.destination)
-        source.start(runAudio.context.currentTime + 0, step, 1)
+        source.start(runAudio.context.currentTime + 0.08, step, 1)
     }
 
     useFrame((state, delta) => {
@@ -227,7 +227,7 @@
     position={[playerState.position.x, 0, playerState.position.z]}
 >
     <T.BoxGeometry args={[1, 0.1, 1]} />
-    <T.MeshStandardMaterial color="#9932CC" />
+    <T.MeshStandardMaterial color="#9932CC"  />
 </T.Mesh>
 
 <Audio src={audioSrc} bind:ref={runAudio} on:create={({ ref }) => {}} autoplay={false} loop={true} volume={0} />

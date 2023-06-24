@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState } from '$lib/stores'
+    import { gameState, gameMovingTo } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { Grid, Instance, InstancedMesh } from '@threlte/extras'
     import Player from './Player.svelte'
@@ -75,13 +75,16 @@
                 }
 
                 if (intersects[0].distance > dist) {
+                    $gameMovingTo = { x: grid.x, z: grid.z }
                     playerState.path.push({ x: grid.x, z: grid.z })
                     selectedColour = 'White'
                 } else {
+                    $gameMovingTo = { x: gridIp.x, z: gridIp.z }
                     playerState.path.push({ x: gridIp.x, z: gridIp.z })
                     selectedColour = 'Red'
                 }
             } else {
+                $gameMovingTo = { x: grid.x, z: grid.z }
                 playerState.path.push({ x: grid.x, z: grid.z })
                 selectedColour = 'White'
             }
@@ -118,7 +121,7 @@
 
 <Player {playerState} />
 
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" receiveShadow on:click={(e) => floorClicked(e)}>
+<T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
  <InstancedMesh visible={$gameState.dev.avoidObjactsVisible} >
@@ -142,11 +145,11 @@
     visible={true}
     name={'selectedGridSquare'}
     scale={[selectedSize, selectedSize, 1]}
-    position={[selectedGridSpace.x, 0.01, selectedGridSpace.z]}
+    position={[selectedGridSpace.x, 0.05, selectedGridSpace.z]}
 >
     <!--<T.CylinderGeometry args={[0.5, 0.5, 0.06]}  />-->
-    <T.RingGeometry args={[0.35, 0.5]} />
-    <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} transparent={true} />
+    <T.RingGeometry args={[0.38, 0.5]} />
+    <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} emissive={selectedColour} transparent={true} />
 </T.Mesh>
 
 {#if $gameState.dev.grid}

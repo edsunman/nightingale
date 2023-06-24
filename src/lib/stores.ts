@@ -30,9 +30,10 @@ export const gameState : Writable<GameState> = writable({
 })
 
 export const gamePosition = writable({ x: 0, z: 0 })
+export const gameMovingTo = writable({ x: 0, z: 0 })
 export const gameSelectedCharacterPosition = writable({ x: 0, y: 0, z: 0 })
 export const gameMessage = writable('')
 export const gameConversation = writable([0, 0])
-export const gameScene = writable(1)
+export const gameScene = writable(3)
 export const gameVolume = writable(0)
 export const gamePixelRatio = writable(1)
