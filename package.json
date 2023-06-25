@@ -39,6 +39,7 @@
 		"@tweenjs/tween.js": "^19.0.0",
 		"postprocessing": "^6.30.2",
 		"seedrandom": "^3.0.5",
-		"three": "^0.151.3"
+		"three": "^0.151.3",
+		"three.meshline": "^1.4.0"
 	}
 }

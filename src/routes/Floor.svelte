@@ -34,7 +34,7 @@
     let avoidObjects: any[] = []
     let selectedOpacity = 0
     let selectedColour = 'White'
-    let selectedSize = 1
+    let selectedSize = 0.5
 
     function floorClicked(e: any) {
         const p = playerState.position
@@ -91,7 +91,7 @@
             selectedGridSpace = { x: grid.x, y: 0, z: grid.z }
             playerState.settingOff = true
             selectedOpacity = 1
-            selectedSize = 0.8
+            selectedSize = 0.4
         }
 
        if($gameState.dev.avoidObjactsVisible){
@@ -111,8 +111,8 @@
 
     useFrame((state, delta) => {
         selectedOpacity -= delta * 2
-        if (selectedSize > 0) {
-            selectedSize -= delta * 0.2
+        if (selectedSize < 1) {
+            selectedSize += delta * 0.8
         }
     })
 
@@ -148,7 +148,7 @@
     position={[selectedGridSpace.x, 0.05, selectedGridSpace.z]}
 >
     <!--<T.CylinderGeometry args={[0.5, 0.5, 0.06]}  />-->
-    <T.RingGeometry args={[0.38, 0.5]} />
+    <T.RingGeometry args={[0.4, 0.5]} />
     <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} emissive={selectedColour} transparent={true} />
 </T.Mesh>
 

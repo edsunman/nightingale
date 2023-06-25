@@ -1,15 +1,33 @@
 <script lang="ts">
-    import { T } from '@threlte/core'
+    import { T, useFrame } from '@threlte/core'
     import Floor from './Floor.svelte'
     import Door from '../objects/Door.svelte'
     import { onMount } from 'svelte'
+    import { InstancedMesh } from '@threlte/extras'
+    import Raindrop from '../objects/Raindrop.svelte'
     import Item from '../objects/Item.svelte'
+    import Sparkes from '../objects/Sparkes.svelte'
+    import * as THREE from 'three'
+    import { MeshLine, MeshLineMaterial } from 'three.meshline'
+    
+
 
     const avoidArray: Array<{ x: number; z: number }> = []
 
     let flickeringInterval: ReturnType<typeof setInterval>
-    let lightBrightness : number
+    let lightBrightness: number
+    let curvePosition : any
+    let percent = 0
+    let windPercent = 0
 
+
+
+    const items = Array.from({ length: 3 }, () => ({
+        x: Math.random() * 5 - 2.5,
+        y: Math.random() * 10,
+        z: Math.random() * 10 - 5
+
+    }))
 
     onMount(() => {
         flickeringInterval = setInterval(function () {
@@ -17,10 +35,74 @@
         }, 30)
         setTimeout(function () {
             clearInterval(flickeringInterval)
-            lightBrightness = 1         
+            lightBrightness = 1
         }, 1500)
     })
+
+   
+    const points = []
+    points.push(new THREE.Vector3(0, 0, 0))
+    points.push(new THREE.Vector3(-1, 2, 1))
+    points.push(new THREE.Vector3(1, 4, -1))
+
+    const curve = new THREE.CatmullRomCurve3(points)
+    const curvePoints = curve.getPoints(100)
+
+
+
+    const line = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints( curvePoints ),
+        new THREE.LineBasicMaterial( { color: 0x00ff00 } )
+    )
+
+    
+   
+
+    const material = new MeshLineMaterial()
+        material.transparent = true
+        material.depthTest = true
+        material.lineWidth = 0.1
+        //material.dashArray = 0.5
+        material.dashRatio = 0.5
+        material.color = new THREE.Color(0xffffff)
+        material.taper = 'linear'
+        
+
+    useFrame((state,delta)=>{
+        if (delta < 0.5) {
+            percent += 0.6 * delta
+
+        }
+        if(percent > 1) percent = 0
+        
+        const point = curve.getPoint(percent)
+        curvePosition = [point.x,point.y,point.z]
+
+       //console.log(percent)
+    })
+    
+    
+
+
 </script>
+
+<T.Mesh position={curvePosition}>
+    <T.DodecahedronGeometry args={[0.2, 0]} />
+    <T.MeshToonMaterial color="#888888" />
+</T.Mesh>
+
+
+
+<!--<T is={line}></T>
+
+<InstancedMesh>
+    <T.DodecahedronBufferGeometry args={[0.02, 0]} />
+    <T.MeshToonMaterial color="#ffffff" />
+    {#each items as item}
+        <Raindrop position={[item.x, item.y, item.z]} />
+    {/each}
+</InstancedMesh>
+-->
 
 <Floor
     levelSize={{ x: 6, z: 10 }}
@@ -41,6 +123,8 @@
 <Door position={[3.5, 1, -2]} rotation.y={1.57} activeSquare={{ x: 3, z: -2 }} scene={1} nextScenePosition={{ x: -1, z: 14 }} />
 
 <Item id={2} position={{ x: -2, y: 0.4, z: 3 }} scale={[0.2, 0.3, 0.2]} />
+
+<Sparkes position={[-2,0,3]} />
 <!--
 <PositionalAudio autoplay loop refDistance={3} volume={0.1} src={'/music.mp3'} position={[0, 0, 0]} bind:ref={audio} />
 -->

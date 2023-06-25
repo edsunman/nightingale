@@ -40,7 +40,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
                 position.y={0}
                 position.z={item.z}
                 position.x={item.x}
-                scale={[0.12, 0.02, 0.22]}
+                scale={[0.12, 0.12, 0.12]}
                 rotation.y={(item.rotation.y * Math.PI) / 180}
                 rotation.x={(item.rotation.x * Math.PI) / 180}
                 rotation.z={(item.rotation.z * Math.PI) / 180}

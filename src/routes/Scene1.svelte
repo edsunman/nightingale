@@ -8,12 +8,17 @@
     import Rocks from '../objects/Rocks.svelte'
     import Door from '../objects/Door.svelte'
     import Spaceship from '../objects/Spaceship.svelte'
+    import Wind from '../objects/Wind.svelte'
 
     const wrap = RepeatWrapping
 
     const avoidArray :  Array<{ x: number, z: number }> = [{x:5,z:-3},{x:-2,z:15},{x:-16,z:-16}]
 
 </script>  
+
+
+<Wind />
+
 
 <Floor avoidArray={avoidArray} startingPosition={{x: 15, z:-14}} startingRotation={{x: 14, z:2}} levelSize={{x:50, z:50}} />
 
