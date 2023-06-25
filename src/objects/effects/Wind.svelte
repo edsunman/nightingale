@@ -30,7 +30,7 @@
         const material = new MeshLineMaterial()
         material.transparent = true
         material.depthTest = true
-        material.lineWidth = (i * 0.05) + 0.04
+        material.lineWidth = (i * 0.02) + 0.01
         material.dashArray = 1
         material.dashRatio = 0.8
         material.color = new Color(0xffffff)

@@ -8,6 +8,7 @@
     import Character from '../objects/Character.svelte'
     import FloorStones from '../objects/FloorStones.svelte'
     import Pillar from '../objects/Pillar.svelte'
+    import DustParticles from '../objects/effects/DustParticles.svelte'
 
     const avoidArray: Array<{ x: number; z: number }> = [
         { x: -7, z: 2 },
@@ -51,6 +52,9 @@
     })
 </script>
 
+<DustParticles position={[1.5,0,-2]} />
+<DustParticles position={[-5,0,-2]} />
+
 <Floor
     levelSize={{ x: 20, z: 10 }}
     {avoidArray}
@@ -91,7 +95,6 @@
     rotation={1.5708}
 />
 
-<T.AmbientLight intensity={0.1} />
 
 <Door position={[10.5, 1, 1]} rotation.y={1.57} activeSquare={{ x: 10, z: 1 }} scene={1} nextScenePosition={{ x: -23, z: 7 }} />
 

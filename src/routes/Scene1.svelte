@@ -8,7 +8,7 @@
     import Rocks from '../objects/Rocks.svelte'
     import Door from '../objects/Door.svelte'
     import Spaceship from '../objects/Spaceship.svelte'
-    import Wind from '../objects/Wind.svelte'
+    import Wind from '../objects/effects/Wind.svelte'
 
     const wrap = RepeatWrapping
 

@@ -6,7 +6,7 @@
     import { InstancedMesh } from '@threlte/extras'
     import Raindrop from '../objects/Raindrop.svelte'
     import Item from '../objects/Item.svelte'
-    import Sparkes from '../objects/Sparkes.svelte'
+    import Sparkes from '../objects/effects/Sparkes.svelte'
     import * as THREE from 'three'
     import { MeshLine, MeshLineMaterial } from 'three.meshline'
     
@@ -19,8 +19,6 @@
     let curvePosition : any
     let percent = 0
     let windPercent = 0
-
-
 
     const items = Array.from({ length: 3 }, () => ({
         x: Math.random() * 5 - 2.5,
