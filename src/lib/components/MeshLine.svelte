@@ -10,7 +10,7 @@
     export let pointWidth :  Props['pointWidth'] = ( p ) => 1
     export let transparent :  Props['transparent'] = false
     export let depthTest : Props['depthTest'] = true
-    export let depthWrite : Props['depthWrite'] = false
+    export let depthWrite : Props['depthWrite'] = true
     export let lineWidth : Props['lineWidth'] = 1
     export let dashArray : Props['dashArray'] = 0
     export let dashRatio : Props['dashRatio'] = 0

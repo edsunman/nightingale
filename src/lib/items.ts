@@ -21,7 +21,7 @@ export const items : Items = [
         name: "Old Medal",
         message: "A fuel cell",
         image: "cardboardBox.svg",
-        description : "",
+        description : "A tattered relic of only sentimental value",
         isSecretKey:false
     },{
         id: 4,

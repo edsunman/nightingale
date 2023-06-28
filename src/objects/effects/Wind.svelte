@@ -37,7 +37,7 @@
     function moveLines() {
         const pX = $gamePosition.x
         const pZ = $gamePosition.z
-        const distance = 15
+        const distance = 10
         generateLines()
         position[0] = Math.random() * (pX + distance - (pX - distance)) + (pX - distance)
         position[2] = Math.random() * (pZ + distance - (pZ - distance)) + (pZ - distance)
@@ -69,6 +69,7 @@
     {#each lines as line, i}
         <MeshLine
             transparent
+            depthWrite={false}
             points={line.points}
             pointWidth={(p) => 1 * Math.pow(4 * p * (1 - p), 1)}
             lineWidth={i * 0.02 + 0.01}

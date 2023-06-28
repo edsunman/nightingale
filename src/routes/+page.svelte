@@ -40,6 +40,7 @@
     $: updateDialogue($gameConversation)
 
     function updateDialogue(g: any) {
+        $gameState.inventory.open = false
         showDialogueOptions = false
         if (g[0] !== 0) {
             $gameState.moveLock = true
@@ -183,6 +184,7 @@
         {/each}   
         </p><br /><br />
         <button on:click={()=>{
+            $gameState.inventory.owned.length=0
             items.forEach(item => {$gameState.inventory.owned.push(item.id);$gameState=$gameState})
         }}>give all items</button>
         <br /><br />

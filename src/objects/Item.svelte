@@ -30,9 +30,12 @@
         if (player.x >= position.x - 1 && player.x <= position.x + 1 && player.z >= position.z - 1 && player.z <= position.z + 1) {
             let itemId = 0
             if (item?.id) itemId = item?.id
-            $gameState.selectedItemId = itemId
-            $gameState.itemDescription.open = true
-            $gameState.moveLock = true
+            $gameState.inventory.owned.push(itemId)
+            $gameState = $gameState
+            $gameMessage = 'You picked up a ' + item?.name
+           // $gameState.selectedItemId = itemId
+            //$gameState.itemDescription.open = true
+            //$gameState.moveLock = true
         } else {
             $gameMessage = item?.message ?? ''
         }

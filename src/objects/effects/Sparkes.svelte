@@ -37,6 +37,7 @@
         {position}
         points={line}
         transparent
+        depthWrite={false}
         lineWidth={0.03}
         dashArray={1}
         dashRatio={0.98}

@@ -84,7 +84,6 @@
 
 -->
 <MeshLine
-
     points={curvePoints}
     dashOffset={percent}
     pointWidth={( p ) => 1 * Math.pow(4 * p * (1 - p), 1)}
