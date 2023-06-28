@@ -1,16 +1,45 @@
-//  @ts-nocheck
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 // from https://github.com/spite/THREE.MeshLine/blob/master/src/THREE.MeshLine.js
 
 import * as THREE from 'three'
 
+export interface MeshLine {
+    setMatrixWorld(matrixWorld: THREE.Matrix4): void
+    setGeometry(g: any, c: any): void
+    setPoints(g: any, c: any): void
+    process(): void
+    copyV3(a: number): void
+    compareV3(a: number, b: number): boolean
+    advance(a: any): void
+    _attributes: { [name: string]: THREE.BufferAttribute }
+    geometry: THREE.BufferGeometry
+    _geom: any
+    _geometry: any
+}
+
 export class MeshLine extends THREE.BufferGeometry {
+    positions: number[]
+    isMeshLine: boolean
+    previous: number[]
+    next: number[]
+    type: string
+    side: number[]
+    width: number[]
+    indices_array: number[]
+    uvs: number[]
+    counters: number[]
+    _points: Float32Array | any[]
+    widthCallback: any
+    matrixWorld: THREE.Matrix4
+    material: any
+    raycast: any
+    position: any
+
     constructor() {
         super()
         this.isMeshLine = true
         this.type = 'MeshLine'
-
         this.positions = []
-
         this.previous = []
         this.next = []
         this.side = []
@@ -19,7 +48,6 @@ export class MeshLine extends THREE.BufferGeometry {
         this.uvs = []
         this.counters = []
         this._points = []
-        this._geom = null
 
         this.widthCallback = null
 
@@ -90,9 +118,9 @@ MeshLine.prototype.setPoints = function (points, wcb) {
         // could transform Vector3 array into the array used below
         // but this approach will only loop through the array once
         // and is more performant
-        for (var j = 0; j < points.length; j++) {
-            var p = points[j]
-            var c = j / points.length
+        for (let j = 0; j < points.length; j++) {
+            const p = points[j]
+            const c = j / points.length
             this.positions.push(p.x, p.y, p.z)
             this.positions.push(p.x, p.y, p.z)
             this.counters.push(c)
@@ -100,7 +128,7 @@ MeshLine.prototype.setPoints = function (points, wcb) {
         }
     } else {
         for (let j = 0; j < points.length; j += 3) {
-            let c = j / points.length
+            const c = j / points.length
             this.positions.push(points[j], points[j + 1], points[j + 2])
             this.positions.push(points[j], points[j + 1], points[j + 2])
             this.counters.push(c)
@@ -110,13 +138,16 @@ MeshLine.prototype.setPoints = function (points, wcb) {
     this.process()
 }
 
-function MeshLineRaycast(raycaster, intersects) {
-    var inverseMatrix = new THREE.Matrix4()
-    var ray = new THREE.Ray()
-    var sphere = new THREE.Sphere()
-    var interRay = new THREE.Vector3()
-    var geometry = this.geometry
+function MeshLineRaycast(this: MeshLine, raycaster: any, intersects: any) {
+    const inverseMatrix = new THREE.Matrix4()
+    const ray = new THREE.Ray()
+    const sphere = new THREE.Sphere()
+    const interRay = new THREE.Vector3()
+    const geometry = this.geometry
     // Checking boundingSphere distance to ray
+
+    if (!geometry) return
+    if (!geometry.boundingSphere) return
 
     if (!geometry.boundingSphere) geometry.computeBoundingSphere()
     sphere.copy(geometry.boundingSphere)
@@ -129,35 +160,35 @@ function MeshLineRaycast(raycaster, intersects) {
     inverseMatrix.copy(this.matrixWorld).invert()
     ray.copy(raycaster.ray).applyMatrix4(inverseMatrix)
 
-    var vStart = new THREE.Vector3()
-    var vEnd = new THREE.Vector3()
-    var interSegment = new THREE.Vector3()
-    var step = this instanceof THREE.LineSegments ? 2 : 1
-    var index = geometry.index
-    var attributes = geometry.attributes
+    const vStart = new THREE.Vector3()
+    const vEnd = new THREE.Vector3()
+    const interSegment = new THREE.Vector3()
+    const step = this instanceof THREE.LineSegments ? 2 : 1
+    const index = geometry.index
+    const attributes: any = geometry.attributes
 
     if (index !== null) {
-        var indices = index.array
-        var positions = attributes.position.array
-        var widths = attributes.width.array
+        const indices = index.array
+        const positions = attributes.position.array
+        const widths = attributes.width.array
 
-        for (var i = 0, l = indices.length - 1; i < l; i += step) {
-            var a = indices[i]
-            var b = indices[i + 1]
+        for (let i = 0, l = indices.length - 1; i < l; i += step) {
+            const a = indices[i]
+            const b = indices[i + 1]
 
             vStart.fromArray(positions, a * 3)
             vEnd.fromArray(positions, b * 3)
-            var width = widths[Math.floor(i / 3)] !== undefined ? widths[Math.floor(i / 3)] : 1
-            var precision = raycaster.params.Line.threshold + (this.material.lineWidth * width) / 2
-            var precisionSq = precision * precision
+            const width = widths[Math.floor(i / 3)] !== undefined ? widths[Math.floor(i / 3)] : 1
+            const precision = raycaster.params.Line.threshold + (this.material.lineWidth * width) / 2
+            const precisionSq = precision * precision
 
-            var distSq = ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment)
+            const distSq = ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment)
 
             if (distSq > precisionSq) continue
 
             interRay.applyMatrix4(this.matrixWorld) //Move back to world space for distance calculation
 
-            var distance = raycaster.ray.origin.distanceTo(interRay)
+            const distance = raycaster.ray.origin.distanceTo(interRay)
 
             if (distance < raycaster.near || distance > raycaster.far) continue
 
@@ -178,8 +209,8 @@ function MeshLineRaycast(raycaster, intersects) {
 }
 MeshLine.prototype.raycast = MeshLineRaycast
 MeshLine.prototype.compareV3 = function (a, b) {
-    var aa = a * 6
-    var ab = b * 6
+    const aa = a * 6
+    const ab = b * 6
     return (
         this.positions[aa] === this.positions[ab] &&
         this.positions[aa + 1] === this.positions[ab + 1] &&
@@ -188,12 +219,12 @@ MeshLine.prototype.compareV3 = function (a, b) {
 }
 
 MeshLine.prototype.copyV3 = function (a) {
-    var aa = a * 6
+    const aa = a * 6
     return [this.positions[aa], this.positions[aa + 1], this.positions[aa + 2]]
 }
 
 MeshLine.prototype.process = function () {
-    var l = this.positions.length / 6
+    const l = this.positions.length / 6
 
     this.previous = []
     this.next = []
@@ -202,19 +233,19 @@ MeshLine.prototype.process = function () {
     this.indices_array = []
     this.uvs = []
 
-    var w
-
-    var v
+    let w
+    let v: any
     // initial previous points
     if (this.compareV3(0, l - 1)) {
         v = this.copyV3(l - 2)
     } else {
         v = this.copyV3(0)
     }
+    if (!this.previous) return
     this.previous.push(v[0], v[1], v[2])
     this.previous.push(v[0], v[1], v[2])
 
-    for (var j = 0; j < l; j++) {
+    for (let j = 0; j < l; j++) {
         // sides
         this.side.push(1)
         this.side.push(-1)
@@ -236,7 +267,7 @@ MeshLine.prototype.process = function () {
             this.previous.push(v[0], v[1], v[2])
 
             // indices
-            var n = j * 2
+            const n = j * 2
             this.indices_array.push(n, n + 1, n + 2)
             this.indices_array.push(n + 2, n + 1, n + 3)
         }
@@ -301,8 +332,8 @@ MeshLine.prototype.process = function () {
     this.computeBoundingBox()
 }
 
-function memcpy(src, srcOffset, dst, dstOffset, length) {
-    var i
+function memcpy(src: any, srcOffset: any, dst: any, dstOffset: any, length: any) {
+    let i
 
     src = src.subarray || src.slice ? src : src.buffer
     dst = dst.subarray || dst.slice ? dst : dst.buffer
@@ -328,11 +359,11 @@ function memcpy(src, srcOffset, dst, dstOffset, length) {
  * Fast method to advance the line by one position.  The oldest position is removed.
  * @param position
  */
-MeshLine.prototype.advance = function (position) {
-    var positions = this._attributes.position.array
-    var previous = this._attributes.previous.array
-    var next = this._attributes.next.array
-    var l = positions.length
+MeshLine.prototype.advance = function (position: any) {
+    const positions = Array.from(this._attributes.position.array)
+    const previous = this._attributes.previous.array
+    const next = Array.from(this._attributes.next.array)
+    const l = positions.length
 
     // PREVIOUS
     memcpy(positions, 0, previous, 0, l)
@@ -482,8 +513,28 @@ THREE.ShaderChunk['meshline_frag'] = [
     '}'
 ].join('\n')
 
+export interface MeshLineMaterial extends THREE.ShaderMaterial {
+    map: string
+    useMap: boolean
+    alphaMap: string
+    useAlphaMap: boolean
+    lineWidth: number
+    dashArray: any
+    dashRatio: any
+    dashOffset: any
+    color: any
+    resolution: any
+    sizeAttenuation: any
+    useDash: any
+    visibility: any
+    alphaTest: any
+    repeat: any
+}
+
 export class MeshLineMaterial extends THREE.ShaderMaterial {
-    constructor(parameters) {
+    isMeshLineMaterial: boolean
+
+    constructor(parameters?: any) {
         super({
             uniforms: Object.assign({}, THREE.UniformsLib.fog, {
                 lineWidth: { value: 1 },
@@ -663,7 +714,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
     }
 }
 
-MeshLineMaterial.prototype.copy = function (source) {
+MeshLineMaterial.prototype.copy = function (source: MeshLineMaterial) {
     THREE.ShaderMaterial.prototype.copy.call(this, source)
 
     this.lineWidth = source.lineWidth
@@ -685,21 +736,3 @@ MeshLineMaterial.prototype.copy = function (source) {
 
     return this
 }
-/*
-if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-        exports = module.exports = {
-            MeshLine: MeshLine,
-            MeshLineMaterial: MeshLineMaterial,
-            MeshLineRaycast: MeshLineRaycast
-        }
-    }
-    exports.MeshLine = MeshLine
-    exports.MeshLineMaterial = MeshLineMaterial
-    exports.MeshLineRaycast = MeshLineRaycast
-} else {
-    root.MeshLine = MeshLine
-    root.MeshLineMaterial = MeshLineMaterial
-    root.MeshLineRaycast = MeshLineRaycast
-}
-*/

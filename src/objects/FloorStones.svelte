@@ -33,7 +33,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
 
     onMount(() => {
         items.forEach((i) => {
-            console.log(i.rotation.y)
+          //  console.log(i.rotation.y)
         })
     })
 </script>
