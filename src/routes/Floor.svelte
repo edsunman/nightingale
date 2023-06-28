@@ -6,7 +6,6 @@
     import { Raycaster, Vector3 } from 'three'
 
     import type { PlayerState } from '$lib/types'
-    import { onMount } from 'svelte'
 
     export let levelSize = { x: 100, z: 100 }
     export let avoidArray: Array<{ x: number; z: number }> = []
@@ -116,7 +115,6 @@
         }
     })
 
-    onMount(()=>{console.log('loaded')})
 </script>
 
 <Player {playerState} />

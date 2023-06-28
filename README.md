@@ -38,3 +38,10 @@ PlayerState
 -- inventory
 
 with items equipped you get different dialoge options and can interact ieth enviroment differently
+
+    function getSectionOfCurve(a : THREE.Vector3[], offset = 0, length = 1){
+        const arrayLength = a.length
+        const percent = offset*100
+        const offsetPercent = ((percent / 100) * arrayLength)
+        const slicedArray = a.slice(0+offsetPercent, arrayLength*length+offsetPercent)
+        return slicedArray

@@ -8,7 +8,8 @@
     import Item from '../objects/Item.svelte'
     import Sparkes from '../objects/effects/Sparkes.svelte'
     import * as THREE from 'three'
-    import { MeshLine, MeshLineMaterial } from 'three.meshline'
+    import MeshLine from '$lib/components/MeshLine.svelte'
+    import type { Vector3 } from 'three'
     
 
 
@@ -38,7 +39,7 @@
     })
 
    
-    const points = []
+    const points : Vector3[] = []
     points.push(new THREE.Vector3(0, 0, 0))
     points.push(new THREE.Vector3(-1, 2, 1))
     points.push(new THREE.Vector3(1, 4, -1))
@@ -56,14 +57,6 @@
     
    
 
-    const material = new MeshLineMaterial()
-        material.transparent = true
-        material.depthTest = true
-        material.lineWidth = 0.1
-        //material.dashArray = 0.5
-        material.dashRatio = 0.5
-        material.color = new THREE.Color(0xffffff)
-        material.taper = 'linear'
         
 
     useFrame((state,delta)=>{
@@ -83,16 +76,21 @@
 
 
 </script>
-
+<!--
 <T.Mesh position={curvePosition}>
     <T.DodecahedronGeometry args={[0.2, 0]} />
     <T.MeshToonMaterial color="#888888" />
 </T.Mesh>
 
+-->
+<MeshLine
 
-
-<!--<T is={line}></T>
-
+    points={curvePoints}
+    dashOffset={percent}
+    pointWidth={( p ) => 1 * Math.pow(4 * p * (1 - p), 1)}
+/>
+<T is={line}></T>
+<!--
 <InstancedMesh>
     <T.DodecahedronBufferGeometry args={[0.02, 0]} />
     <T.MeshToonMaterial color="#ffffff" />
@@ -122,7 +120,9 @@
 
 <Item id={2} position={{ x: -2, y: 0.4, z: 3 }} scale={[0.2, 0.3, 0.2]} />
 
+
 <Sparkes position={[-2,0,3]} />
+
 <!--
 <PositionalAudio autoplay loop refDistance={3} volume={0.1} src={'/music.mp3'} position={[0, 0, 0]} bind:ref={audio} />
 -->

@@ -1,7 +1,6 @@
 <script lang="ts">
     import { T, useFrame } from '@threlte/core'   
     import { Instance, InstancedMesh } from '@threlte/extras'
-    import { MeshLine, MeshLineMaterial } from 'three.meshline'
     import { Vector3, BufferGeometry, Line, LineBasicMaterial, CatmullRomCurve3, Color } from 'three'
 
     export let position : [x: number, y: number, z: number] = [0,0,0]
@@ -43,7 +42,7 @@
 </script>
 
 <InstancedMesh {position} rotation.x={0.5}>
-    <T.DodecahedronGeometry args={[0.015, 0]} />
+    <T.DodecahedronGeometry args={[0.01, 0]} />
     <T.MeshToonMaterial color="#888888" transparent={true} opacity={0.7} />
     {#each positionsArray as p}
         <Instance position={[p[0],p[1],p[2]]}></Instance>
