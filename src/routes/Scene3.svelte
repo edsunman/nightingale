@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { T, useFrame } from '@threlte/core'
+    import { T, useFrame, useThrelte } from '@threlte/core'
     import Floor from './Floor.svelte'
     import Door from '../objects/Door.svelte'
     import { onMount } from 'svelte'
@@ -11,7 +11,7 @@
     import MeshLine from '$lib/components/MeshLine.svelte'
     import type { Vector3 } from 'three'
     
-
+    const { scene } = useThrelte()
 
     const avoidArray: Array<{ x: number; z: number }> = []
 
@@ -20,6 +20,8 @@
     let curvePosition : any
     let percent = 0
     let windPercent = 0
+    let toggleMesh = true
+    let curveSection : any
 
     const items = Array.from({ length: 3 }, () => ({
         x: Math.random() * 5 - 2.5,
@@ -45,8 +47,18 @@
     points.push(new THREE.Vector3(1, 4, -1))
 
     const curve = new THREE.CatmullRomCurve3(points)
-    const curvePoints = curve.getPoints(100)
+    const curvePoints = curve.getPoints(50)
+    curveSection = curvePoints
 
+
+
+    function getSectionOfCurve(a : THREE.Vector3[], offset = 0, length = 1){
+        const arrayLength = a.length
+        const percent = offset*100
+        const offsetPercent = ((percent / 100) * arrayLength)
+        const slicedArray = a.slice(0+offsetPercent, arrayLength*length+offsetPercent)
+        return slicedArray
+    }
 
 
     const line = new THREE.Line(
@@ -69,9 +81,13 @@
         const point = curve.getPoint(percent)
         curvePosition = [point.x,point.y,point.z]
 
+       // curveSection = getSectionOfCurve(curvePoints, percent, 0.5)
+       // toggleMesh = !toggleMesh
+
        //console.log(percent)
     })
     
+    onMount(() => {console.log(scene)})
     
 
 
@@ -83,11 +99,15 @@
 </T.Mesh>
 
 -->
-<MeshLine
-    points={curvePoints}
-    dashOffset={percent}
-    pointWidth={( p ) => 1 * Math.pow(4 * p * (1 - p), 1)}
-/>
+{#if toggleMesh}
+    <MeshLine
+        name={'meshLine'}
+        points={curveSection}
+        dashOffset={percent}
+        pointWidth={( p ) => 1 * Math.pow(4 * p * (1 - p), 1)}
+    />
+{/if}
+
 <T is={line}></T>
 <!--
 <InstancedMesh>

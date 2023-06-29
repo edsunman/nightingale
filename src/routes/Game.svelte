@@ -24,7 +24,7 @@
     function changePixelRatio(p: number) {
         if (p > 0) {
             renderer?.setPixelRatio(p)
-            // console.log('set to :'+p)
+             console.log('set to :'+p)
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
             //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)

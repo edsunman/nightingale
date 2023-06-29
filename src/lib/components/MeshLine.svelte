@@ -23,7 +23,10 @@
     const line = new MeshLine()
     line.setPoints(points, pointWidth)
 
-    $: line.setPoints(points, pointWidth)
+    // Its probably not a good idea to allow reseting the points
+    // It can lead to garbage collection issues 
+    
+    //$: line.setPoints(points, pointWidth)
 
     const material = new MeshLineMaterial() as any
     material.transparent = transparent

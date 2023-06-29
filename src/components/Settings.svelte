@@ -1,6 +1,8 @@
 <script lang="ts">
     import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores'
 
+    let selected : number
+
     function onKeyDown(e: any) {
         if (e.keyCode == 27) {
             toggleSettings()
@@ -55,6 +57,11 @@
             $gameState.charctersSpokenWith = j.spokenWith
         }
     }
+
+    function setPixelAspectRatio(){
+        $gamePixelRatio = selected
+        $gameState.settings.open = false
+    }
 </script>
 
 {#if $gameState.settings.open}
@@ -75,7 +82,7 @@
             </div>
             <div class=" my-7">
                 <div class="text-sm text-neutral-300">Graphics resolution</div>
-                <select
+                <select bind:value={selected} on:change={() => setPixelAspectRatio()}
                     class="my-3 h-10 px-3 rounded-md text-neutral-200 bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-800 w-full outline-none"
                 >
                     <option value="1" >Low</option>
