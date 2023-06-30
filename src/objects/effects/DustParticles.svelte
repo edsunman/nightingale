@@ -41,7 +41,7 @@
     })
 </script>
 
-<InstancedMesh {position} rotation.x={0.5}>
+<InstancedMesh {position} rotation.x={0.5} frustumCulled={false}>
     <T.DodecahedronGeometry args={[0.01, 0]} />
     <T.MeshToonMaterial color="#888888" transparent={true} opacity={0.7} />
     {#each positionsArray as p}

@@ -66,7 +66,9 @@
  </script>
 
 {#each optionsArray as option,i}
-    <button on:click={() => selectSpeech(i)} class="block w-full {optionsArray.length === i+1 ? '' : 'mb-3'} " >
+    <button on:click={() => selectSpeech(i)}
+    class="flex-1 mr-4 h-10 px-6 font-semibold rounded-md bg-neutral-900 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-800 block w-full
+    {optionsArray.length === i+1 ? '' : 'mb-3'} " >
         <small class="text-neutral-500">{i+1}.</small> {option.text}
         {#if !option.linkId}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-6 h-6">

@@ -100,14 +100,14 @@
     <ItemDescription />
     {#if showDialogueOptions}
         <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
-            <div class="inline-block text-neutral-100 bg-neutral-950 rounded-md p-3 m-3">
+            <div class="inline-block text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 rounded-xl p-3 m-3">
                 <DialogueOptions />
             </div>
         </div>
     {/if}
     {#if $gameConversation[0] !== 0}
         <div class="absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
-            <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-md px-3 py-2 select-none">
+            <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-xl px-3 py-2 select-none">
                 <Dialogue />
             </h3>
         </div>
@@ -119,6 +119,10 @@
             </div>
         </div>
     {/if}
+    <div class="absolute my-5 mx-6 transition-opacity duration-300 text-neutral-100 opacity-30 hover:opacity-100">
+        <p><small>Objective:</small></p>
+        <p>Find a fuel cell</p>
+    </div>
 
     <Canvas>
         <Game {selectedScene} {sceneFinishedLoading} />

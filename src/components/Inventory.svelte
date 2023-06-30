@@ -77,11 +77,11 @@
     <button
         on:click={() => toggleInventory()}
         class="
-        {!$gameState.settings.open && !$gameState.moveLock && !$gameState.inventory.open
-            ? 'text-neutral-200 hover:text-neutral-50 bg-neutral-950'
-            : 'text-neutral-600 bg-neutral-900'}
-        {$gameState.settings.open || $gameState.moveLock ? 'pointer-events-none' : ''}
-          hover:bg-neutral-900 rounded-md pr-3 pl-3 py-2 select-none m-2 outline-none"
+        {$gameState.inventory.open
+            ? 'text-neutral-600 bg-neutral-900'
+            : 'hover:text-neutral-50'}
+        {$gameState.settings.open || $gameState.moveLock ? 'pointer-events-none opacity-50' : ' '}
+          hover:bg-neutral-900 rounded-md pr-3 pl-3 py-2 select-none m-2 outline-none text-neutral-200"
     >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-6 h-6 cursorHover">
             <path

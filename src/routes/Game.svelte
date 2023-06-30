@@ -75,7 +75,7 @@
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, dialogueHeight, $gameSelectedCharacterPosition.z]} center>
-        <h3 class="text-neutral-100 bg-neutral-950 hidden md:block rounded-md px-3 py-2 select-none whitespace-nowrap">
+        <h3 class="text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 hidden md:block rounded-xl px-3 py-2 select-none whitespace-nowrap">
             <Dialogue />
         </h3>
     </HTML>
