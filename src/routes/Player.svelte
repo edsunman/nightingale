@@ -60,7 +60,7 @@
     }
 
     function rotateTowards(sc: { x: number; y: number; z: number }) {
-        if (sc.x !== 0 && sc.z !== 0) {
+        if (!(sc.x == 0 && sc.z == 0)) {
             const p = playerState.position
             const v = new Vector3(sc.x, 0, sc.z)
             const pv = new Vector3(p.x, 0, p.z)

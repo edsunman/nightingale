@@ -9,6 +9,9 @@
     import Door from '../objects/Door.svelte'
     import Spaceship from '../objects/Spaceship.svelte'
     import Wind from '../objects/effects/Wind.svelte'
+    import Object from '../objects/Object.svelte'
+    import Objects from '../objects/Objects.svelte'
+    import Sparkes from '../objects/effects/Sparkes.svelte'
 
     const wrap = RepeatWrapping
 
@@ -32,7 +35,7 @@
 
 <Character 
     message="A hologram flickers through the dust"
-    position={{ x: 19, y:0 , z:-13}}
+    position={{ x: 11, y:0 , z:-11}}
     url={'/hologram-transformed.glb'}
     characterId={1}
     rotation={1.5708}
@@ -63,6 +66,19 @@
     characterId={4}
     rotation={1.5708}
     currentActionKey={"idle"}
+    lookatPlayerWhenTalking={false}
+/>
+
+<Object url={'/tech_landing_pad-transformed.glb'} scale={[4.9,5.2,5.4]} position={[14,-0.05,-17.5]} rotation.y={1.57} />
+<Object url={'/tech_holo_pad-transformed.glb'} scale={0.5} position={[11,0,-11]} rotation.y={-1.57} />
+<Sparkes position={[11,0,-11]} />
+<Objects
+    url={'/tech_crate-transformed.glb'}
+    scale={[0.5, 0.5, 0.5]}
+    instances={[
+        { position: [9, 0.4, -10], rotation: [0, 1, 0] },
+        { position: [8, 0.4, -11.5], rotation: [0, 1.57, 0] }
+    ]}
 />
 
 <Rocks />

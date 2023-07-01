@@ -30,8 +30,8 @@
 <Floor
     levelSize={{ x: 6, z: 12 }}
     {avoidArray}
-    startingPosition={{ x: 2, z: -2 }}
-    startingRotation={{ x: 1, z: -2 }}
+    startingPosition={{ x: 2, z: -1 }}
+    startingRotation={{ x: 1, z: -1 }}
     floorType="stone"
     sunIntensity={0}
 />
@@ -45,7 +45,7 @@
     name="Door"
     position={[3.5, 1, -1]}
     rotation.y={1.57}
-    activeSquare={{ x: 3, z: -2 }}
+    activeSquare={{ x: 3, z: -1 }}
     scene={1}
     nextScenePosition={{ x: -1, z: 14 }}
 />
@@ -60,9 +60,7 @@
         { position: [-2.5, 1.2, 2.0], rotation: [0, 1.57, 0] },
     ]}
 />
-
 <Object url={'/tech_wall_end-transformed.glb'} scale={[1.5, 1.2, 0.05]} position={[2,1.2,-5.5]} />
-
 <Object url={'/tech_wall_end_left-transformed.glb'} rotation={[0, 1.57, 0]} scale={[1.5, 1.2, 0.05]} position={[-2.5, 1.2, 4.5]} />
 
 <!-- OBJECTS -->

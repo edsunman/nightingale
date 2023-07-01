@@ -19,7 +19,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 tech_wall.glb -T
 </script>
 
 {#await gltf then gltf}
-    <InstancedMesh castShadow {...$$restProps} geometry={gltf.nodes.Mesh.geometry}>
+    <InstancedMesh castShadow receiveShadow {...$$restProps} geometry={gltf.nodes.Mesh.geometry}>
         <T.MeshStandardMaterial />
         {#each instances as object}
             <Instance position={object.position} rotation={object.rotation} scale={scale} />

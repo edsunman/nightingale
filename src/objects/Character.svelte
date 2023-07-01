@@ -16,7 +16,9 @@
     export let beforeDialogueActionKey = ''
     export let isHologram = false
     export let lookatPlayer = false
+    export let lookatPlayerWhenTalking = true
     export let pingPongIdle = false
+    export let chatRadius = 1
 
     const gltf = useGltf(url, { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
@@ -82,10 +84,17 @@
     function clicked(e: any) {
         if ($gameConversation[0] === 0 && characterId > 0) {
             const player = $gamePosition
-            if (player.x >= position.x - 1 && player.x <= position.x + 1 && player.z >= position.z - 1 && player.z <= position.z + 1) {
-                const lookAtVector = new Vector3(player.x, 0, player.z)
-                rotationMatrix.lookAt(lookAtVector, currentPosition, new Vector3(0, 1, 0))
-                endRotation.setFromRotationMatrix(rotationMatrix)
+            if (
+                player.x >= position.x - chatRadius &&
+                player.x <= position.x + chatRadius &&
+                player.z >= position.z - chatRadius &&
+                player.z <= position.z + chatRadius
+            ) {
+                if(lookatPlayerWhenTalking) {
+                    const lookAtVector = new Vector3(player.x, 0, player.z)
+                    rotationMatrix.lookAt(lookAtVector, currentPosition, new Vector3(0, 1, 0))
+                    endRotation.setFromRotationMatrix(rotationMatrix)
+                }
                 if (!endRotation.equals(ref.quaternion)) {
                     spinning = true
                     //transitionTo("walk")
@@ -163,7 +172,7 @@
                         {#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">
                                 <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
-                            </T.MeshToonMaterial>                     
+                            </T.MeshToonMaterial>
                         {/await}
                     {/if}
                 </T.SkinnedMesh>

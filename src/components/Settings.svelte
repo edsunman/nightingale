@@ -113,9 +113,10 @@
     <button
         on:click={() => toggleSettings()}
         class="
-        {!$gameState.settings.open && !$gameState.moveLock
-            ? 'text-neutral-200 hover:text-neutral-50 '
-            : 'text-neutral-600 pointer-events-none bg-neutral-900'}
+        {$gameState.settings.open 
+            ? 'text-neutral-600 pointer-events-none bg-neutral-900'
+            : 'text-neutral-200 hover:text-neutral-50'}
+        {$gameState.moveLock ? 'pointer-events-none opacity-50 ' : ''} 
           hover:bg-neutral-900 rounded-md px-3 py-2 select-none m-2 outline-none"
     >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 cursorHover">

@@ -9,6 +9,8 @@
     import FloorStones from '../objects/FloorStones.svelte'
     import Pillar from '../objects/Pillar.svelte'
     import DustParticles from '../objects/effects/DustParticles.svelte'
+    import Object from '../objects/Object.svelte'
+    import Objects from '../objects/Objects.svelte'
 
     const avoidArray: Array<{ x: number; z: number }> = [
         { x: -7, z: 2 },
@@ -86,6 +88,7 @@
     url={'/hologram-transformed.glb?v=2'}
     characterId={5}
     rotation={1.5708}
+    chatRadius={2}
 />
 <Character
     message="An old soldier"
@@ -98,14 +101,12 @@
 
 <Door position={[10.5, 1, 1]} rotation.y={1.57} activeSquare={{ x: 10, z: 1 }} scene={1} nextScenePosition={{ x: -23, z: 7 }} />
 
-<InstancedMesh>
+<InstancedMesh name="pillars">
     <T.CylinderGeometry args={[0.5, 0.5, 5]} />
     <T.MeshToonMaterial color="#666666" />
     <Instance position={[5.5, 2.5, -2.5]} />
     <Instance position={[-0.5, 2.5, -2.5]} />
     <Instance position={[-6.5, 2.5, -2.5]} />
-    <!--<Instance position={[5.5, 2, 3.5]} />
-    <Instance position={[-0.5, 2, 3.5]} />-->
     <Instance position={[-6.5, 2, 3.5]} />
 </InstancedMesh>
 
@@ -116,6 +117,17 @@
 <Pillar
     position={[-0.5, 2, 3.5]}
     matrix={[-3.5, -5.5, 0.5, -1.5, -2.5, -4.5, 1.5, -0.5, -1.5, -3.5, 2.5, 0.5, -0.5, -2.5, 3.5, 1.5]}
+/>
+
+<Object url={'/tech_holo_pad-transformed.glb'} scale={0.4} position={[-2,0,-2]} rotation.y={3.14} />
+<Objects
+    url={'/tech_crate-transformed.glb'}
+    scale={[0.5, 0.5, 0.5]}
+    instances={[
+        { position: [-6.8, 0.4, -1], rotation: [0, 1, 0] },
+        { position: [-7, 0.4, 0.5], rotation: [0, 1.57, 0] },
+        { position: [-6.8, 0.4, 2], rotation: [0, 1.57, 0] }
+    ]}
 />
 
 <T.PointLight position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
