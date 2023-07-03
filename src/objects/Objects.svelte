@@ -9,7 +9,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 tech_wall.glb -T
     import { useGltf, InstancedMesh, Instance } from '@threlte/extras'
     
     export let url : string
-    export let scale :  [x: number, y: number, z: number]
+    export let scale : number | [x: number, y: number, z: number] = 1
     export let instances: {
         position?: [x: number, y: number, z: number],
         rotation?: [x: number, y: number, z: number]
@@ -19,8 +19,8 @@ Command: npx @threlte/gltf@1.0.0-next.12 tech_wall.glb -T
 </script>
 
 {#await gltf then gltf}
-    <InstancedMesh castShadow receiveShadow {...$$restProps} geometry={gltf.nodes.Mesh.geometry}>
-        <T.MeshStandardMaterial />
+    <InstancedMesh castShadow {...$$restProps} geometry={gltf.nodes.Mesh.geometry}>
+        <T.MeshToonMaterial />
         {#each instances as object}
             <Instance position={object.position} rotation={object.rotation} scale={scale} />
         {/each}

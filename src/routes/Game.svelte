@@ -24,7 +24,6 @@
     function changePixelRatio(p: number) {
         if (p > 0) {
             renderer?.setPixelRatio(p)
-             console.log('set to :'+p)
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
             //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)
@@ -49,7 +48,7 @@
            renderer?.compile(scene, $camera)
             //scene.traverse(obj => obj.frustumCulled = false)
            // setTimeout(()=> { scene.traverse(obj => obj.frustumCulled = true) }, 5000)
-            //console.log('shader compile')
+            console.log(scene)
             audio.context.resume()
         }
     }

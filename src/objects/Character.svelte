@@ -148,7 +148,7 @@
     })
 </script>
 
-<T is={ref} dispose={false} {...$$restProps} position={[position.x, position.y, position.z]}>
+<T is={ref} dispose={false} {...$$restProps} name={"character " + characterId} position={[position.x, position.y, position.z]}>
     {#await gltf}
         <slot name="fallback" />
     {:then gltf}

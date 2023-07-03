@@ -13,7 +13,7 @@
         const points = []
         points.push(new Vector3(0, 0, 0))
         for (let i = 1; i < 5; i++) {
-            points.push(new Vector3(Math.random() * 1 - 0.5, 0.23 * i, Math.random() * 1 - 0.5))
+            points.push(new Vector3(Math.random() * 0.5 - 0.2, 0.4 * i, Math.random() * 0.8 - 0.5))
         }
         return new CatmullRomCurve3(points).getPoints(50)
     }
@@ -34,11 +34,13 @@
 
 {#each lines as line, i}
     <MeshLine
+        name={'spark'}
         {position}
+        color={'#ccf7ff'}
         points={line}
         transparent
         depthWrite={false}
-        lineWidth={0.03}
+        lineWidth={0.02}
         dashArray={1}
         dashRatio={0.98}
         dashOffset={offsetValues[i]}

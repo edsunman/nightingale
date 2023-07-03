@@ -20,6 +20,7 @@
     let gameLoaded = false
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
+    let messageTimeout: number
 
     const { progress, item } = useProgress()
 
@@ -30,7 +31,8 @@
     function fadeInMessage(m: string) {
         if ($gameMessage) {
             messageVisible = true
-            setTimeout(function () {
+            clearTimeout(messageTimeout)
+            messageTimeout = setTimeout(function () {
                 messageVisible = false
                 $gameMessage = ''
             }, 3500)

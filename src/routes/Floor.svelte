@@ -141,7 +141,7 @@
     receiveShadow
     rotation.x={-1.57}
     visible={true}
-    name={'selectedGridSquare'}
+    name={'selected grid square'}
     scale={[selectedSize, selectedSize, 1]}
     position={[selectedGridSpace.x, 0.05, selectedGridSpace.z]}
 >

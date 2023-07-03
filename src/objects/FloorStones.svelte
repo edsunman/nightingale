@@ -41,7 +41,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
-    <InstancedMeshes meshes={gltf.nodes} let:components={{ Mesh }} castShadow receiveShadow>
+    <InstancedMeshes meshes={gltf.nodes} let:components={{ Mesh }} name={'floor stones'} castShadow receiveShadow>
         <T.MeshToonMaterial color="#555555" />
         {#each items as item}
             <Mesh

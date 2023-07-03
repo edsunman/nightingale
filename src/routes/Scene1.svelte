@@ -70,7 +70,7 @@
 />
 
 <Object url={'/tech_landing_pad-transformed.glb'} scale={[4.9,5.2,5.4]} position={[14,-0.05,-17.5]} rotation.y={1.57} />
-<Object url={'/tech_holo_pad-transformed.glb'} scale={0.5} position={[11,0,-11]} rotation.y={-1.57} />
+<Object url={'/tech_holo_pad-transformed.glb'} scale={0.4} position={[11,0,-11]} rotation.y={-1.57} />
 <Sparkes position={[11,0,-11]} />
 <Objects
     url={'/tech_crate-transformed.glb'}

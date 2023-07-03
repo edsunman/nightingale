@@ -68,7 +68,7 @@
             <slot name="error" {error} />
         {/await}
     </T>
-   <!--   <T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={2} />-->
-      <Sparkes position={[position.x,  position.y - 0.5, position.z]} /> 
+  
+    <!-- <Sparkes position={[position.x,  position.y - 0.5, position.z]} />  -->
 {/if}
  <T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={owned ? 2 : 0} />
