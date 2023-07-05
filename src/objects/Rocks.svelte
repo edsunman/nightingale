@@ -18,8 +18,8 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     let sRandom = seedrandom('seed')
 
     const items = Array.from({ length: 120 }, () => ({
-        x: sRandom() * 75 - 37.5,
-        z: sRandom() * 75 - 37.5,
+        x: sRandom() * 80 - 40,
+        z: sRandom() * 80 - 40,
         scale: sRandom() * 0.01 + 0.1,
         rotation: {
             x: sRandom() * 360,

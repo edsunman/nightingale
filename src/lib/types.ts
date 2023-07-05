@@ -17,10 +17,12 @@ export type Script = Array<{
         id: number
         text: string
         options?: Array<{
+            id: number
             text: string
             linkId?: number
             item?: number
             receiveItem?: number
+            alreadyChosen? :boolean
         }>
     }>
 }>
@@ -57,6 +59,7 @@ export type GameState = {
     itemDescription: {
         open: boolean
     },
+    selectedConvoOptions : Array<number>
     selectedItemId: number
     charctersSpokenWith : Array<number>,
     volumePreference : number

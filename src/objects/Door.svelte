@@ -9,8 +9,10 @@
     export let activeSquare = { x: 0, z: 0 }
     export let scene: number
     export let key: number = 0
+    export let url : string
+    export let message : string = 'A door'
 
-    const gltf = useGltf('/tech_door-transformed.glb', { useDraco: true })
+    const gltf = useGltf(url, { useDraco: true })
 
     const { onPointerEnter, onPointerLeave } = useCursor()
 
@@ -31,7 +33,7 @@
                 openDoor()
             }
         } else {
-            $gameMessage = 'A door'
+            $gameMessage = message
         }
     }
 </script>
@@ -39,7 +41,7 @@
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
-    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes.Mesh.geometry} scale={[0.5, 1, 0.05]} />
+    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes.Mesh.geometry} scale={0.45} />
 {:catch error}
     <slot name="error" {error} />
 {/await}

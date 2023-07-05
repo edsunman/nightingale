@@ -8,7 +8,7 @@
 </script>
 
 {#await gltf then gltf}
-    <T.Mesh {...$$restProps} geometry={gltf.nodes.Mesh.geometry} castShadow receiveShadow>
+    <T.Mesh {...$$restProps} geometry={gltf.nodes.Mesh.geometry} castShadow>
         <T.MeshToonMaterial />
     </T.Mesh>
 {/await}

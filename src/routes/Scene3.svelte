@@ -42,12 +42,12 @@
 </T.Mesh>
 
 <Door
+    url={'/objects/tech_door-transformed.glb'}
     name="Door"
-    position={[3.5, 1, -1]}
-    rotation.y={1.57}
+    position={[3.5, 0, -1]}
     activeSquare={{ x: 3, z: -1 }}
     scene={1}
-    nextScenePosition={{ x: -1, z: 14 }}
+    nextScenePosition={{ x: 20, z: 23 }}
 />
 
 <Objects
@@ -75,6 +75,9 @@
 />
 
 <Item id={2} position={{ x: -1, y: 1.25, z: 2 }} scale={[0.2, 0.3, 0.2]} />
+
+<Object name={'table'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[0.5, -0.45, -5]} rotation.y={0} />
+<Object name={'server'} url={'/objects/tech_server-transformed.glb'} scale={0.45} position={[-2, -0.1, -4]} rotation.y={-1.57} />
 
 
 <T.Mesh position={[0.5, 2.5, 0]} visible={true} name="light-box">

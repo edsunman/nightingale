@@ -37,7 +37,7 @@
 
     function floorClicked(e: any) {
         const p = playerState.position
-        playerState.path = []
+        playerState.path.length = 0
         const point = e.intersections[0].point
         const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {

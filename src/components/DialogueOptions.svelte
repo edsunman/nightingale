@@ -10,6 +10,7 @@
     const itemsArray : Items = items
     const optionsArray : any[] = []
     let characterId : number = 0
+    let speechId : number = 0
 
     $ : setOptions($gameConversation)
 
@@ -17,9 +18,15 @@
         optionsArray.length = 0
         if (g[0]!==0) {
             characterId = g[0]
+            speechId =  g[1]
             const o = s[g[0]-1].speech.find(x => x.id === g[1])?.options
             if (o) {
                 o.forEach(option => {
+                    console.log(option.id)
+                    option.alreadyChosen = false
+                    if($gameState.selectedConvoOptions.includes(option.id)&&option.linkId){
+                        option.alreadyChosen = true
+                    }
                     if(option.item===undefined||$gameState.inventory.owned.includes(option.item)){
                         optionsArray.push(option)
                     }
@@ -33,6 +40,8 @@
             return false
         }
         const option = optionsArray[n]
+        $gameState.selectedConvoOptions.push(option.id)
+        console.log($gameState.selectedConvoOptions)
         if(option.receiveItem){
             const item = itemsArray.find(x => x.id === option.receiveItem)
             if(item) {
@@ -67,7 +76,8 @@
 
 {#each optionsArray as option,i}
     <button on:click={() => selectSpeech(i)}
-    class="flex-1 mr-4 h-10 px-6 font-semibold rounded-md bg-neutral-900 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-800 block w-full
+    class="flex-1 mr-4 h-10 px-6 font-semibold rounded-md bg-neutral-900   hover:bg-neutral-800 block w-full
+    {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-200 hover:text-neutral-50'}
     {optionsArray.length === i+1 ? '' : 'mb-3'} " >
         <small class="text-neutral-500">{i+1}.</small> {option.text}
         {#if !option.linkId}

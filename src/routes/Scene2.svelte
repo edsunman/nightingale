@@ -114,7 +114,14 @@
     lookatPlayerWhenTalking={false}
 />
 
-<Door position={[10.5, 1, 1]} rotation.y={1.57} activeSquare={{ x: 10, z: 1 }} scene={1} nextScenePosition={{ x: -23, z: 7 }} />
+<Door
+    url={'/objects/stone_door-transformed.glb'}
+    position={[10.5, 0, 1]}
+    activeSquare={{ x: 10, z: 1 }}
+    scene={1}
+    nextScenePosition={{ x: -30, z: 17 }}
+    message={'Back to the outpost'}
+/>
 
 <Objects
     name={'wall'}
@@ -151,8 +158,14 @@
         { position: [-6.5, 0.2, 3.5], rotation: [0, 3.14, 0] }
     ]}
 />
-<Object name={'small pillar'} url={'/objects/stone_pillar_small-transformed.glb'} scale={0.9} position={[-0.5, 0.2, -2.5]} rotation.y={1.57} />
-<Pillar  position={[5.5, 0, 3.5]} matrix={[2.5, -0.5, 0.5, -2.5, 3.5, 0.5, 1.5, -1.5, 4.5, 1.5, 2.5, -0.5, 5.5, 2.5, 3.5, 0.5]} />
+<Object
+    name={'small pillar'}
+    url={'/objects/stone_pillar_small-transformed.glb'}
+    scale={0.9}
+    position={[-0.5, 0.2, -2.5]}
+    rotation.y={1.57}
+/>
+<Pillar position={[5.5, 0, 3.5]} matrix={[2.5, -0.5, 0.5, -2.5, 3.5, 0.5, 1.5, -1.5, 4.5, 1.5, 2.5, -0.5, 5.5, 2.5, 3.5, 0.5]} />
 <Pillar
     position={[-0.5, 0, 3.5]}
     matrix={[-3.5, -6.5, 0.5, -2.5, -2.5, -5.5, 1.5, -1.5, -1.5, -4.5, 2.5, -0.5, -0.5, -3.5, 3.5, 0.5]}
@@ -169,7 +182,7 @@
 <Objects
     name={'table'}
     url={'/objects/stone_table.glb'}
-    scale={[0.32, 0.32, 0.32]}
+    scale={0.32}
     instances={[
         { position: [2, 0, -2], rotation: [0, 0, 0] },
         { position: [9, 0, -3], rotation: [0, 1.57, 0] },
@@ -179,7 +192,7 @@
 <Objects
     name={'stool'}
     url={'/objects/stone_stool.glb'}
-    scale={[0.22, 0.22, 0.22]}
+    scale={0.22}
     instances={[
         { position: [-2, 0, 4], rotation: [0, 0.4, 0] },
         { position: [7.7, 0, -2], rotation: [0, 1, 0] },
