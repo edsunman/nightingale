@@ -13,10 +13,11 @@
 
     interactivity()
 
-    export let script : Script
+    export let script: Script
     export let selectedScene: number
     export let sceneFinishedLoading: boolean
     let audio: any
+    let shaderCamera = false
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
@@ -47,9 +48,9 @@
     function compileScene(s: boolean) {
         if (s) {
             // compile shaders when scene is loaded
-           renderer?.compile(scene, $camera)
-            //scene.traverse(obj => obj.frustumCulled = false)
-           // setTimeout(()=> { scene.traverse(obj => obj.frustumCulled = true) }, 5000)
+           // renderer?.compile(scene, shaderCamera)
+            //shaderCamera = true
+          // setTimeout(() => {shaderCamera = false; console.log(shaderCamera)}, 5000)
             console.log(scene)
             audio.context.resume()
         }
@@ -64,7 +65,7 @@
     })
 </script>
 
-<AudioListener bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x , 2, $gamePosition.z ]} rotation.y={0.78} />
+<AudioListener bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
 
 {#if selectedScene === 1}
     <Scene1 />
@@ -76,7 +77,9 @@
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, dialogueHeight, $gameSelectedCharacterPosition.z]} center>
-        <h3 class="text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 hidden md:block rounded-xl px-3 py-2 select-none whitespace-nowrap">
+        <h3
+            class="text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 hidden md:block rounded-xl px-3 py-2 select-none whitespace-nowrap"
+        >
             <Dialogue {script} />
         </h3>
     </HTML>
@@ -92,4 +95,14 @@
     >
         <OrbitControls enablePan />
     </T.PerspectiveCamera>
+{/if}
+{#if shaderCamera}
+<T.PerspectiveCamera
+    makeDefault
+    name="shader camera"
+    position={[10, 5, 10]}
+    on:create={({ ref }) => {
+        ref.lookAt(0, 1, 0)
+    }}
+/>
 {/if}

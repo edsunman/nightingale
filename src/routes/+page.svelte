@@ -23,9 +23,7 @@
 
     export let data: PageData
     const script = data.script
-
-    //console.log(data.script)
-    // console.log(script)
+    const dev = data.dev
 
     let clientWidth, clientHeight
     let messageVisible = false
@@ -55,8 +53,10 @@
 
     function checkLoaded(p: number) {
         if (p === 1) {
-            gameLoaded = true
-            sceneFinishedLoading = true
+            setTimeout(() => {
+                gameLoaded = true
+                sceneFinishedLoading = true
+            }, 800)
         }
     }
 
@@ -80,7 +80,7 @@
     bind:clientHeight
 >
     {#if !gameLoaded}
-        <div class="w-full h-full bg-neutral-950 z-10 absolute text-white">
+        <div out:fade={{ duration: 300 }}  class="w-full h-full bg-neutral-950 z-10 absolute text-white">
             {#if $progress < 1}
                 <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 100 }}>
                     <div class="bg-white h-full" style="width: {$progress * 100}%" />
@@ -115,7 +115,7 @@
         <Game {selectedScene} {sceneFinishedLoading} {script} />
     </Canvas>
 </div>
-{#if $gameState.dev.status}
+{#if dev}
     <div
         class="mt-12 invisible md:visible"
         style="position:absolute; top:20px; width:150px; white-space: nowrap;left:20px; background-color:#202020; color:azure; font-family: monospace"

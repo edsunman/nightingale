@@ -5,6 +5,7 @@
     import { Vector3, Matrix4, Group, Quaternion, sRGBEncoding } from 'three'
 
     import type { PlayerState } from '$lib/types'
+    import { onMount } from 'svelte'
 
     export let playerState: PlayerState
 
@@ -22,6 +23,7 @@
     let audioSrc: string
     let footstepInterval: number
     let footstepVolume = 0.4
+    let zoom = 8
 
     const rotationMatrix = new Matrix4().lookAt(
         new Vector3(playerState.rotation.x, 0, playerState.rotation.z),
@@ -138,6 +140,10 @@
         }
         $gamePosition = playerState.position
     })
+
+    onMount(() => {
+        setTimeout(()=>{zoom=80}, 800)
+    })
 </script>
 
 <T
@@ -194,7 +200,7 @@
         on:create={({ ref }) => {
             ref.lookAt(playerState.position.x + 8, 9, playerState.position.z + 8)
         }}
-        zoom={80}
+        zoom={zoom}
     />
 {/if}
 

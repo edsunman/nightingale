@@ -29,13 +29,9 @@
         } else {
             speechLookup = script[characterPosition].speech.find((x) => x.id === gc[1])
         }
-        
         if (speechLookup) {
             speech = speechLookup
             alreadyChosen = $gameState.seenSpeech.includes(speech.id)
-            if(!$gameState.seenSpeech.find(x => x === speech.id)) {
-              //  $gameState.seenSpeech.push(speech.id)
-            }
         }
     }
 

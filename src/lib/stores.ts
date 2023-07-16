@@ -5,7 +5,7 @@ import type { GameState } from './types'
 
 export const gameState : Writable<GameState> = writable({
     dev: {
-        status: true,
+        status: false,
         camera: false,
         grid: false,
         avoidObjactsVisible: false
@@ -36,6 +36,6 @@ export const gameMovingTo = writable({ x: 0, z: 0 })
 export const gameSelectedCharacterPosition = writable({ x: 0, y: 0, z: 0 })
 export const gameMessage = writable('')
 export const gameConversation = writable([0, 0])
-export const gameScene = writable(1)
+export const gameScene = writable(2)
 export const gameVolume = writable(0)
 export const gamePixelRatio = writable(1)
