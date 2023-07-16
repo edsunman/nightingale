@@ -1,5 +1,13 @@
 <script lang="ts">
-    import { gameState, gameMessage, gamePosition, gameConversation, gameScene, gameSelectedCharacterPosition, gameMovingTo } from '$lib/stores'
+    import {
+        gameState,
+        gameMessage,
+        gamePosition,
+        gameConversation,
+        gameScene,
+        gameSelectedCharacterPosition,
+        gameMovingTo
+    } from '$lib/stores'
     import { Canvas, useThrelte } from '@threlte/core'
     import { fade } from 'svelte/transition'
     import Game from './Game.svelte'
@@ -7,15 +15,19 @@
     import Dialogue from '../components/Dialogue.svelte'
     import Inventory from '../components/Inventory.svelte'
     import ItemDescription from '../components/ItemDescription.svelte'
-    import { script } from '$lib/script'
+    // import { script } from '$lib/script'
     import Settings from '../components/Settings.svelte'
     import { useProgress } from '@threlte/extras'
-
-
     import { items } from '$lib/items'
+    import type { PageData } from './$types'
+
+    export let data: PageData
+    const script = data.script
+
+    //console.log(data.script)
+    // console.log(script)
 
     let clientWidth, clientHeight
-    let showDialogueOptions = false
     let messageVisible = false
     let gameLoaded = false
     let selectedScene: number = $gameScene
@@ -24,7 +36,7 @@
 
     const { progress, item } = useProgress()
 
-   // $ : console.log('Loaded : '+$item)
+    // $ : console.log('Loaded : '+$item)
 
     $: fadeInMessage($gameMessage)
 
@@ -36,26 +48,6 @@
                 messageVisible = false
                 $gameMessage = ''
             }, 3500)
-        }
-    }
-
-    $: updateDialogue($gameConversation)
-
-    function updateDialogue(g: any) {
-        $gameState.inventory.open = false
-        showDialogueOptions = false
-        if (g[0] !== 0) {
-            $gameState.moveLock = true
-            if (script[g[0] - 1].speech.find((x) => x.id === g[1])?.options) {
-                setTimeout(() => {
-                    showDialogueOptions = true
-                }, 1500)
-            } else {
-                const nextLine = g[1] + 0.1
-                setTimeout(() => {
-                    $gameConversation = [g[0], nextLine]
-                }, 2000)
-            }
         }
     }
 
@@ -80,7 +72,6 @@
         // are we already loaded? then remove black screen
         setTimeout(() => checkLoaded($progress), 500)
     }
-
 </script>
 
 <div
@@ -100,17 +91,11 @@
     <Settings />
     <Inventory />
     <ItemDescription />
-    {#if showDialogueOptions}
-        <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
-            <div class="inline-block text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 rounded-xl p-3 m-3">
-                <DialogueOptions />
-            </div>
-        </div>
-    {/if}
+    <DialogueOptions {script} />
     {#if $gameConversation[0] !== 0}
         <div class="absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
             <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-xl px-3 py-2 select-none">
-                <Dialogue />
+                <Dialogue {script}/>
             </h3>
         </div>
     {/if}
@@ -127,7 +112,7 @@
     </div>
 
     <Canvas>
-        <Game {selectedScene} {sceneFinishedLoading} />
+        <Game {selectedScene} {sceneFinishedLoading} {script} />
     </Canvas>
 </div>
 {#if $gameState.dev.status}
@@ -160,7 +145,7 @@
             x: {$gameMovingTo.x}<br />
             z: {$gameMovingTo.z}
         </p>
-        <p>
+        <p />
         <p>
             Movement locked:
             <input type="checkbox" bind:checked={$gameState.moveLock} />
@@ -177,27 +162,49 @@
             on:click={() => {
                 $gameScene = 2
             }}>2</button
-        ><br/>
+        ><br />
         <button
             on:click={() => {
                 $gameScene = 3
             }}>3</button
         >
         <br /><br />
-        <p>Owned Items:</p><p>
-        {#each $gameState.inventory.owned as item}
-            {item},
-        {/each}   
-        </p><br /><br />
-        <button on:click={()=>{
-            $gameState.inventory.owned.length=0
-            items.forEach(item => {$gameState.inventory.owned.push(item.id);$gameState=$gameState})
-        }}>give all items</button>
+        <p>Owned Items:</p>
+        <p>
+            {#each $gameState.inventory.owned as item}
+                {item},
+            {/each}
+        </p>
         <br /><br />
-        <button on:click={()=>{
-            $gameState.inventory.owned.length = 0
-            $gameState=$gameState
-        }}>clear all items</button>
+        <button
+            on:click={() => {
+                $gameState.inventory.owned.length = 0
+                items.forEach((item) => {
+                    $gameState.inventory.owned.push(item.id)
+                    $gameState = $gameState
+                })
+            }}>give all items</button
+        >
         <br /><br />
+        <button
+            on:click={() => {
+                $gameState.inventory.owned.length = 0
+                $gameState = $gameState
+            }}>clear all items</button
+        >
+        <br /><br />
+         <p>Seen speech:</p>
+        <p>
+            {#each $gameState.seenSpeech as s}
+                {s},
+            {/each}
+        </p>
+         <br /><br />
+           <p>Selected options:</p>
+        <p>
+            {#each $gameState.selectedConvoOptions as o}
+                {o},
+            {/each}
+        </p>
     </div>
 {/if}

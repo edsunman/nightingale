@@ -5,6 +5,7 @@
     import { onMount } from 'svelte'
     import { interactivity, OrbitControls, HTML, useProgress, AudioListener } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
+    import type { Script } from '$lib/types'
 
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
@@ -12,6 +13,7 @@
 
     interactivity()
 
+    export let script : Script
     export let selectedScene: number
     export let sceneFinishedLoading: boolean
     let audio: any
@@ -75,7 +77,7 @@
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, dialogueHeight, $gameSelectedCharacterPosition.z]} center>
         <h3 class="text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 hidden md:block rounded-xl px-3 py-2 select-none whitespace-nowrap">
-            <Dialogue />
+            <Dialogue {script} />
         </h3>
     </HTML>
 {/if}

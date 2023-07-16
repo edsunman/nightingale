@@ -3,20 +3,21 @@ import type { Script } from "./types"
 export const script : Script = [
     {
         name: 'Hologram',
-        characterId: 1,
+        id: 17,
         speech: [
             {
                 id: 1,
+                linkId: 2,
                 text: 'Welcome to the outpost . . .'
             },
             {
-                id: 1.1,
+                id: 2,
                 text: ". . . we don't often get visitors!",
                 options: [
                     {   
                         id: 111,
                         text: 'What is this place?',
-                        linkId: 2
+                        linkId: 5
                     },
                     {
                         id: 112,
@@ -30,13 +31,13 @@ export const script : Script = [
                 ]
             },
             {
-                id: 2,
+                id: 5,
                 text: 'This is the last outpost before Thrace.',
                 options: [
                     {
                         id: 121,
                         text: 'Oh cool',
-                        linkId: 4
+                        linkId: 2
                     }
                 ]
             },
@@ -47,27 +48,7 @@ export const script : Script = [
                     {
                         id : 131,
                         text: "Ok I'll check it out.",
-                        linkId: 4
-                    }
-                ]
-            },
-            {
-                id: 4,
-                text: 'Anything else?',
-                options: [
-                    {
-                        id: 111,
-                        text: 'What is this place?',
                         linkId: 2
-                    },
-                    {
-                        id: 112,
-                        text: 'Where can I buy fuel?',
-                        linkId: 3
-                    },
-                    {
-                        id: 113,
-                        text: 'Thanks, see ya!'
                     }
                 ]
             }
@@ -75,7 +56,7 @@ export const script : Script = [
     },
     {
         name: 'Lieutenant',
-        characterId: 2,
+        id: 2,
         speech: [
             {
                 id: 1,
@@ -107,7 +88,7 @@ export const script : Script = [
     },
     {
         name: 'Merchant',
-        characterId: 3,
+        id: 3,
         speech: [
             {
                 id: 1,
@@ -139,7 +120,7 @@ export const script : Script = [
     },
     {
         name: 'Cadet',
-        characterId: 4,
+        id: 4,
         speech: [
             {
                 id: 1,
@@ -172,7 +153,7 @@ export const script : Script = [
     },
     {
         name: 'Bartender',
-        characterId: 5,
+        id: 5,
         speech: [
             {
                 id: 1,
@@ -204,7 +185,7 @@ export const script : Script = [
     },
     {
         name: 'Retired Major',
-        characterId: 6,
+        id: 6,
         speech: [
             {
                 id: 1,

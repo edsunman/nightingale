@@ -100,7 +100,7 @@
     message="Bartender"
     position={{ x: -8, y: 0, z: 0 }}
     url={'/hologram-transformed.glb?v=2'}
-    characterId={5}
+    characterId={22}
     rotation={1.5708}
     chatRadius={2}
 />
@@ -108,7 +108,7 @@
     message="An old soldier"
     position={{ x: 3, y: 0, z: -3 }}
     url={'/hologram-transformed.glb?v=3'}
-    characterId={6}
+    characterId={23}
     rotation={0}
     chatRadius={2}
     lookatPlayerWhenTalking={false}

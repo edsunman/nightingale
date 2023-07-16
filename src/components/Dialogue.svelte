@@ -1,13 +1,51 @@
 <script lang="ts">
-    import { gameConversation } from '$lib/stores'
-    import { script } from '$lib/script'
+    import { gameConversation, gameState } from '$lib/stores'
+   // import { script } from '$lib/script'
 
-    import type { Script } from '$lib/types'
+    import type { Script, Character, Speech } from '$lib/types'
 
-    const s : Script = script
+    export let script : Script
+    let character : Character
+    let characterPosition
+    let speech : Speech
+    let alreadyChosen = false
+
+    $ : updateSpeech($gameConversation)
+
+    function updateSpeech(gc : any){
+        const characterLookup = script.find(x => x.id === gc[0])
+
+        if(!characterLookup) {
+            console.error('No character found with id ' + gc[0])
+        }
+
+        characterPosition = script.findIndex(x => x.id === gc[0])
+        if (characterLookup) {
+            character = characterLookup
+        }
+        let speechLookup 
+        if(gc[1]===1){ // first selected speech
+            speechLookup = script[characterPosition].speech.find((x) => x.order === 1)
+        } else {
+            speechLookup = script[characterPosition].speech.find((x) => x.id === gc[1])
+        }
+        
+        if (speechLookup) {
+            speech = speechLookup
+            alreadyChosen = $gameState.seenSpeech.includes(speech.id)
+            if(!$gameState.seenSpeech.find(x => x === speech.id)) {
+              //  $gameState.seenSpeech.push(speech.id)
+            }
+        }
+    }
+
 </script>
 
 {#if $gameConversation[0] !== 0}
-    <small>{script[$gameConversation[0] - 1].name}:</small><br />
-    {s[$gameConversation[0] - 1].speech.find((x) => x.id === $gameConversation[1])?.text}
+    <small>{character.name}:</small><br />
+    {#if alreadyChosen && speech.textRepeat}
+        {speech.textRepeat}
+    {:else}
+        {speech.text}
+    {/if}
 {/if}

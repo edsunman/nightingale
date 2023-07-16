@@ -89,14 +89,14 @@
     message="An elderly woman"
     position={{ x: -16, y: 0, z: -23 }}
     url={'/hologram-transformed.glb?v=3'}
-    characterId={3}
+    characterId={20}
     currentActionKey={'idle'}
 />
 <Character
     message="A soldier guards the door"
     position={{ x: 19, y: 0, z: 24 }}
     url={'/hologram-transformed.glb?v=4'}
-    characterId={4}
+    characterId={21}
     rotation={1.5708}
     currentActionKey={'idle'}
     lookatPlayerWhenTalking={false}

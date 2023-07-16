@@ -24,6 +24,7 @@ export const gameState : Writable<GameState> = writable({
     itemDescription: {
         open: false
     },
+    seenSpeech : [],
     selectedConvoOptions : [],
     selectedItemId: 0,
     charctersSpokenWith : [0],

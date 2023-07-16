@@ -10,22 +10,29 @@ export type PlayerState = {
     sunIntensity: number
 }
 
-export type Script = Array<{
+export type Script = Array<Character>
+
+export type Character = {
     name: string
-    characterId: number
-    speech: Array<{
+    id: number
+    speech: Array<Speech>
+}
+
+export type Speech = {
+    id: number
+    text: string
+    textRepeat? : string
+    linkId?: number
+    order? : number
+    options?: Array<{
         id: number
         text: string
-        options?: Array<{
-            id: number
-            text: string
-            linkId?: number
-            item?: number
-            receiveItem?: number
-            alreadyChosen? :boolean
-        }>
+        linkId?: number
+        item?: number
+        receiveItem?: number
+        alreadyChosen?: boolean
     }>
-}>
+}
 
 export type Item = {
     id: number
@@ -38,15 +45,14 @@ export type Item = {
 
 export type Items = Item[]
 
-
 export type GameState = {
-    dev : {
-        status : boolean
+    dev: {
+        status: boolean
         camera: boolean
         grid: boolean
         avoidObjactsVisible: boolean
     }
-    nextScenePosition: { x: number, z: number }
+    nextScenePosition: { x: number; z: number }
     moveLock: boolean
     inventory: {
         open: boolean
@@ -55,13 +61,13 @@ export type GameState = {
     }
     settings: {
         open: boolean
-    },
+    }
     itemDescription: {
         open: boolean
-    },
-    selectedConvoOptions : Array<number>
+    }
+    seenSpeech: Array<number>
+    selectedConvoOptions: Array<number>
     selectedItemId: number
-    charctersSpokenWith : Array<number>,
-    volumePreference : number
-
+    charctersSpokenWith: Array<number>
+    volumePreference: number
 }
