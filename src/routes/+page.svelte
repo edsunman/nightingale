@@ -15,7 +15,6 @@
     import Dialogue from '../components/Dialogue.svelte'
     import Inventory from '../components/Inventory.svelte'
     import ItemDescription from '../components/ItemDescription.svelte'
-    // import { script } from '$lib/script'
     import Settings from '../components/Settings.svelte'
     import { useProgress } from '@threlte/extras'
     import { items } from '$lib/items'
