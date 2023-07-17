@@ -17,7 +17,6 @@
     export let selectedScene: number
     export let sceneFinishedLoading: boolean
     let audio: any
-    let shaderCamera = false
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
@@ -47,10 +46,6 @@
 
     function compileScene(s: boolean) {
         if (s) {
-            // compile shaders when scene is loaded
-           // renderer?.compile(scene, shaderCamera)
-            //shaderCamera = true
-          // setTimeout(() => {shaderCamera = false; console.log(shaderCamera)}, 5000)
             console.log(scene)
             audio.context.resume()
         }
@@ -95,14 +90,4 @@
     >
         <OrbitControls enablePan />
     </T.PerspectiveCamera>
-{/if}
-{#if shaderCamera}
-<T.PerspectiveCamera
-    makeDefault
-    name="shader camera"
-    position={[10, 5, 10]}
-    on:create={({ ref }) => {
-        ref.lookAt(0, 1, 0)
-    }}
-/>
 {/if}

@@ -121,7 +121,7 @@
 
 {#if showDialogueOptions}
     <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
-        <div class="inline-block text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 rounded-xl p-3 m-3">
+        <div class="inline-block text-neutral-100 backdrop-blur-md bg-white/10  rounded-xl p-3 m-3">
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}

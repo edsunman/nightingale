@@ -31,7 +31,9 @@
                 scene: $gameScene,
                 position: $gamePosition,
                 inventory: $gameState.inventory,
-                spokenWith: $gameState.charctersSpokenWith
+                spokenWith: $gameState.charctersSpokenWith,
+                seenSpeech: $gameState.seenSpeech,
+                selectedConvoOptions: $gameState.selectedConvoOptions
             })
         )
         localStorage.setItem('Nightingale Save Data', s)
@@ -55,6 +57,8 @@
             $gameState.inventory = j.inventory
             $gameState.settings.open = false
             $gameState.charctersSpokenWith = j.spokenWith
+            $gameState.seenSpeech = j.seenSpeech
+            $gameState.selectedConvoOptions = j.selectedConvoOptions
         }
     }
 

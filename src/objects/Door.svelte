@@ -22,7 +22,7 @@
     }
 
     function doorClicked(e: any) {
-        if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z) {
+        if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z && !$gameState.moveLock) {
             if (key > 0) {
                 if ($gameState.inventory.owned.includes(key)) {
                     openDoor()

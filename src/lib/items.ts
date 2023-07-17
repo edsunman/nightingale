@@ -39,7 +39,7 @@ export const items : Items = [
         name: "",
         message: "",
         image: "",
-        description: "advice to talk to door guard",
+        description: "major gives advice to talk to door guard",
         isSecretKey:true
     } ,
     {
@@ -47,8 +47,25 @@ export const items : Items = [
         name: "",
         message: "",
         image: "",
-        description: "permission to enter room",
+        description: "permission to enter store",
         isSecretKey:true
-    }     
+    },
+    {
+        id: 103,
+        name: "",
+        message: "",
+        image: "",
+        description: "told about store",
+        isSecretKey:true
+    },
+    {
+        id: 104,
+        name: "",
+        message: "",
+        image: "",
+        description: "entered store",
+        isSecretKey:true
+    }
+
 ]
 

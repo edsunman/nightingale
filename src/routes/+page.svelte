@@ -8,7 +8,7 @@
         gameSelectedCharacterPosition,
         gameMovingTo
     } from '$lib/stores'
-    import { Canvas, useThrelte } from '@threlte/core'
+    import { Canvas } from '@threlte/core'
     import { fade } from 'svelte/transition'
     import Game from './Game.svelte'
     import DialogueOptions from '../components/DialogueOptions.svelte'
@@ -19,6 +19,7 @@
     import { useProgress } from '@threlte/extras'
     import { items } from '$lib/items'
     import type { PageData } from './$types'
+    import Objectives from '../components/Objectives.svelte'
 
     export let data: PageData
     const script = data.script
@@ -27,6 +28,7 @@
     let clientWidth, clientHeight
     let messageVisible = false
     let gameLoaded = false
+    let welcomeMessage = false
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
     let messageTimeout: number
@@ -79,7 +81,7 @@
     bind:clientHeight
 >
     {#if !gameLoaded}
-        <div out:fade={{ duration: 300 }}  class="w-full h-full bg-neutral-950 z-10 absolute text-white">
+        <div out:fade={{ duration: 300 }} class="w-full h-full bg-neutral-950 z-30 absolute text-white">
             {#if $progress < 1}
                 <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 100 }}>
                     <div class="bg-white h-full" style="width: {$progress * 100}%" />
@@ -94,7 +96,7 @@
     {#if $gameConversation[0] !== 0}
         <div class="absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
             <h3 class="text-neutral-100 bg-neutral-950 md:hidden inline-block rounded-xl px-3 py-2 select-none">
-                <Dialogue {script}/>
+                <Dialogue {script} />
             </h3>
         </div>
     {/if}
@@ -105,10 +107,31 @@
             </div>
         </div>
     {/if}
-    <div class="absolute my-5 mx-6 transition-opacity duration-300 text-neutral-100 opacity-30 hover:opacity-100">
-        <p><small>Objective:</small></p>
-        <p>Find a fuel cell</p>
-    </div>
+    {#if welcomeMessage}
+        <div>
+            <div
+                class="z-20 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
+            >
+                <h3 class="text-xl text-center py-6">Welcome to Nightigale!</h3>
+                <p class="pb-6">Nightingale is a rough 'proof of concept' attempt at a point and click adventure game.</p>
+                <p class="pb-6">
+                    Set in the far future on a distant planet, your ship has run out of fuel and you are marooned at a remote desert
+                    outpost.
+                </p>
+                <p>Your objective is to find a fuel cell to power your ship.</p>
+                <div class="text-center py-6">
+                    <button
+                        class="flex-1 mr-6 h-10 px-8 font-semibold rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
+                        on:click={() => {
+                            welcomeMessage = false
+                        }}>Start game</button
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="w-full h-full bg-black opacity-0 z-10 absolute" />
+    {/if}
+    <Objectives />
 
     <Canvas>
         <Game {selectedScene} {sceneFinishedLoading} {script} />
@@ -192,17 +215,17 @@
             }}>clear all items</button
         >
         <br /><br />
-         <p>Seen speech:</p>
+        <p>Seen speech:</p>
         <p>
             {#each $gameState.seenSpeech as s}
                 {s},
             {/each}
         </p>
-         <br /><br />
-           <p>Selected options:</p>
+        <br /><br />
+        <p>Selected options:</p>
         <p>
-            {#each $gameState.selectedConvoOptions as o}
-                {o},
+            {#each $gameState.selectedConvoOptions as o, i}
+                {o},{#if i % 5 === 0}<br/>{/if}
             {/each}
         </p>
     </div>

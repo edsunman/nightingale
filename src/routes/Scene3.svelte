@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { gameState } from '$lib/stores'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import Floor from './Floor.svelte'
     import Door from '../objects/Door.svelte'
@@ -21,9 +22,12 @@
         setTimeout(function () {
             clearInterval(flickeringInterval)
             lightBrightness = 1
-        }, 1500)
+        }, 2000)
 
-        console.log(scene)
+        if(!$gameState.inventory.owned.includes(104)){
+            $gameState.inventory.owned.push(104)
+            $gameState = $gameState
+        }
     })
 </script>
 
