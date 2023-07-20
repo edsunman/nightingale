@@ -2,24 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-
+.painted {
+    background-image: url('/paint-bg.png');
+    background-position: center;
 }
 
 *,
 *:before,
 *:after {
-  @apply cursor-default;
+    @apply cursor-default;
 }
 
-a, button, .cursorHover {
-  @apply cursor-pointer;
+a,
+button,
+.cursorHover {
+    @apply cursor-pointer;
 }
-
 
 /* Hide scroll bar mobile safari */
 @supports (-webkit-touch-callout: none) {
-  .h-screen {
-    height: -webkit-fill-available;
-  }
+    .h-screen {
+        height: -webkit-fill-available;
+    }
 }

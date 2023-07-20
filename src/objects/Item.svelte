@@ -11,7 +11,7 @@
     export let position: { x: number; y: number; z: number }
 
     const gltf = useGltf('/fuelcell-transformed.glb', { useDraco: true })
-    const texture = useTexture('/fuelcellAtlas.png')
+    const texture = useTexture('/itemAtlas.png')
 
     export const ref = new Group()
 
@@ -71,4 +71,4 @@
   
     <!-- <Sparkes position={[position.x,  position.y - 0.5, position.z]} />  -->
 {/if}
- <T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={owned ? 2 : 0} />
+ <T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={owned ? 1 : 0} />

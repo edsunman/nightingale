@@ -3,25 +3,25 @@ import type { Items } from "./types"
 export const items : Items = [
     {
         id: 1,
-        name: "Cardboard Box",
+        name: "Cardboard box",
         message: "A cardboard box",
         image: "cardboardBox.svg",
-        description : "",
+        description : "A Cardboard Box!?",
         isSecretKey:false
     },
     {
         id: 2,
-        name: "Fuel Cell",
+        name: "Fuel cell",
         message: "A fuel cell",
-        image: "cardboardBox.svg",
-        description : "",
+        image: "fuelCell.svg",
+        description : "A powerful energy store used to power spacecraft",
         isSecretKey:false
     },{
         id: 3,
         name: "Old Medal",
-        message: "A fuel cell",
-        image: "cardboardBox.svg",
-        description : "A tattered relic of only sentimental value",
+        message: "",
+        image: "medal.svg",
+        description : "An old, tattered relic of only sentimental value",
         isSecretKey:false
     },{
         id: 4,
@@ -29,6 +29,14 @@ export const items : Items = [
         message: "",
         image: "cardboardBox.svg",
         description: "",
+        isSecretKey:false
+    },
+    {
+        id: 5,
+        name: "Mask",
+        message: "A mask",
+        image: "cardboardBox.svg",
+        description : "",
         isSecretKey:false
     },
     

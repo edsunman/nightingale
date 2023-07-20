@@ -38,7 +38,7 @@
 </script>
 
 {#if $gameConversation[0] !== 0}
-    <small>{character.name}:</small><br />
+    <small class="uppercase">{character.name}:</small><br />
     {#if alreadyChosen && speech.textRepeat}
         {speech.textRepeat}
     {:else}

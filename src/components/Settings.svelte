@@ -72,22 +72,22 @@
     <div
         class="backdrop-blur-sm bg-white/10 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl pt-6 select-none z-20"
     >
-        <h3 class="text-2xl text-center mb-4">Settings</h3>
-        <div class="px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+        <h3 class="text-xl text-center mb-4 uppercase">Settings</h3>
+        <div class="painted px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
             <div class="flex my-7">
                 <button
-                    class="flex-1 mr-4 h-10 px-6 font-semibold rounded-md bg-neutral-900 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-800"
+                    class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
                     on:click={() => saveGame()}>Save game</button
                 >
                 <button
-                    class="flex-1 h-10 px-6 font-semibold rounded-md bg-neutral-900 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-800"
+                    class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
                     on:click={() => loadGame()}>Load game</button
                 >
             </div>
             <div class=" my-7">
                 <div class="text-sm text-neutral-300">Graphics resolution</div>
                 <select bind:value={selected} on:change={() => setPixelAspectRatio()}
-                    class="my-3 h-10 px-3 rounded-md text-neutral-200 bg-neutral-900 hover:bg-neutral-800 focus:bg-neutral-800 w-full outline-none"
+                    class="tracking-wider my-3 h-10 px-3 rounded-md text-neutral-200 bg-white/[0.05] hover:bg-white/[0.1] focus:bg-neutral-800 w-full outline-none"
                 >
                     <option value="1" >Low</option>
                     <option value="2">High</option>
@@ -118,40 +118,32 @@
         on:click={() => toggleSettings()}
         class="
         {$gameState.settings.open 
-            ? 'text-neutral-600 pointer-events-none bg-neutral-900'
-            : 'text-neutral-200 hover:text-neutral-50'}
+            ? 'bg-white/20 text-neutral-50'
+            : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
         {$gameState.moveLock ? 'pointer-events-none opacity-50 ' : ''} 
-          hover:bg-neutral-900 rounded-md px-3 py-2 select-none m-2 outline-none"
+          text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10 m-5 rounded-md px-3 py-2 select-none m-e outline-none"
     >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 cursorHover">
-            <path
-                class="cursorHover"
-                fill-rule="evenodd"
-                d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 01-.517.608 7.45 7.45 0 00-.478.198.798.798 0 01-.796-.064l-.453-.324a1.875 1.875 0 00-2.416.2l-.243.243a1.875 1.875 0 00-.2 2.416l.324.453a.798.798 0 01.064.796 7.448 7.448 0 00-.198.478.798.798 0 01-.608.517l-.55.092a1.875 1.875 0 00-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 01-.064.796l-.324.453a1.875 1.875 0 00.2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 01.796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 01.517-.608 7.52 7.52 0 00.478-.198.798.798 0 01.796.064l.453.324a1.875 1.875 0 002.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 01-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 001.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 01-.608-.517 7.507 7.507 0 00-.198-.478.798.798 0 01.064-.796l.324-.453a1.875 1.875 0 00-.2-2.416l-.243-.243a1.875 1.875 0 00-2.416-.2l-.453.324a.798.798 0 01-.796.064 7.462 7.462 0 00-.478-.198.798.798 0 01-.517-.608l-.091-.55a1.875 1.875 0 00-1.85-1.566h-.344zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z"
-                clip-rule="evenodd"
-            />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+            <path class="cursorHover" d="m197.91,123.88l3.02-8.03,30.18-21.72-4.72-17.69-22.64-30.76-44.33,14.42-10.38-47.1-52.82,2.88-6.6,49.02-45.28-19.22-15.09,16.34-12.26,30.18,33.01,29.41.94,5.77-33.96,26.72,4.72,18.46,24.52,29.8,38.67-13.46,5.66,3.84,5.66,41.33,33.01,1.92,23.58-4.81,3.77-42.29,5.66-3.84,43.39,18.26,27.35-48.06-35.09-31.38Zm-50.75,23.69l-19.81,10-22.64-6.15-13.21-23.07,8.49-26.91,24.05-11.92,14.62,5.19,12.26,12.5,5.66,21.15-9.43,19.22Z"/>   
         </svg>
     </button>
 </div>
 
 {#if $gameVolume === 0}
-    <div class="absolute bottom-0 left-14">
+    <div class="absolute bottom-0 left-20">
         <button
             on:click={() => {
                 $gameVolume = 0.6
             }}
             class="
             {!$gameState.settings.open && !$gameState.moveLock
-                ? ' '
+                ? ''
                 : 'opacity-50 pointer-events-none '}
-            hover:bg-neutral-900 text-neutral-200 hover:text-neutral-50 rounded-md px-3 py-2 select-none m-2 outline-none"
+            text-neutral-50 bg-white/20 opacity-70 hover:opacity-100 backdrop-blur-md rounded-md px-3 py-2 select-none m-5 ml-0 outline-none"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 cursorHover">
-                <path
-                    class="cursorHover"
-                    d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z"
-                />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+               <polygon class="cursorHover" points="1 102 46 96 109 39 122 47 122 207 107 222 47 166 4 160 1 102"/><path d="m149.41,78.62l5.79-8.11s5.79-1.16,8.11,0,32.42,40.53,32.42,40.53l39.84-41.05,11.12,2.83,2.32,8.11-36.13,45.16,36.13,45.16-3.47,12.74-10.42-2.32-35.9-36.82-31.27,35.67-9.73,3.47-8.8-11.58,35.9-42.85-35.9-50.95Z"/>
+                </svg>
         </button>
     </div>
 {/if}

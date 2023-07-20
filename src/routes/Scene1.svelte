@@ -46,7 +46,7 @@
 <!--startingPosition={{x: 26, z:-22}} -->
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[90, 0.01, 90]} />
-    <T.MeshStandardMaterial color="#c97841" />
+    <T.MeshToonMaterial color="#a6623c" />
 </T.Mesh>
 
 <Door

@@ -8,13 +8,13 @@
   </script>
   
   {#if showObjective}
-        <div in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
+        <div out:fade={{ duration: 300 }}>
             <ul class="list-disc absolute mt-16 pt-2 mx-6 text-neutral-100">
                 {#each objectives as objective}
                     {#if (objective.itemRequired && $gameState.inventory.owned.includes(objective.itemRequired)) || !objective.itemRequired}
                         <li
                             class="text-sm ml-5 pt-2 {objective.itemsStrike && objective.itemsStrike.some(r => $gameState.inventory.owned.includes(r))
-                                ? 'line-through'
+                                ? 'line-through opacity-70'
                                 : ''}"
                         >
                             {objective.text}
@@ -31,8 +31,8 @@
         on:mouseleave={() => {
             showObjective = false
         }}
-        class="absolute my-5 mx-6 transition-opacity duration-300 text-neutral-100 opacity-50 hover:opacity-100"
+        class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-100 opacity-50 hover:opacity-100"
     >
-        <p><small>Objective:</small></p>
+        <p><small class="uppercase">Objective:</small></p>
         <p>Find a fuel cell</p>
     </div>

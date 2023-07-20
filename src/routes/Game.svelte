@@ -3,7 +3,7 @@
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { onMount } from 'svelte'
-    import { interactivity, OrbitControls, HTML, useProgress, AudioListener } from '@threlte/extras'
+    import { interactivity, OrbitControls, HTML, useProgress, AudioListener, Audio } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
     import type { Script } from '$lib/types'
 
@@ -20,6 +20,10 @@
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
+    let inventoryOpen = false
+    let equippedItem = 0
+    let openInventoryAudio  : any
+    let itemSelectAudio : any
 
     $: changePixelRatio($gamePixelRatio)
 
@@ -29,6 +33,37 @@
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
             //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)
+        }
+    }
+
+    $: inventoryOpenSound($gameState)
+
+    function inventoryOpenSound(gs : any){
+        if (!inventoryOpen && gs.inventory.open) {
+            inventoryOpen = true
+            openInventoryAudio.play()
+        }
+        if(!gs.inventory.open) {
+            inventoryOpen = false
+        }
+    }
+
+    $: itemEquippedSound($gameState)
+
+    function itemEquippedSound(gs : any){
+        if (equippedItem !== gs.inventory.equipped) {
+            console.log('play')
+            //itemSelectAudio.play()
+
+            const source = itemSelectAudio.context.createBufferSource()
+            const gainNode = itemSelectAudio.context.createGain()
+            source.buffer = itemSelectAudio.buffer
+            gainNode.gain.value = $gameVolume
+            source.connect(gainNode)
+            gainNode.connect(itemSelectAudio.context.destination)
+            source.start()
+
+            equippedItem = gs.inventory.equipped
         }
     }
 
@@ -60,7 +95,9 @@
     })
 </script>
 
-<AudioListener bind:ref={audio} masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
+<AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
+<Audio src={'/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
+<Audio src={'/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
 
 {#if selectedScene === 1}
     <Scene1 />
@@ -73,7 +110,7 @@
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, dialogueHeight, $gameSelectedCharacterPosition.z]} center>
         <h3
-            class="text-neutral-100 bg-gradient-to-b from-neutral-950 to-neutral-900 hidden md:block rounded-xl px-3 py-2 select-none whitespace-nowrap"
+            class="text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-3 py-1 select-none whitespace-nowrap "
         >
             <Dialogue {script} />
         </h3>

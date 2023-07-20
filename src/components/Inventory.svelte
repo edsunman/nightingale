@@ -37,32 +37,39 @@
 
     function selectItem(item: Item) {
         selectedItem = item
+        $gameState.inventory.equipped = item.id
     }
 </script>
 
 {#if $gameState.inventory.open}
     <div
-        class="absolute w-[16.5rem] right-0 bottom-0 mb-16 text-neutral-100 backdrop-blur-md bg-white/10 rounded-xl select-none m-2 pt-6"
+        class="absolute w-[16.5rem] right-0 bottom-0 mb-20 text-neutral-100 backdrop-blur-md bg-white/10 rounded-xl select-none m-5 pt-6"
     >
-        {#if selectedItem}
-            <div class="bg-no-repeat bg-center bg-contain w-full h-24 mb-3" style="background-image:url('/{selectedItem.image}" />
-            <h3 class="text-xl text-center mb-2">{selectedItem.name}</h3>
-            <p class="text-center text-sm mb-3 px-4">{selectedItem.description}</p>
-        {/if}
-        {#if inventory.length < 1}
-            <h3 class="text-xl text-center mb-4">empty</h3>
-        {/if}
-        <div class="px-6 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+        <h3 class="text-xl text-center mb-4 uppercase">inventory</h3>
+        <div class="painted px-6 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+            {#if selectedItem}
+                <div
+                    class="bg-no-repeat bg-center bg-contain w-full h-24 mb-5 mt-2"
+                    style="background-image:url('/icons/{selectedItem.image}"
+                />
+                <h3 class="text-xl text-center">{selectedItem.name}</h3>
+                <div class="flex content-center h-14 flex-wrapmb-3">
+                    <p class=" text-center text-sm m-auto px-4">{selectedItem.description}</p>
+                </div>
+            {/if}
+            {#if inventory.length < 1}
+                <h3 class="text-xl text-center mb-4">empty</h3>
+            {/if}
             <div class="flex flex-wrap">
                 {#each inventory as item}
                     <button
                         on:click={() => {
                             selectItem(item)
                         }}
-                        class="m-2 w-14 h-14 bg-neutral-800 rounded-md p-1 bg-no-repeat bg-center bg-[size:60%]
-                        {item === selectedItem ? 'border-neutral-300 border-2' : ''}
+                        class="m-2 w-14 h-14 rounded-md p-1 bg-no-repeat bg-center bg-[size:75%]
+                        {item === selectedItem ? 'border-neutral-300 bg-white/[0.2] border-2' : ' bg-white/[0.1]'}
                             "
-                        style="background-image:url('/{item.image}')"
+                        style="background-image:url('/icons/{item.image}')"
                     />
                 {/each}
                 {#each { length: 6 - inventory.length } as _, i}
@@ -77,24 +84,12 @@
     <button
         on:click={() => toggleInventory()}
         class="
-        {$gameState.inventory.open
-            ? 'text-neutral-600 bg-neutral-900'
-            : 'hover:text-neutral-50'}
+        {$gameState.inventory.open ? 'bg-white/20 text-neutral-50' : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
         {$gameState.settings.open || $gameState.moveLock ? 'pointer-events-none opacity-50' : ' '}
-          hover:bg-neutral-900 rounded-md pr-3 pl-3 py-2 select-none m-2 outline-none text-neutral-200"
+          rounded-md px-3 py-2 select-none m-5 outline-none text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10"
     >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-6 h-6 cursorHover">
-            <path
-                class="cursorHover"
-                d="M153.6,332.8v128h204.8v-128H153.6z M409.6,313.25V460.8c0,28.3-22.9,51.2-51.2,51.2H153.6c-28.28,0-51.2-22.9-51.2-51.2
-		V313.25c-15.7-14.08-25.6-34.5-25.6-57.25v-76.8c0-42.4,34.4-76.8,76.8-76.8h204.8c42.43,0,76.8,34.4,76.8,76.8V256
-		C435.2,278.75,425.33,299.2,409.6,313.25z M153.6,153.6c-14.13,0-25.6,11.47-25.6,25.6V256c0,14.15,11.48,25.6,25.6,25.6h204.8
-		c14.15,0,25.6-11.45,25.6-25.6v-76.8c0-14.13-11.45-25.6-25.6-25.6H153.6z M281.6,281.6h-51.2V256c0-14.13,11.48-25.6,25.6-25.6
-		c14.15,0,25.6,11.48,25.6,25.6V281.6z M281.6,332.8v25.6c0,14.15-11.45,25.6-25.6,25.6c-14.13,0-25.6-11.45-25.6-25.6v-25.6H281.6z
-		 M166.4,0c21.23,0,38.4,17.2,38.4,38.4v76.8c0,21.23-17.18,38.4-38.4,38.4c-21.2,0-38.4-17.18-38.4-38.4V38.4
-		C128,17.2,145.2,0,166.4,0z M345.6,0C366.83,0,384,17.2,384,38.4v76.8c0,21.23-17.17,38.4-38.4,38.4c-21.2,0-38.4-17.18-38.4-38.4
-		V38.4C307.2,17.2,324.4,0,345.6,0z"
-            />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+            <polygon class="cursorHover" points="9.35 31.81 32 18.7 90.37 7 177.94 15.12 188.91 23.47 215.62 23.47 240.65 67.58 249 143.89 235.51 183.09 215.24 197.39 211.36 168.04 220.38 129.58 215.62 75.93 204.88 53.27 194.15 64.01 191.77 92.62 172.69 105.74 117.85 104.54 86.85 102.16 86.85 80.7 66.58 77.12 53.46 83.08 52.98 99.18 41.54 102.16 4.82 102.16 1 50.89 9.35 31.81"/><polygon points="90.5 118.63 148.92 122.2 181.97 122.06 194.15 148.66 194.15 191.58 194.15 214.24 177.46 232.12 133.35 241.9 47.5 239.27 6.96 224.97 3.38 180.85 5.47 131 26.11 116.24 53.54 118.63 54.73 131.74 54.73 143.66 83.34 148.43 83.34 134.13 84.54 121.01 90.5 118.63"/>
         </svg>
     </button>
 </div>

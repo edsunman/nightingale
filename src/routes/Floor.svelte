@@ -12,7 +12,7 @@
     export let startingPosition = { x: 0, z: 0 }
     export let startingRotation = { x: 0, z: 0 }
     export let floorType = 'sand'
-    export let sunIntensity = 0.8
+    export let sunIntensity = 1
 
     let next = $gameState.nextScenePosition
     let playerState: PlayerState = {

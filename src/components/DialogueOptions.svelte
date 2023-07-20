@@ -76,15 +76,15 @@
     }
 
     function selectSpeech(n: number) {
-        if (n + 1 > optionsArray.length) {
+        if (n + 1 > optionsArray.length || !showDialogueOptions) {
             return false
         }
         const option = optionsArray[n]
         if (!$gameState.selectedConvoOptions.find((x) => x === option.id)) {
             $gameState.selectedConvoOptions.push(option.id)
         }
-        if(!$gameState.seenSpeech.find(x => x === speech.id)) {
-                $gameState.seenSpeech.push(speech.id)
+        if (!$gameState.seenSpeech.find((x) => x === speech.id)) {
+            $gameState.seenSpeech.push(speech.id)
         }
         if (option.receiveItem) {
             const item = itemsArray.find((x) => x.id === option.receiveItem)
@@ -121,29 +121,22 @@
 
 {#if showDialogueOptions}
     <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
-        <div class="inline-block text-neutral-100 backdrop-blur-md bg-white/10  rounded-xl p-3 m-3">
+        <div class="inline-block">
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
-                    class="flex-1 mr-4 h-10 px-6 font-semibold rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
+                    class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
     {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-200 hover:text-neutral-50'}
     {optionsArray.length === i + 1 ? '' : 'mb-3'} "
                 >
                     <small class="text-neutral-500">{i + 1}.</small>
                     {option.text}
                     {#if !option.linkId}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="inline w-6 h-6"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 250 250" class="inline w-5 h-5 ml-1">
+                            <polygon
+                                points="89.56 110.32 197.8 110.2 174.47 85.91 181.22 70.48 195.68 67.59 231.54 103.45 242.14 114.05 246 120.8 246 126.2 238.29 137.19 196.51 178.97 183.01 181.86 175.3 172.22 178.19 156.8 198.76 136.22 183.34 136.22 142.85 137.19 92.89 136.22 85.18 131.4 82.29 120.8 89.56 110.32"
+                            /><polygon
+                                points="114.98 25 46.2 25 30.75 28.32 16.63 40.78 13.31 57.06 13.31 197.61 19.95 212.73 29.92 219.38 44.54 224 118.97 224 135.42 218.55 147.88 206.92 151.2 186.98 147.88 177.84 135.42 172.03 127.11 175.35 124.62 180.34 124.62 196.95 118.8 199.44 50.69 199.44 47.36 198.61 37.4 188.64 38.23 55.73 43.21 49.09 121.29 49.92 125.45 56.57 125.45 65.7 131.26 74.01 141.23 75.67 149.54 69.03 151.2 47.76 142.89 32.48 125.28 25 114.98 25"
                             />
                         </svg>
                     {/if}

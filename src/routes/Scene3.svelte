@@ -78,7 +78,7 @@
     ]}
 />
 
-<Item id={2} position={{ x: -1, y: 1.25, z: 2 }} scale={[0.2, 0.3, 0.2]} />
+<Item id={2} position={{ x: -1, y: 1.25, z: 2 }} scale={0.2} />
 
 <Object name={'table'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[0.5, -0.45, -5]} rotation.y={0} />
 <Object name={'server'} url={'/objects/tech_server-transformed.glb'} scale={0.45} position={[-2, -0.1, -4]} rotation.y={-1.57} />

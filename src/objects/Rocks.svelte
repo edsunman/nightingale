@@ -34,7 +34,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     <slot name="fallback" />
 {:then gltf}
     <InstancedMeshes meshes={gltf.nodes} let:components={{ Rock }} castShadow receiveShadow>
-        <T.MeshToonMaterial color="#ac6130" />
+        <T.MeshToonMaterial color="#9c5b30" />
         {#each items as item}
             <Rock
                 position.y={0}

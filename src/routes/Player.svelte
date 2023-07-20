@@ -6,6 +6,7 @@
 
     import type { PlayerState } from '$lib/types'
     import { onMount } from 'svelte'
+    import Inventory from '../components/Inventory.svelte'
 
     export let playerState: PlayerState
 
@@ -52,13 +53,6 @@
         }
         nextAction.play()
         currentActionKey = nextActionKey
-    }
-
-    function loaded(ref: any) {
-        ref.ref.traverse(function (object: any) {
-            object.castShadow = true
-            object.receiveShadow = false
-        })
     }
 
     function rotateTowards(sc: { x: number; y: number; z: number }) {
@@ -142,7 +136,9 @@
     })
 
     onMount(() => {
-        setTimeout(()=>{zoom=80}, 800)
+        setTimeout(() => {
+            zoom = 80
+        }, 800)
     })
 </script>
 
@@ -158,20 +154,41 @@
     {#await gltf}
         <slot name="fallback" />
     {:then gltf}
-        <T.Group name="Scene" >
-            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01} >
+        <T.Group name="Scene">
+            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
                 <T is={gltf.nodes.mixamorigHips} />
-                <T.SkinnedMesh castShadow
-                    name="Body"
-                    geometry={gltf.nodes.Body.geometry}
-                    skeleton={gltf.nodes.Body.skeleton}
-                >
-                {#await texture then t}
-                    <T.MeshToonMaterial color="#ffffff">
-                          <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
-                    </T.MeshToonMaterial>
-                {/await}
-                </T.SkinnedMesh>
+                <T is={gltf.nodes.Box_Bone} />
+                {#if $gameState.inventory.equipped !== 1}
+                    <T.SkinnedMesh castShadow name="Mesh" geometry={gltf.nodes.Mesh.geometry} skeleton={gltf.nodes.Mesh.skeleton}>
+                        {#await texture then t}
+                            <T.MeshToonMaterial color="#ffffff">
+                                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                            </T.MeshToonMaterial>
+                        {/await}
+                    </T.SkinnedMesh>
+                {:else}
+                    <T.SkinnedMesh
+                        castShadow
+                        name="Box"
+                        geometry={gltf.nodes.Box.geometry}
+                        skeleton={gltf.nodes.Box.skeleton}
+                    >
+                        {#await texture then t}
+                            <T.MeshToonMaterial color="#ffffff">
+                                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                            </T.MeshToonMaterial>
+                        {/await}
+                     </T.SkinnedMesh>
+                {/if}
+                {#if $gameState.inventory.equipped === 5}
+                    <T.SkinnedMesh
+                        castShadow
+                        name="Mask"
+                        geometry={gltf.nodes.Mask.geometry}
+                        material={gltf.nodes.Mask.material}
+                        skeleton={gltf.nodes.Mask.skeleton}
+                    />
+                {/if}
             </T.Group>
         </T.Group>
     {:catch error}
@@ -181,17 +198,6 @@
     <slot {ref} />
 </T>
 
-<!--
-<GLTF
-    bind:gltf={$gltf}
-    on:create={(ref) => loaded(ref)}
-    position.x={playerState.position.x}
-    position.y={0}
-    position.z={playerState.position.z}
-    url="/player.glb"
-/>
-
- -->
 {#if !$gameState.dev.camera}
     <T.OrthographicCamera
         name="main camera"
@@ -200,7 +206,7 @@
         on:create={({ ref }) => {
             ref.lookAt(playerState.position.x + 8, 9, playerState.position.z + 8)
         }}
-        zoom={zoom}
+        {zoom}
     />
 {/if}
 
@@ -233,7 +239,7 @@
     position={[playerState.position.x, 0, playerState.position.z]}
 >
     <T.BoxGeometry args={[1, 0.1, 1]} />
-    <T.MeshStandardMaterial color="#9932CC"  />
+    <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
 
 <Audio src={audioSrc} bind:ref={runAudio} on:create={({ ref }) => {}} autoplay={false} loop={true} volume={0} />
