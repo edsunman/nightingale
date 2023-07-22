@@ -43,7 +43,7 @@
 
 {#if $gameState.inventory.open}
     <div
-        class="absolute w-[16.5rem] right-0 bottom-0 mb-20 text-neutral-100 backdrop-blur-md bg-white/10 rounded-xl select-none m-5 pt-6"
+        class="z-20 absolute w-[16.5rem] right-0 bottom-0 mb-20 text-neutral-100 backdrop-blur-md bg-white/10 rounded-xl select-none m-5 pt-6"
     >
         <h3 class="text-xl text-center mb-4 uppercase">inventory</h3>
         <div class="painted px-6 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">

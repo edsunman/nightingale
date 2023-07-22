@@ -61,11 +61,11 @@ export const useCursor = (
     const unsubscribeHovering = hoveringStore.subscribe((isHovering) => {
         //hovering = isHovering
         if (isHovering) {
-        // el.style.cursor = onPointerOverValue
-        el.classList.add("cursorHover")
+            // el.style.cursor = onPointerOverValue
+            el.classList.add("cursorHover")
         } else {
-        //el.style.cursor = onPointerOutValue
-        el.classList.remove("cursorHover")
+            //el.style.cursor = onPointerOutValue
+            el.classList.remove("cursorHover")
         }
     })
     onDestroy(unsubscribeHovering)

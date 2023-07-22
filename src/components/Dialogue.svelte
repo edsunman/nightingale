@@ -17,8 +17,8 @@
 
         if(!characterLookup) {
             console.error('No character found with id ' + gc[0])
+            return
         }
-
         characterPosition = script.findIndex(x => x.id === gc[0])
         if (characterLookup) {
             character = characterLookup
@@ -29,16 +29,20 @@
         } else {
             speechLookup = script[characterPosition].speech.find((x) => x.id === gc[1])
         }
-        if (speechLookup) {
-            speech = speechLookup
-            alreadyChosen = $gameState.seenSpeech.includes(speech.id)
+        if (!speechLookup) {
+            console.error('Speech not found: ' + gc[1])
+            return
         }
+        speech = speechLookup
+        alreadyChosen = $gameState.seenSpeech.includes(speech.id)
     }
 
 </script>
 
 {#if $gameConversation[0] !== 0}
-    <small class="uppercase">{character.name}:</small><br />
+    {#if !speech.incidental}
+        <small class="uppercase">{character.name}:</small><br />
+    {/if}
     {#if alreadyChosen && speech.textRepeat}
         {speech.textRepeat}
     {:else}

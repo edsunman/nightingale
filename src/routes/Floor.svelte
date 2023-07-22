@@ -51,8 +51,7 @@
             const intersects = raycaster.intersectObjects(avoidObjects, false)
             const dist = Math.sqrt((grid.x - playerVec.x) ** 2 + (grid.z - playerVec.z) ** 2)
 
-            if (intersects.length > 0) {
-                // pointing towards wall
+            if (intersects.length > 0) { // pointing towards wall
                 // move towards wall and stop
                 const ip = intersects[0].point
                 let gridIp = { x: 0, z: 0 }
@@ -145,7 +144,6 @@
     scale={[selectedSize, selectedSize, 1]}
     position={[selectedGridSpace.x, 0.05, selectedGridSpace.z]}
 >
-    <!--<T.CylinderGeometry args={[0.5, 0.5, 0.06]}  />-->
     <T.RingGeometry args={[0.4, 0.5]} />
     <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} emissive={selectedColour} transparent={true} />
 </T.Mesh>

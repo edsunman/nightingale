@@ -24,6 +24,7 @@ export type Speech = {
     textRepeat? : string
     linkId?: number
     order? : number
+    incidental? : number
     options?: Array<{
         id: number
         text: string

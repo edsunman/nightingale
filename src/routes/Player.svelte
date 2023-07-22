@@ -6,7 +6,6 @@
 
     import type { PlayerState } from '$lib/types'
     import { onMount } from 'svelte'
-    import Inventory from '../components/Inventory.svelte'
 
     export let playerState: PlayerState
 
@@ -41,7 +40,7 @@
 
     $: $actions[playerState.annimation]?.play()
 
-    $: rotateTowards($gameSelectedCharacterPosition)
+    $: rotateTowards($gameState.moveLock)
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
         const currentAction = $actions[currentActionKey]
@@ -55,9 +54,11 @@
         currentActionKey = nextActionKey
     }
 
-    function rotateTowards(sc: { x: number; y: number; z: number }) {
+    function rotateTowards(ml : any) {
+        const sc = $gameSelectedCharacterPosition
         if (!(sc.x == 0 && sc.z == 0)) {
             const p = playerState.position
+            // TODO : reuse vector3 rather than create
             const v = new Vector3(sc.x, 0, sc.z)
             const pv = new Vector3(p.x, 0, p.z)
             rotationMatrix.lookAt(v, pv, new Vector3(0, 1, 0))
@@ -88,7 +89,7 @@
             const radians = Math.atan2(path[0].z - p.z, path[0].x - p.x)
             const modifier = { x: Math.cos(radians), z: Math.sin(radians) }
             if (p.x < path[0].x + 0.04 && p.x > path[0].x - 0.04 && p.z < path[0].z + 0.04 && p.z > path[0].z - 0.04) {
-                // dont need to move so snap to grid
+                // reached destination so snap to grid
                 playerState.position.z = path[0].z
                 playerState.position.x = path[0].x
                 playerState.settingOff = true
@@ -113,8 +114,7 @@
                     playerState.running = true
                 }
                 playerState.settingOff = false
-                if (delta < 0.5) {
-                    // check for one off spikes caused by switching tabs etc
+                if (delta < 0.5) { // don't move if there are one off spikes caused by switching tabs etc
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
                 }
@@ -123,19 +123,18 @@
             if (!playerState.arrived) {
                 playerState.running = false
                 transitionTo('idle')
-                // runAudio.stop()
                 clearInterval(footstepInterval)
             }
             playerState.arrived = true
         }
         if (ref) {
-            // console.log(ref)
             ref.quaternion.rotateTowards(endRotation, delta * 10)
         }
         $gamePosition = playerState.position
     })
 
     onMount(() => {
+        // zoom out breifly on load to compile shaders
         setTimeout(() => {
             zoom = 80
         }, 800)
@@ -242,4 +241,4 @@
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
 
-<Audio src={audioSrc} bind:ref={runAudio} on:create={({ ref }) => {}} autoplay={false} loop={true} volume={0} />
+<Audio src={audioSrc} bind:ref={runAudio} autoplay={false} loop={true} volume={0} />

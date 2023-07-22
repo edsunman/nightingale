@@ -5,6 +5,7 @@
     import { Vector3, Matrix4, Euler, Quaternion, Group, DoubleSide, sRGBEncoding, LoopOnce, LoopPingPong } from 'three'
     import { useCursor } from '$lib/util/useCursor'
     import { onMount, onDestroy } from 'svelte'
+    import IncidentalDialogue from './IncidentalDialogue.svelte'
 
     export const ref = new Group()
     export let position = { x: 1, y: 0, z: 1 }
@@ -30,6 +31,7 @@
     let flickerInterval: any
     let flickeringInterval: any
     let staticAudio: any
+    let characterSelected : any
 
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
@@ -82,7 +84,7 @@
     })
 
     function clicked(e: any) {
-        if ($gameConversation[0] === 0 && characterId > 0) {
+        if (!$gameState.moveLock) {
             const player = $gamePosition
             if (
                 player.x >= position.x - chatRadius &&
@@ -90,6 +92,7 @@
                 player.z >= position.z - chatRadius &&
                 player.z <= position.z + chatRadius
             ) {
+                characterSelected()
                 if(lookatPlayerWhenTalking) {
                     const lookAtVector = new Vector3(player.x, 0, player.z)
                     rotationMatrix.lookAt(lookAtVector, currentPosition, new Vector3(0, 1, 0))
@@ -99,7 +102,11 @@
                     spinning = true
                     //transitionTo("walk")
                 }
-                $gameSelectedCharacterPosition = position
+                let nudgeDialogueAmount = 0
+                if (player.x <= position.x && player.z <= position.z) {
+                    nudgeDialogueAmount = 0.5
+                }
+                $gameSelectedCharacterPosition = { x: position.x, y: 2.6 + nudgeDialogueAmount, z: position.z}
                 $gameConversation = [characterId, 1]
                 if (!$gameState.charctersSpokenWith.includes(characterId)) {
                     $gameState.charctersSpokenWith.push(characterId)
@@ -211,3 +218,5 @@
         bind:ref={staticAudio}
     />
 {/if}
+
+<IncidentalDialogue {characterId} {position} bind:clicked={characterSelected} />

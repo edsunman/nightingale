@@ -78,13 +78,20 @@
     floorType="stone"
     sunIntensity={0}
 />
-
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[20, 0.01, 10]} />
     <T.MeshStandardMaterial color="#555555" />
 </T.Mesh>
+<Door
+    url={'/objects/stone_door-transformed.glb'}
+    position={[10.5, 0, 1]}
+    activeSquare={{ x: 10, z: 1 }}
+    scene={1}
+    nextScenePosition={{ x: -30, z: 17 }}
+    message={'Back to the outpost'}
+/>
 
-<FloorStones />
+<!-- CHARACTERS -->
 
 <Character
     message="A hologram dances"
@@ -113,15 +120,9 @@
     lookatPlayerWhenTalking={false}
 />
 
-<Door
-    url={'/objects/stone_door-transformed.glb'}
-    position={[10.5, 0, 1]}
-    activeSquare={{ x: 10, z: 1 }}
-    scene={1}
-    nextScenePosition={{ x: -30, z: 17 }}
-    message={'Back to the outpost'}
-/>
+<!-- OBJECTS -->
 
+<FloorStones />
 <Objects
     name={'wall'}
     url={'/objects/stone_wall-transformed.glb'}
@@ -213,15 +214,15 @@
         { position: [-9, 0, 4], rotation: [0, 0, 0] }
     ]}
 />
-
 <Sparkes position={[-0.5, 1.5, -2.5]} />
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
 
+<!-- LIGHTS + AUDIO -->
+
 <T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'yellow light'} position={[-7, 3, 0]} distance={8} color={'#deac40'} intensity={1.5} />
-
 {#await windowTexture then t}
     <T.SpotLight
         name={'window light'}

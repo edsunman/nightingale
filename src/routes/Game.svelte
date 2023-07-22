@@ -70,11 +70,11 @@
     let dialogueHeight = 0
     $: nudgeDialogue($gameSelectedCharacterPosition)
     function nudgeDialogue(sc: any) {
-        if ($gamePosition.x <= sc.x && $gamePosition.z <= sc.z) {
-            dialogueHeight = 3.1
-        } else {
-            dialogueHeight = 2.8
-        }
+            if ($gamePosition.x <= sc.x && $gamePosition.z <= sc.z) {
+               // dialogueHeight = 3.1
+            } else {
+                dialogueHeight = 2.6
+            }
     }
 
     $: compileScene(sceneFinishedLoading)
@@ -108,9 +108,9 @@
 {/if}
 
 {#if $gameConversation[0] !== 0}
-    <HTML position={[$gameSelectedCharacterPosition.x, dialogueHeight, $gameSelectedCharacterPosition.z]} center>
+    <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
         <h3
-            class="text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-3 py-1 select-none whitespace-nowrap "
+            class="z-20 text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-3 py-1 select-none whitespace-nowrap "
         >
             <Dialogue {script} />
         </h3>

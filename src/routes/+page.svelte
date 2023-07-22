@@ -81,7 +81,7 @@
     bind:clientHeight
 >
     {#if !gameLoaded}
-        <div out:fade={{ duration: 300 }} class="w-full h-full bg-neutral-950 z-30 absolute text-white">
+        <div out:fade={{ duration: 300 }} class="w-full h-full bg-neutral-950 z-40 absolute text-white">
             {#if $progress < 1}
                 <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 100 }}>
                     <div class="bg-white h-full" style="width: {$progress * 100}%" />
@@ -94,14 +94,14 @@
     <ItemDescription />
     <DialogueOptions {script} />
     {#if $gameConversation[0] !== 0}
-        <div class="absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
+        <div class="z-20 absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
             <h3 class="text-neutral-100 rounded-md bg-neutral-900 md:hidden inline-block px-3 py-2 select-none">
                 <Dialogue {script} />
             </h3>
         </div>
     {/if}
     {#if messageVisible}
-        <div in:fade={{ duration: 100 }} out:fade={{ duration: 500 }} class="absolute text-center w-full top-12">
+        <div in:fade={{ duration: 100 }} out:fade={{ duration: 500 }} class="z-20 absolute text-center w-full top-12">
             <div class="inline-block text-neutral-900 bg-neutral-300 rounded-md px-3 py-2 select-none m-2">
                 <h3>{$gameMessage}</h3>
             </div>
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-full h-full bg-black opacity-0 z-10 absolute" />
+        <div class="w-full h-full bg-black opacity-0 z-20  absolute" />
     {/if}
     <Objectives />
 

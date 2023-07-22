@@ -17,38 +17,44 @@
 
     $: updateDialogue($gameConversation)
 
-    function updateDialogue(g: any) {
-        if (g[0] !== 0) {
-            const characterLookup = script.find((x) => x.id === g[0])
-            characterPosition = script.findIndex((x) => x.id === g[0])
-            if (characterLookup) {
-                character = characterLookup
+    function updateDialogue(gc: any) {
+        if (gc[0] !== 0) {
+            const characterLookup = script.find((x) => x.id === gc[0])
+            characterPosition = script.findIndex((x) => x.id === gc[0])
+            if(!characterLookup) {
+                console.error('No character found with id ' + gc[0])
+                return
             }
+            character = characterLookup
             let speechLookup
-            if (g[1] === 1) {
-                // first selected speech
+            if (gc[1] === 1) {
                 speechLookup = script[characterPosition].speech.find((x) => x.order === 1)
             } else {
-                speechLookup = script[characterPosition].speech.find((x) => x.id === g[1])
+                speechLookup = script[characterPosition].speech.find((x) => x.id === gc[1])
+            }
+            if(!speechLookup) {
+                console.error('No character found with id ' + gc[0])
+                return
+            }
+            speech = speechLookup
+            if(speech.incidental){
+
+            } else {
+                $gameState.inventory.open = false
+                showDialogueOptions = false
+                setOptions(gc)
+                $gameState.moveLock = true
+                if (speech.options && speech.options.length > 0) {
+                    setTimeout(() => {
+                        showDialogueOptions = true
+                    }, 1500)
+                } else if (speech.linkId) {
+                    setTimeout(() => {
+                        $gameConversation = [gc[0], speech.linkId]
+                    }, 2000)
+                }
             }
 
-            if (speechLookup) {
-                speech = speechLookup
-            }
-            $gameState.inventory.open = false
-            showDialogueOptions = false
-            setOptions(g)
-
-            $gameState.moveLock = true
-            if (speech.options && speech.options.length > 0) {
-                setTimeout(() => {
-                    showDialogueOptions = true
-                }, 1500)
-            } else if (speech.linkId) {
-                setTimeout(() => {
-                    $gameConversation = [g[0], speech.linkId]
-                }, 2000)
-            }
         }
     }
 
@@ -100,7 +106,7 @@
             $gameState.moveLock = false
             $gameConversation = [0, 0]
             showDialogueOptions = false
-            $gameState.seenSpeech.length = 0
+            //$gameState.seenSpeech.length = 0
         } else {
             $gameConversation = [character.id, option.linkId]
         }
