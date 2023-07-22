@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { gameMovingTo, gameConversation } from '$lib/stores'
     import { T, useThrelte } from '@threlte/core'
     import Floor from './Floor.svelte'
     import Door from '../objects/Door.svelte'
@@ -62,9 +63,7 @@
         { x: -9, z: -3 }
     ]
 
-    const windowTexture = useTexture('./window.png')
-
-    const { scene } = useThrelte()
+    const windowTexture = useTexture('/texture/window.png')
 
     onMount(() => {
         //console.log(audio)
@@ -90,7 +89,7 @@
 <Character
     message="A hologram dances"
     position={{ x: -0.5, y: 1.8, z: -2.5 }}
-    url={'/hologram-transformed.glb'}
+    url={'/objects/hologram-transformed.glb'}
     characterId={0}
     currentActionKey={'dance'}
     isHologram={true}
@@ -99,7 +98,7 @@
 <Character
     message="Bartender"
     position={{ x: -8, y: 0, z: 0 }}
-    url={'/hologram-transformed.glb?v=2'}
+    url={'/objects/hologram-transformed.glb?v=2'}
     characterId={22}
     rotation={1.5708}
     chatRadius={2}
@@ -107,7 +106,7 @@
 <Character
     message="An old soldier"
     position={{ x: 3, y: 0, z: -3 }}
-    url={'/hologram-transformed.glb?v=3'}
+    url={'/objects/hologram-transformed.glb?v=3'}
     characterId={23}
     rotation={0}
     chatRadius={2}
@@ -134,10 +133,10 @@
         { position: [0.5, 0, -4.5], rotation: [0, 1.57, 0] }
     ]}
 />
-<Object name={'wall end'} url={'/objects/stone_wall_end-transformed.glb'} position={[5.5, 0, -4.5]} rotation.y={1.57} />
+<Object name={'wall end'} url={'/objects/stone_wallEnd-transformed.glb'} position={[5.5, 0, -4.5]} rotation.y={1.57} />
 <Objects
     name={'pillar base'}
-    url={'/objects/stone_pillarbase-transformed.glb'}
+    url={'/objects/stone_pillarBase-transformed.glb'}
     scale={[0.9, 0.9, 0.9]}
     instances={[
         { position: [5.5, 0.2, -2.5], rotation: [0, 0, 0] },
@@ -160,7 +159,7 @@
 />
 <Object
     name={'small pillar'}
-    url={'/objects/stone_pillar_small-transformed.glb'}
+    url={'/objects/stone_pillarSmall-transformed.glb'}
     scale={0.9}
     position={[-0.5, 0.2, -2.5]}
     rotation.y={1.57}
@@ -172,7 +171,7 @@
 />
 <Objects
     name={'crate'}
-    url={'/tech_crate-transformed.glb'}
+    url={'/objects/tech_crate-transformed.glb'}
     scale={[0.5, 0.5, 0.5]}
     instances={[
         { position: [-6.8, 0.4, -1], rotation: [0, 1, 0] },
@@ -181,7 +180,7 @@
 />
 <Objects
     name={'table'}
-    url={'/objects/stone_table.glb'}
+    url={'/objects/stone_table-transformed.glb'}
     scale={0.32}
     instances={[
         { position: [2, 0, -2], rotation: [0, 0, 0] },
@@ -191,7 +190,7 @@
 />
 <Objects
     name={'stool'}
-    url={'/objects/stone_stool.glb'}
+    url={'/objects/stone_stool-transformed.glb'}
     scale={0.22}
     instances={[
         { position: [-2, 0, 4], rotation: [0, 0.4, 0] },

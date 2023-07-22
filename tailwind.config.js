@@ -4,8 +4,8 @@ export default {
     theme: {
         extend: {
             cursor : {
-                default: 'image-set( "/cursor.png" 1x, "/cursor-x2.png" 2x), default',
-                pointer: 'image-set( "/cursorHover.png" 1x, "/cursorHover-x2.png" 2x), pointer'
+                default: 'image-set( "/cursor/cursor.png" 1x, "/cursor/cursor-x2.png" 2x), default',
+                pointer: 'image-set( "/cursor/cursorHover.png" 1x, "/cursor/cursorHover-x2.png" 2x), pointer'
             },
             fontFamily: {
                 sans: ['Viga']

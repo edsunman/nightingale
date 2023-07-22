@@ -10,8 +10,8 @@
     export let id: number
     export let position: { x: number; y: number; z: number }
 
-    const gltf = useGltf('/fuelcell-transformed.glb', { useDraco: true })
-    const texture = useTexture('/itemAtlas.png')
+    const gltf = useGltf('/objects/item_fuelCell-transformed.glb', { useDraco: true })
+    const texture = useTexture('/texture/itemAtlas.png')
 
     export const ref = new Group()
 

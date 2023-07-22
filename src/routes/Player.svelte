@@ -11,10 +11,10 @@
     export let playerState: PlayerState
 
     export const ref = new Group()
-    const gltf = useGltf('/player-transformed.glb', { useDraco: true })
+    const gltf = useGltf('/objects/player-transformed.glb', { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
     const component = forwardEventHandlers()
-    const texture = useTexture('/playerAtlas.png')
+    const texture = useTexture('/texture/playerAtlas.png')
 
     let mesh: any
     let currentActionKey = playerState.annimation
@@ -34,9 +34,9 @@
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
 
     if (playerState.floorType === 'stone') {
-        audioSrc = '/footstep-stone.mp3'
+        audioSrc = '/audio/footstep-stone.mp3'
     } else {
-        audioSrc = '/footstep-sand.mp3'
+        audioSrc = '/audio/footstep-sand.mp3'
     }
 
     $: $actions[playerState.annimation]?.play()

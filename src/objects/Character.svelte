@@ -169,11 +169,11 @@
                             args={[{ color: 0x15b3e7, transparent: true, wireframe: true, emissive: 0x009dff }]}
                         />
                     {:else}
-                        {#await useTexture('/rick.jpg') then texture}
+                        <!--{#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">
                                 <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
                             </T.MeshToonMaterial>
-                        {/await}
+                        {/await} -->
                     {/if}
                 </T.SkinnedMesh>
             </T.Group>
@@ -206,7 +206,7 @@
         loop
         refDistance={1}
         volume={1}
-        src={'/static.mp3'}
+        src={'/audio/static.mp3'}
         position={[position.x, 1, position.z]}
         bind:ref={staticAudio}
     />

@@ -68,7 +68,7 @@
 <Character
     message="A hologram flickers through the dust"
     position={{ x: 21, y: 0, z: -18 }}
-    url={'/hologram-transformed.glb'}
+    url={'/objects/hologram-transformed.glb'}
     characterId={1}
     rotation={1.5708}
     currentActionKey={'idle'}
@@ -79,7 +79,7 @@
 <Character
     message="A soldier"
     position={{ x: 2, y: 0, z: 2 }}
-    url={'/hologram-transformed.glb?v=2'}
+    url={'/objects/hologram-transformed.glb?v=2'}
     characterId={2}
     rotation={1.5708}
     currentActionKey={'idle'}
@@ -88,14 +88,14 @@
 <Character
     message="An elderly woman"
     position={{ x: -16, y: 0, z: -23 }}
-    url={'/hologram-transformed.glb?v=3'}
+    url={'/objects/hologram-transformed.glb?v=3'}
     characterId={20}
     currentActionKey={'idle'}
 />
 <Character
     message="A soldier guards the door"
     position={{ x: 19, y: 0, z: 24 }}
-    url={'/hologram-transformed.glb?v=4'}
+    url={'/objects/hologram-transformed.glb?v=4'}
     characterId={21}
     rotation={1.5708}
     currentActionKey={'idle'}
@@ -103,16 +103,16 @@
 />
 
 <Objects
-    url={'/tech_landing_pad-transformed.glb'}
+    url={'/objects/tech_landingPad-transformed.glb'}
     scale={[4.9, 5.2, 5.4]}
     instances={[
         { position: [24, -0.05, -25.5], rotation: [0, 1.57, 0] },
         { position: [-23, -0.05, -20], rotation: [0, 0, 0] }
     ]}
 />
-<Object url={'/tech_holo_pad-transformed.glb'} scale={0.4} position={[21, 0, -18]} rotation.y={-1.57} />
+<Object url={'/objects/tech_hologramPad-transformed.glb'} scale={0.4} position={[21, 0, -18]} rotation.y={-1.57} />
 <Objects
-    url={'/tech_crate-transformed.glb'}
+    url={'/objects/tech_crate-transformed.glb'}
     scale={[0.5, 0.5, 0.5]}
     instances={[
         { position: [18, 0.4, -19], rotation: [0, 1, 0] },
@@ -122,7 +122,7 @@
         { position: [2, 0.4, -1], rotation: [0, 1.3, 0] }
     ]}
 />
-<Object name={'satalite'} url={'/tech_satalite-transformed.glb'} scale={0.5} position={[-3, 1.8, 3]} rotation={[1.57, 0, 1.8]} />
+<Object name={'satalite'} url={'/objects/tech_satalite-transformed.glb'} scale={0.5} position={[-3, 1.8, 3]} rotation={[1.57, 0, 1.8]} />
 <Object name={'table tech'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[3, -0.45, 2]} rotation.y={-1.57} />
 <Object name={'bench'} url={'/objects/stone_table-transformed.glb'} scale={0.32} position={[-16, 0, -22]} rotation.y={0} />
 <Objects
@@ -141,7 +141,7 @@
 <Sparkes position={[21, 0, -18]} />
 <Wind />
 
-<Audio src={'/wind.ogg'} on:create={({ ref }) => {}} autoplay={true} loop={true} volume={1} />
+<Audio src={'/audio/wind.ogg'} on:create={({ ref }) => {}} autoplay={true} loop={true} volume={1} />
 
 <T.AmbientLight intensity={0.1} />
 

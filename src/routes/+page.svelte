@@ -28,7 +28,7 @@
     let clientWidth, clientHeight
     let messageVisible = false
     let gameLoaded = false
-    let welcomeMessage = true
+    let welcomeMessage = false
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
     let messageTimeout: number
@@ -211,6 +211,7 @@
         <button
             on:click={() => {
                 $gameState.inventory.owned.length = 0
+                $gameState.inventory.equipped = 0
                 $gameState = $gameState
             }}>clear all items</button
         >

@@ -96,8 +96,8 @@
 </script>
 
 <AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
-<Audio src={'/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
-<Audio src={'/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
+<Audio src={'/audio/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
+<Audio src={'/audio/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
 
 {#if selectedScene === 1}
     <Scene1 />

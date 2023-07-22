@@ -8,11 +8,10 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, InstancedMeshes } from '@threlte/extras'
     import seedrandom from 'seedrandom'
-    import { onMount } from 'svelte'
 
     export const ref = new Group()
 
-    const gltf = useGltf('/floorStones-transformed.glb', { useDraco: true })
+    const gltf = useGltf('/objects/stone_floorTile-transformed.glb', { useDraco: true })
 
     const component = forwardEventHandlers()
 
@@ -31,11 +30,6 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
         }
     }))
 
-    onMount(() => {
-        items.forEach((i) => {
-          //  console.log(i.rotation.y)
-        })
-    })
 </script>
 
 {#await gltf}

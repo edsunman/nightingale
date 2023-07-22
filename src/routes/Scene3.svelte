@@ -55,22 +55,22 @@
 />
 
 <Objects
-    url={'/tech_wall-transformed.glb'}
+    url={'/objects/tech_wall-transformed.glb'}
     scale={[1.5, 1.2, 0.05]}
     instances={[
+        { position: [2,1.2,-5.5], rotation: [0, 0, 0] },
         { position: [-1.0, 1.2, -5.5], rotation: [0, 0, 0] },
         { position: [-2.5, 1.2, -4.0], rotation: [0, 1.57, 0] },
         { position: [-2.5, 1.2, -1.0], rotation: [0, 1.57, 0] },
         { position: [-2.5, 1.2, 2.0], rotation: [0, 1.57, 0] },
+        { position: [-2.5, 1.2, 5], rotation: [0, 1.57, 0] },
     ]}
 />
-<Object url={'/tech_wall_end-transformed.glb'} scale={[1.5, 1.2, 0.05]} position={[2,1.2,-5.5]} />
-<Object url={'/tech_wall_end_left-transformed.glb'} rotation={[0, 1.57, 0]} scale={[1.5, 1.2, 0.05]} position={[-2.5, 1.2, 4.5]} />
 
 <!-- OBJECTS -->
 
 <Objects
-    url={'/tech_crate-transformed.glb'}
+    url={'/objects/tech_crate-transformed.glb'}
     scale={[0.5, 0.5, 0.5]}
     instances={[
         { position: [-1.0, 0.4, 2], rotation: [0, 1, 0] },

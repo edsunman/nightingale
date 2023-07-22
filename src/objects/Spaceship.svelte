@@ -10,8 +10,8 @@ Command: npx @threlte/gltf@1.0.0-next.12 spaceship.glb -T
 
     export const ref = new Group()
 
-    const gltf = useGltf('/spaceship-transformed.glb', { useDraco: true })
-    const texture = useTexture('/shipAtlas.png')
+    const gltf = useGltf('/objects/spaceship-transformed.glb', { useDraco: true })
+    const texture = useTexture('/texture/shipAtlas.png')
 
     const component = forwardEventHandlers()
 </script>

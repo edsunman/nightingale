@@ -8,10 +8,11 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, InstancedMeshes } from '@threlte/extras'
     import seedrandom from 'seedrandom'
+    import { onMount } from 'svelte'
 
     export const ref = new Group()
 
-    const gltf = useGltf('/rock.glb')
+    const gltf = useGltf('/objects/desert_rock-transformed.glb', { useDraco: true })
 
     const component = forwardEventHandlers()
 
@@ -20,27 +21,28 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     const items = Array.from({ length: 120 }, () => ({
         x: sRandom() * 80 - 40,
         z: sRandom() * 80 - 40,
-        scale: sRandom() * 0.01 + 0.1,
+        scale: sRandom() * 0.25 + 0.15,
         rotation: {
             x: sRandom() * 360,
             y: sRandom() * 360,
             z: sRandom() * 360
         }
     }))
+
     
 </script>
 
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
-    <InstancedMeshes meshes={gltf.nodes} let:components={{ Rock }} castShadow receiveShadow>
+    <InstancedMeshes meshes={gltf.nodes} let:components={{ Mesh }} castShadow receiveShadow>
         <T.MeshToonMaterial color="#9c5b30" />
         {#each items as item}
-            <Rock
+            <Mesh
                 position.y={0}
                 position.z={item.z}
                 position.x={item.x}
-                scale={[0.12, 0.12, 0.12]}
+                scale={item.scale}
                 rotation.y={(item.rotation.y * Math.PI) / 180}
                 rotation.x={(item.rotation.x * Math.PI) / 180}
                 rotation.z={(item.rotation.z * Math.PI) / 180}
