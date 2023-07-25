@@ -9,8 +9,10 @@
 
     export let id: number
     export let position: { x: number; y: number; z: number }
+    export let url : string
+    export let lightIntensity = 0
 
-    const gltf = useGltf('/objects/item_fuelCell-transformed.glb', { useDraco: true })
+    const gltf = useGltf(url, { useDraco: true })
     const texture = useTexture('/texture/itemAtlas.png')
 
     export const ref = new Group()
@@ -71,4 +73,4 @@
   
     <!-- <Sparkes position={[position.x,  position.y - 0.5, position.z]} />  -->
 {/if}
- <T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={owned ? 1 : 0} />
+   <!--<T.PointLight position={[position.x, position.y + 0.2, position.z]} distance={4} color={'#00feff'} intensity={owned ? lightIntensity : 0} />  -->

@@ -40,12 +40,14 @@
 </script>
 
 {#if $gameConversation[0] !== 0}
+    <p class="leading-tight">
     {#if !speech.incidental}
-        <small class="uppercase">{character.name}:</small><br />
+        <small class="uppercase text-neutral-400">{character.name}:</small><br />
     {/if}
     {#if alreadyChosen && speech.textRepeat}
-        {speech.textRepeat}
+        <span class="font-serif tracking-wide">{@html speech.textRepeat}</span>
     {:else}
-        {speech.text}
+        <span class="font-serif tracking-wide">{@html speech.text}</span>
     {/if}
+    </p>
 {/if}

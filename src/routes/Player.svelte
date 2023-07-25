@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume } from '$lib/stores'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume, gameLoaded } from '$lib/stores'
     import { useGltf, useGltfAnimations, Audio, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
     import { Vector3, Matrix4, Group, Quaternion, sRGBEncoding } from 'three'
 
     import type { PlayerState } from '$lib/types'
-    import { onMount } from 'svelte'
 
     export let playerState: PlayerState
 
@@ -18,18 +17,16 @@
     let mesh: any
     let currentActionKey = playerState.annimation
     let lightTarget: any
-    let movementVector = new Vector3()
     let runAudio: any
     let audioSrc: string
     let footstepInterval: number
     let footstepVolume = 0.4
     let zoom = 8
 
-    const rotationMatrix = new Matrix4().lookAt(
-        new Vector3(playerState.rotation.x, 0, playerState.rotation.z),
-        new Vector3(playerState.position.x, 0, playerState.position.z),
-        new Vector3(0, 1, 0)
-    )
+    const playerVector = new Vector3(playerState.position.x, 0, playerState.position.z)
+    const destinationVector = new Vector3(playerState.rotation.x, 0, playerState.rotation.z)
+    const upVector = new Vector3(0, 1, 0)
+    const rotationMatrix = new Matrix4().lookAt(destinationVector, playerVector, upVector)
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
 
     if (playerState.floorType === 'stone') {
@@ -39,6 +36,10 @@
     }
 
     $: $actions[playerState.annimation]?.play()
+
+    $: {
+        zoom = $gameLoaded ? 80 : 8
+    }
 
     $: rotateTowards($gameState.moveLock)
 
@@ -52,18 +53,6 @@
         }
         nextAction.play()
         currentActionKey = nextActionKey
-    }
-
-    function rotateTowards(ml : any) {
-        const sc = $gameSelectedCharacterPosition
-        if (!(sc.x == 0 && sc.z == 0)) {
-            const p = playerState.position
-            // TODO : reuse vector3 rather than create
-            const v = new Vector3(sc.x, 0, sc.z)
-            const pv = new Vector3(p.x, 0, p.z)
-            rotationMatrix.lookAt(v, pv, new Vector3(0, 1, 0))
-            endRotation.setFromRotationMatrix(rotationMatrix)
-        }
     }
 
     function playFootstep() {
@@ -81,11 +70,25 @@
         source.start(runAudio.context.currentTime + 0.08, step, 1)
     }
 
+    function rotateTowards(ml: any) {
+        if (ml) {
+            const sc = $gameSelectedCharacterPosition
+            if (!(sc.x == 0 && sc.z == 0)) {
+                const p = playerState.position
+                destinationVector.set(sc.x, 0, sc.z)
+                playerVector.set(p.x, 0, p.z)
+                rotationMatrix.lookAt(destinationVector, playerVector, upVector)
+                endRotation.setFromRotationMatrix(rotationMatrix)
+            }
+        }
+    }
+
     useFrame((state, delta) => {
-        // player movement
         const p = playerState.position
         const path = playerState.path
         if (path.length > 0) {
+            // TODO : this is prob not the best way to do player movement...
+            // moving along a THREE.Line3 may be better ??
             const radians = Math.atan2(path[0].z - p.z, path[0].x - p.x)
             const modifier = { x: Math.cos(radians), z: Math.sin(radians) }
             if (p.x < path[0].x + 0.04 && p.x > path[0].x - 0.04 && p.z < path[0].z + 0.04 && p.z > path[0].z - 0.04) {
@@ -98,12 +101,13 @@
             } else {
                 // get moving
                 if (playerState.settingOff) {
-                    const v = new Vector3(path[0].x, 0, path[0].z)
-                    const pv = new Vector3(p.x, 0, p.z)
-                    rotationMatrix.lookAt(v, pv, new Vector3(0, 1, 0))
+                    destinationVector.set(path[0].x, 0, path[0].z)
+                    playerVector.set(p.x, 0, p.z)
+                    rotationMatrix.lookAt(destinationVector, playerVector, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
-                    movementVector = v.sub(pv).normalize()
+
                     transitionTo('run')
+                    // TODO : move this audio stuff out
                     if (!playerState.running) {
                         clearInterval(footstepInterval)
                         playFootstep()
@@ -114,7 +118,8 @@
                     playerState.running = true
                 }
                 playerState.settingOff = false
-                if (delta < 0.5) { // don't move if there are one off spikes caused by switching tabs etc
+                if (delta < 0.5) {
+                    // ^^^^^^ don't move if there are one off spikes caused by switching tabs etc
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
                 }
@@ -131,13 +136,6 @@
             ref.quaternion.rotateTowards(endRotation, delta * 10)
         }
         $gamePosition = playerState.position
-    })
-
-    onMount(() => {
-        // zoom out breifly on load to compile shaders
-        setTimeout(() => {
-            zoom = 80
-        }, 800)
     })
 </script>
 
@@ -166,18 +164,13 @@
                         {/await}
                     </T.SkinnedMesh>
                 {:else}
-                    <T.SkinnedMesh
-                        castShadow
-                        name="Box"
-                        geometry={gltf.nodes.Box.geometry}
-                        skeleton={gltf.nodes.Box.skeleton}
-                    >
+                    <T.SkinnedMesh castShadow name="Box" geometry={gltf.nodes.Box.geometry} skeleton={gltf.nodes.Box.skeleton}>
                         {#await texture then t}
                             <T.MeshToonMaterial color="#ffffff">
                                 <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
                             </T.MeshToonMaterial>
                         {/await}
-                     </T.SkinnedMesh>
+                    </T.SkinnedMesh>
                 {/if}
                 {#if $gameState.inventory.equipped === 5}
                     <T.SkinnedMesh
@@ -201,9 +194,9 @@
     <T.OrthographicCamera
         name="main camera"
         makeDefault
-        position={[playerState.position.x + 9, 10, playerState.position.z + 9]}
+        position={[playerState.position.x + 19, 20, playerState.position.z + 19]}
         on:create={({ ref }) => {
-            ref.lookAt(playerState.position.x + 8, 9, playerState.position.z + 8)
+            ref.lookAt(playerState.position.x + 18, 19, playerState.position.z + 18)
         }}
         {zoom}
     />
@@ -219,7 +212,7 @@
     shadow.camera.right={4}
     shadow.camera.left={-18}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x + 8.5, 10, playerState.position.z + 10]}
+    position={[playerState.position.x + 12, 20, playerState.position.z + 20]}
     target={lightTarget}
 />
 

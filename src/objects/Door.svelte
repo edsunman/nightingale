@@ -24,7 +24,7 @@
     function doorClicked(e: any) {
         if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z && !$gameState.moveLock) {
             if (key > 0) {
-                if ($gameState.inventory.owned.includes(key)) {
+                if ($gameState.inventory.owned.includes(key)||$gameState.inventory.equipped===1) {
                     openDoor()
                 } else {
                     $gameMessage = 'The door is locked'

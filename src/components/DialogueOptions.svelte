@@ -51,7 +51,7 @@
                 } else if (speech.linkId) {
                     setTimeout(() => {
                         $gameConversation = [gc[0], speech.linkId]
-                    }, 2000)
+                    }, 4000)
                 }
             }
 
@@ -131,8 +131,8 @@
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
-                    class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
-    {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-200 hover:text-neutral-50'}
+                    class="font-serif tracking-wide flex-1 mr-4 max-w-sm px-6 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
+    {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-50'}
     {optionsArray.length === i + 1 ? '' : 'mb-3'} "
                 >
                     <small class="text-neutral-500">{i + 1}.</small>

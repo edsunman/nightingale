@@ -21,7 +21,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     const items = Array.from({ length: 120 }, () => ({
         x: sRandom() * 80 - 40,
         z: sRandom() * 80 - 40,
-        scale: sRandom() * 0.25 + 0.15,
+        scale: sRandom() * 0.2 + 0.16,
         rotation: {
             x: sRandom() * 360,
             y: sRandom() * 360,
@@ -36,7 +36,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 rock.glb
     <slot name="fallback" />
 {:then gltf}
     <InstancedMeshes meshes={gltf.nodes} let:components={{ Mesh }} castShadow receiveShadow>
-        <T.MeshToonMaterial color="#9c5b30" />
+        <T.MeshToonMaterial color="#9c5c32" />
         {#each items as item}
             <Mesh
                 position.y={0}

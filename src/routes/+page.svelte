@@ -6,7 +6,8 @@
         gameConversation,
         gameScene,
         gameSelectedCharacterPosition,
-        gameMovingTo
+        gameMovingTo,
+        gameLoaded
     } from '$lib/stores'
     import { Canvas } from '@threlte/core'
     import { fade } from 'svelte/transition'
@@ -27,7 +28,7 @@
 
     let clientWidth, clientHeight
     let messageVisible = false
-    let gameLoaded = false
+    let loadingScreen = false
     let welcomeMessage = false
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
@@ -55,9 +56,13 @@
     function checkLoaded(p: number) {
         if (p === 1) {
             setTimeout(() => {
-                gameLoaded = true
-                sceneFinishedLoading = true
-            }, 800)
+                $gameLoaded = true
+                setTimeout(() => {
+                // $gameLoaded = true
+                    loadingScreen = false
+                    sceneFinishedLoading = true
+                }, 500)
+            }, 500)
         }
     }
 
@@ -65,7 +70,8 @@
 
     function loadScene(id: number) {
         // show black screen
-        gameLoaded = false
+        $gameLoaded = false
+        loadingScreen = true
         sceneFinishedLoading = false
         $gameSelectedCharacterPosition = { x: 0, y: 0, z: 0 }
         // then load scene so any slight lag is hidden
@@ -80,8 +86,8 @@
     bind:clientWidth
     bind:clientHeight
 >
-    {#if !gameLoaded}
-        <div out:fade={{ duration: 300 }} class="w-full h-full bg-neutral-950 z-40 absolute text-white">
+    {#if loadingScreen}
+        <div out:fade={{ duration: 300 }} class="w-full h-full opacity-60 bg-neutral-950 z-40 absolute text-white">
             {#if $progress < 1}
                 <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 100 }}>
                     <div class="bg-white h-full" style="width: {$progress * 100}%" />

@@ -8,7 +8,8 @@ export default {
                 pointer: 'image-set( "/cursor/cursorHover.png" 1x, "/cursor/cursorHover-x2.png" 2x), pointer'
             },
             fontFamily: {
-                sans: ['Viga']
+                sans: ['Viga'],
+                serif: ['Bree Serif']
             }
         }
     },

@@ -109,11 +109,11 @@
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
-        <h3
-            class="z-20 text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-3 py-1 select-none whitespace-nowrap "
+        <div
+            class="z-20 text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-4 py-2 select-none whitespace-nowrap "
         >
             <Dialogue {script} />
-        </h3>
+        </div>
     </HTML>
 {/if}
 

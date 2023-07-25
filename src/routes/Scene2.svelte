@@ -13,6 +13,7 @@
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
     import Sparkes from '../objects/effects/Sparkes.svelte'
+    import Item from '../objects/Item.svelte'
 
     const avoidArray: Array<{ x: number; z: number }> = [
         { x: -7, z: 2 },
@@ -91,7 +92,7 @@
     message={'Back to the outpost'}
 />
 
-<!-- CHARACTERS -->
+ CHARACTERS 
 
 <Character
     message="A hologram dances"
@@ -123,6 +124,7 @@
 <!-- OBJECTS -->
 
 <FloorStones />
+
 <Objects
     name={'wall'}
     url={'/objects/stone_wall-transformed.glb'}
@@ -164,7 +166,8 @@
     scale={0.9}
     position={[-0.5, 0.2, -2.5]}
     rotation.y={1.57}
-/>
+/> 
+
 <Pillar position={[5.5, 0, 3.5]} matrix={[2.5, -0.5, 0.5, -2.5, 3.5, 0.5, 1.5, -1.5, 4.5, 1.5, 2.5, -0.5, 5.5, 2.5, 3.5, 0.5]} />
 <Pillar
     position={[-0.5, 0, 3.5]}
@@ -218,11 +221,13 @@
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
 
-<!-- LIGHTS + AUDIO -->
-
+<Item id={1} position={{ x: -9, y: 0, z: 5 }} rotation={[3.14,1.57,0]} scale={0.2} url="/objects/item_cardboardBox-transformed.glb" />-->
+<!--
+ LIGHTS + AUDIO
+-->
 <T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
-<T.PointLight name={'yellow light'} position={[-7, 3, 0]} distance={8} color={'#deac40'} intensity={1.5} />
+
 {#await windowTexture then t}
     <T.SpotLight
         name={'window light'}
@@ -242,9 +247,7 @@
         intensity={5}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
-        <!--  <Portal object={scene}>
-            <T.SpotLightHelper args={[ref]} />
-        </Portal> -->
+
     </T.SpotLight>
 
     <T.SpotLight
@@ -265,8 +268,6 @@
         intensity={5}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
-        <!--  <Portal object={scene}>
-            <T.SpotLightHelper args={[ref]} />
-        </Portal> -->
+
     </T.SpotLight>
 {/await}

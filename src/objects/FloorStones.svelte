@@ -13,7 +13,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
 
     const gltf = useGltf('/objects/stone_floorTile-transformed.glb', { useDraco: true })
 
-    const component = forwardEventHandlers()
+   // const component = forwardEventHandlers()
 
     let sRandom = seedrandom('seed97')
 

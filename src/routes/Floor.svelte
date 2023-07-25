@@ -13,8 +13,8 @@
     export let startingRotation = { x: 0, z: 0 }
     export let floorType = 'sand'
     export let sunIntensity = 1
-
     let next = $gameState.nextScenePosition
+    
     let playerState: PlayerState = {
         position: next.x === 0 && next.z === 0 ? startingPosition : next,
         rotation: startingRotation,
@@ -27,8 +27,10 @@
         sunIntensity: sunIntensity
     }
 
-    let direction = new Vector3()
+    const direction = new Vector3()
     const raycaster = new Raycaster()
+    const gridVector = new Vector3()
+    const playerVector = new Vector3()
     let selectedGridSpace: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }
     let avoidObjects: any[] = []
     let selectedOpacity = 0
@@ -37,22 +39,23 @@
 
     function floorClicked(e: any) {
         const p = playerState.position
-        playerState.path.length = 0
+        
         const point = e.intersections[0].point
         const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {
-           
-            const gridVec = new Vector3(grid.x, 0, grid.z)
-            const playerVec = new Vector3(p.x, 0, p.z)
+            playerState.path.length = 0
+            gridVector.set(grid.x, 0, grid.z)
+            playerVector.set(p.x, 0, p.z)
 
-            direction.subVectors(gridVec, playerVec).normalize()
-            raycaster.set(playerVec, direction)
+            direction.subVectors(gridVector, playerVector).normalize()
+            raycaster.set(playerVector, direction)
 
             const intersects = raycaster.intersectObjects(avoidObjects, false)
-            const dist = Math.sqrt((grid.x - playerVec.x) ** 2 + (grid.z - playerVec.z) ** 2)
+            const dist = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
 
-            if (intersects.length > 0) { // pointing towards wall
-                // move towards wall and stop
+            if (intersects.length > 0) {
+                // ^^^ pointing towards wall
+                // so move towards wall and stop
                 const ip = intersects[0].point
                 let gridIp = { x: 0, z: 0 }
 
@@ -92,17 +95,17 @@
             selectedSize = 0.4
         }
 
-       if($gameState.dev.avoidObjactsVisible){
-            let obj = avoidArray.find(o => (o.x === grid.x && o.z === grid.z))
-            if(obj){
-                avoidArray = avoidArray.filter(function(o) {
+        if ($gameState.dev.avoidObjactsVisible) {
+            let obj = avoidArray.find((o) => o.x === grid.x && o.z === grid.z)
+            if (obj) {
+                avoidArray = avoidArray.filter(function (o) {
                     return !(o.x === grid.x && o.z === grid.z)
                 })
-                localStorage.setItem("Dev Avoid Array", JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
+                localStorage.setItem('Dev Avoid Array', JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
             } else {
                 avoidArray.push(grid)
                 avoidArray = avoidArray
-                localStorage.setItem("Dev Avoid Array", JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
+                localStorage.setItem('Dev Avoid Array', JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
             }
         }
     }
@@ -113,7 +116,6 @@
             selectedSize += delta * 0.8
         }
     })
-
 </script>
 
 <Player {playerState} />
@@ -121,7 +123,7 @@
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
- <InstancedMesh visible={$gameState.dev.avoidObjactsVisible} >
+<InstancedMesh visible={$gameState.dev.avoidObjactsVisible}>
     {#each avoidArray as block}
         <Instance
             name={'avoid object'}
@@ -130,11 +132,10 @@
             on:create={({ ref }) => {
                 avoidObjects.push(ref)
             }}
-        >
-        </Instance>
+        />
     {/each}
-     <T.BoxGeometry args={[1, 0.1, 1]} />
-            <T.MeshStandardMaterial color="#161616" />
+    <T.BoxGeometry args={[1, 0.1, 1]} />
+    <T.MeshStandardMaterial color="#161616" />
 </InstancedMesh>
 <T.Mesh
     receiveShadow
@@ -155,7 +156,7 @@
         cellColor="#ffffff"
         sectionColor="#ffffff"
         sectionThickness={0}
-        fadeDistance={25}
+        fadeDistance={50}
         cellSize={1}
         gridSize={[levelSize.x, levelSize.z]}
     />
