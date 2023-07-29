@@ -36,7 +36,7 @@
     <MeshLine
         name={'spark'}
         {position}
-        color={'#ccf7ff'}
+        color={'#ccfbff'}
         points={line}
         transparent
         depthWrite={false}

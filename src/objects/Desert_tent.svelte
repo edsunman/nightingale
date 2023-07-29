@@ -4,13 +4,15 @@ Command: npx @threlte/gltf@1.0.0-next.13 desert_tent.glb -T
 -->
 
 <script>
+    import { sRGBEncoding } from 'three'
     import { Group, MeshToonMaterial } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
-    import { useGltf, useGltfAnimations } from '@threlte/extras'
+    import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
 
     export const ref = new Group()
 
     const gltf = useGltf('/objects/desert_tent-transformed.glb', { useDraco: true })
+    const texture = useTexture('/texture/objectAtlas.png')
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
 
     $: $actions['Idle']?.play()
@@ -30,10 +32,20 @@ Command: npx @threlte/gltf@1.0.0-next.13 desert_tent.glb -T
                 <T is={gltf.nodes.Bone015} />
                 <T is={gltf.nodes.Bone020} />
                 <T.SkinnedMesh castShadow name="Cloth" geometry={gltf.nodes.Cloth.geometry} skeleton={gltf.nodes.Cloth.skeleton}>
-                   
+                    {#await texture then t}
+                        <T.MeshBasicMaterial color="#ffffff" gradientMap={null}>
+                            <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                        </T.MeshBasicMaterial>
+                    {/await}
                 </T.SkinnedMesh>
             </T.Group>
-            <T.Mesh castShadow name="Poles" geometry={gltf.nodes.Poles.geometry} />
+            <T.Mesh castShadow name="Poles" geometry={gltf.nodes.Poles.geometry}>
+                {#await texture then t}
+                    <T.MeshToonMaterial color="#ffffff">
+                        <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                    </T.MeshToonMaterial>
+                {/await}
+            </T.Mesh>
         </T.Group>
     {:catch error}
         <slot name="error" {error} />

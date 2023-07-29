@@ -14,6 +14,7 @@
     import Sparkes from '../objects/effects/Sparkes.svelte'
     import DesertTent from '../objects/Desert_tent.svelte'
     import DesertSand from '../objects/Desert_sand.svelte'
+    import TechSign from '../objects/Tech_sign.svelte'
 
     const avoidArray: Array<{ x: number; z: number }> = [
         { x: -2, z: 15 },
@@ -89,7 +90,9 @@
 <!-- OBJECTS -->
 <DesertSand />
 <Rocks />
+<TechSign position={[3.6, 10, 3]} scale={1.2} rotation.y={-1.57} />
 <Objects
+    receiveShadow
     url={'/objects/tech_landingPad-transformed.glb'}
     scale={[4.9, 5.2, 5.4]}
     instances={[
@@ -119,6 +122,7 @@
 />
 <Object name={'table tech'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[12, -0.45, -3]} rotation.y={-1.57} />
 <Object name={'bench'} url={'/objects/stone_table-transformed.glb'} scale={0.32} position={[-16, 0, -22]} rotation.y={0} />
+<Object name={'bench'} url={'/objects/stone_table-transformed.glb'} scale={0.32} position={[-21, 0, -10]} rotation.y={1.57} />
 <Objects
     name={'stool'}
     url={'/objects/stone_stool-transformed.glb'}
@@ -141,10 +145,18 @@
         { position: [-24, 0, -5], rotation: [0, 1.7, 0] }
     ]}
 />
+<Objects
+    url={'/objects/desert_stall-transformed.glb'}
+    scale={0.4}
+    instances={[
+        { position: [-16, 0, -23], rotation: [0, 1.57, 0] },
+        { position: [-22, 0, -10], rotation: [0, 3.14, 0] }        
+    ]}
+/>
 
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
 
-<Sparkes position={[21, 0, -18]} />
+
 <Wind />
 
 <!-- LIGHTS + AUDIO -->

@@ -2,10 +2,11 @@
     import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition, gameState } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
-    import { Vector3, Matrix4, Euler, Quaternion, Group, DoubleSide, sRGBEncoding, LoopOnce, LoopPingPong } from 'three'
+    import { Vector3, Matrix4, Euler, Quaternion, Group, ShaderMaterial, LoopOnce, LoopPingPong, TextureLoader, RepeatWrapping } from 'three'
     import { useCursor } from '$lib/util/useCursor'
     import { onMount, onDestroy } from 'svelte'
     import IncidentalDialogue from './IncidentalDialogue.svelte'
+    import HolgramMaterial from './effects/HolgramMaterial.svelte'
 
     export const ref = new Group()
     export let position = { x: 1, y: 0, z: 1 }
@@ -26,7 +27,7 @@
     const { onPointerEnter, onPointerLeave } = useCursor()
 
     let spinning = false
-    let hologramOpacity = 0.2
+    let hologramOpacity = 1
     let beforeDialogueInterval: any
     let flickerInterval: any
     let flickeringInterval: any
@@ -121,12 +122,12 @@
 
     function flicker() {
         flickeringInterval = setInterval(function () {
-            hologramOpacity = Math.random() * 0.3 + 0
+            hologramOpacity = Math.random() * 1 + 0
         }, 30)
         staticAudio.offset = Math.floor(Math.random() * 3)
         staticAudio.play()
         setTimeout(function () {
-            clearInterval(flickeringInterval), (hologramOpacity = 0.2)
+            clearInterval(flickeringInterval), (hologramOpacity = 1)
             staticAudio.stop()
         }, Math.random() * 1500 + 100)
     }
@@ -167,14 +168,17 @@
                     name="Body"
                     geometry={gltf.nodes.Body.geometry}
                     skeleton={gltf.nodes.Body.skeleton}
+                    
                 >
                     {#if isHologram}
-                        <T.MeshLambertMaterial
+                       <!-- <T.MeshLambertMaterial
                             side={DoubleSide}
                             wireframeLinewidth={4}
                             opacity={hologramOpacity}
-                            args={[{ color: 0x15b3e7, transparent: true, wireframe: true, emissive: 0x009dff }]}
-                        />
+                            args={[{ color: 0x00d5ff, transparent: true, wireframe: true, emissive: 0x00bedb }]}
+                        /> -->
+                        <HolgramMaterial opacity={hologramOpacity} dotSize={60}/>
+                       
                     {:else}
                         <!--{#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">
@@ -204,11 +208,11 @@
     }}
 >
     <T.BoxGeometry args={[0.5, 1.5, 0.5]} />
-    <T.MeshStandardMaterial color="hotpink" />
+    
 </T.Mesh>
 
 {#if isHologram}
-    <T.PointLight position={[position.x, 0.2, position.z]} distance={4} color={'#009dff'} intensity={hologramOpacity * 20} />
+    <T.PointLight position={[position.x, 1, position.z]} distance={3} color={'#03d3fc'} intensity={hologramOpacity * 2} />
     <PositionalAudio
         loop
         refDistance={1}

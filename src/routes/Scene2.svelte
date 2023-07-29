@@ -217,7 +217,7 @@
         { position: [-9, 0, 4], rotation: [0, 0, 0] }
     ]}
 />
-<Sparkes position={[-0.5, 1.5, -2.5]} />
+
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
 

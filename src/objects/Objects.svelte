@@ -4,14 +4,15 @@ Command: npx @threlte/gltf@1.0.0-next.12 tech_wall.glb -T
 -->
 
 <script lang="ts">
-    import { Group } from 'three'
+    import { sRGBEncoding } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
-    import { useGltf, InstancedMesh, Instance } from '@threlte/extras'
-    
-    export let url : string
-    export let scale : number | [x: number, y: number, z: number] = 1
+    import { useGltf, InstancedMesh, Instance, useTexture } from '@threlte/extras'
+
+    export let url: string
+    const texture = useTexture('/texture/objectAtlas.png')
+    export let scale: number | [x: number, y: number, z: number] = 1
     export let instances: {
-        position?: [x: number, y: number, z: number],
+        position?: [x: number, y: number, z: number]
         rotation?: [x: number, y: number, z: number]
     }[] = [{ position: [0, 0, 0], rotation: [0, 0, 0] }]
 
@@ -20,9 +21,13 @@ Command: npx @threlte/gltf@1.0.0-next.12 tech_wall.glb -T
 
 {#await gltf then gltf}
     <InstancedMesh castShadow {...$$restProps} geometry={gltf.nodes.Mesh.geometry}>
-        <T.MeshToonMaterial />
+        {#await texture then t}
+            <T.MeshToonMaterial color="#ffffff">
+                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+            </T.MeshToonMaterial>
+        {/await}
         {#each instances as object}
-            <Instance position={object.position} rotation={object.rotation} scale={scale} />
+            <Instance position={object.position} rotation={object.rotation} {scale} />
         {/each}
     </InstancedMesh>
 {/await}

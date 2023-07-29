@@ -95,7 +95,7 @@
     position={[0.5, 4, 0]}
     distance={8}
     color={'#ffffff'}
-    intensity={lightBrightness * 2}
+    intensity={lightBrightness * 4}
     castShadow
     shadow.mapSize.width={500}
     shadow.mapSize.height={500}
