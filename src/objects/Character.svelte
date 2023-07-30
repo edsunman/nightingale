@@ -37,13 +37,15 @@
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
     const currentPosition = new Vector3(position.x, 0, position.z)
+    const playerVector = new Vector3(0, 0, 0)
+    const upVector = new Vector3(0, 1, 0)
+    const defaultEuler = new Euler(0, rotation, 0)
 
     $: {
         if (pingPongIdle) {
             $actions[currentActionKey]?.setLoop(LoopPingPong, 1000)
         }
         $actions[currentActionKey]?.play()
-        /* console.log('character: '+characterId+' is playing: '+ currentActionKey) */
     }
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
@@ -57,7 +59,6 @@
         }
         nextAction.stop()
         nextAction.timeScale = 1
-        //nextAction.play()
         currentActionKey = nextActionKey
     }
 
@@ -69,14 +70,14 @@
 
     function rotateBack(gc: any) {
         if (gc[0] === 0) {
-            endRotation.setFromEuler(new Euler(0, rotation, 0))
+            endRotation.setFromEuler(defaultEuler)
         }
     }
 
     useFrame((state, delta) => {
         if (lookatPlayer) {
-            const player = $gamePosition
-            rotationMatrix.lookAt(new Vector3(player.x, 0, player.z), currentPosition, new Vector3(0, 1, 0))
+            playerVector.set($gamePosition.x, 0, $gamePosition.z)
+            rotationMatrix.lookAt(playerVector, currentPosition, upVector)
             endRotation.setFromRotationMatrix(rotationMatrix)
         }
         if (ref) {
@@ -95,13 +96,12 @@
             ) {
                 characterSelected()
                 if(lookatPlayerWhenTalking) {
-                    const lookAtVector = new Vector3(player.x, 0, player.z)
-                    rotationMatrix.lookAt(lookAtVector, currentPosition, new Vector3(0, 1, 0))
+                    playerVector.set(player.x, 0, player.z)
+                    rotationMatrix.lookAt(playerVector, currentPosition, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
                 }
                 if (!endRotation.equals(ref.quaternion)) {
                     spinning = true
-                    //transitionTo("walk")
                 }
                 let nudgeDialogueAmount = 0
                 if (player.x <= position.x && player.z <= position.z) {
@@ -171,14 +171,7 @@
                     
                 >
                     {#if isHologram}
-                       <!-- <T.MeshLambertMaterial
-                            side={DoubleSide}
-                            wireframeLinewidth={4}
-                            opacity={hologramOpacity}
-                            args={[{ color: 0x00d5ff, transparent: true, wireframe: true, emissive: 0x00bedb }]}
-                        /> -->
                         <HolgramMaterial opacity={hologramOpacity} dotSize={60}/>
-                       
                     {:else}
                         <!--{#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">

@@ -10,10 +10,10 @@
     export let id: number
     export let position: { x: number; y: number; z: number }
     export let url : string
-    export let lightIntensity = 0
+    //export let lightIntensity = 0
 
     const gltf = useGltf(url, { useDraco: true })
-    const texture = useTexture('/texture/itemAtlas.png')
+    const texture = useTexture('/texture/objectAtlas.png')
 
     export const ref = new Group()
 

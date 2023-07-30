@@ -53,6 +53,7 @@
 
     $: {
         material.uniforms.opacity.value = opacity
+        material.uniforms.dotSize.value = opacity * dotSize
     }
 
     useFrame(() => {

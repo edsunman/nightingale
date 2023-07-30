@@ -1,45 +1,48 @@
 <script lang="ts">
     import { T, useFrame } from '@threlte/core'
     import { gamePosition } from '$lib/stores'
-    import { useGltf } from '@threlte/extras'
-    import { Vector3, Line, BufferGeometry, LineBasicMaterial } from 'three'
+    import { useGltf, useTexture } from '@threlte/extras'
+    import { sRGBEncoding, Vector3, Line, BufferGeometry, LineBasicMaterial } from 'three'
 
-    export let matrix: number[] = []
+    export let hidePoints: { x: number; z: number }[] = []
 
     let isPillarVisible = true
     let opacity = 1
+    const debug = false
+    const debugLine = new Line()
 
     const gltf = useGltf('/objects/stone_pillar-transformed.glb', { useDraco: true })
+    const texture = useTexture('/texture/objectAtlas.png')
 
-    /* DEBUG LINES
-    const points = []
-    for (let i = 0; i < 4; i++) {
-        const o = (i * 4)
-        points.push(new Vector3(matrix[0+o], 0.2, matrix[3+o]))
-        points.push(new Vector3(matrix[1+o], 0.2, matrix[3+o]))
-        points.push(new Vector3(matrix[1+o], 0.2, matrix[2+o]))
-        points.push(new Vector3(matrix[0+o], 0.2, matrix[2+o]))
-        points.push(new Vector3(matrix[0+o], 0.2, matrix[3+o]))
+    if (debug && hidePoints.length > 0) {
+        const debugPoints = []
+        for (let i = 0; i < 4; i++) {
+            const o = i * 4
+            debugPoints.push(new Vector3(hidePoints[i].x, 0.2, hidePoints[i].z))
+        }
+        debugPoints.push(new Vector3(hidePoints[0].x, 0.2, hidePoints[0].z))
+        debugLine.material = new LineBasicMaterial({ color: 0x00ff00 })
+        debugLine.geometry = new BufferGeometry().setFromPoints(debugPoints)
     }
-    const debugLine = new Line(
-        new BufferGeometry().setFromPoints( points ),
-        new LineBasicMaterial( { color: 0x00ff00 } )
-    )
-    */
+
+    function isInside(point: any, vs: any) {
+        const x = point.x
+        const y = point.z
+        let inside = false
+        for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+            const xi = vs[i].x
+            const yi = vs[i].z
+            const xj = vs[j].x
+            const yj = vs[j].z
+            const intersect = yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+            if (intersect) inside = !inside
+        }
+        return inside
+    }
 
     useFrame(() => {
-        const p = $gamePosition
-        const m = matrix
-        isPillarVisible = true
-
-        // TODO : change to a "point in polygon" function 
-        if (
-            (m[0] > p.x && p.x > m[1] && m[2] > p.z && p.z > m[3]) ||
-            (m[4] > p.x && p.x > m[5] && m[6] > p.z && p.z > m[7]) ||
-            (m[8] > p.x && p.x > m[9] && m[10] > p.z && p.z > m[11]) ||
-            (m[12] > p.x && p.x > m[13] && m[14] > p.z && p.z > m[15])
-        ) {
-            isPillarVisible = false
+        if (hidePoints.length > 0) {
+            isPillarVisible = !isInside($gamePosition, hidePoints)
         }
 
         if (isPillarVisible) {
@@ -53,11 +56,15 @@
 </script>
 
 {#await gltf then gltf}
-    <T.Mesh {...$$restProps} name={'vanishing pillar'} geometry={gltf.nodes.Mesh.geometry} >
-        <T.MeshToonMaterial color="#666666" transparent={true} {opacity} />
+    <T.Mesh {...$$restProps} name={'vanishing pillar'} geometry={gltf.nodes.Mesh.geometry}>
+        {#await texture then t}
+            <T.MeshToonMaterial color="#ffffff" transparent {opacity}>
+                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+            </T.MeshToonMaterial>
+        {/await}
     </T.Mesh>
 {/await}
 
-<!--<T is={debugLine} />-->
-
-
+{#if debug}
+    <T is={debugLine} />
+{/if}

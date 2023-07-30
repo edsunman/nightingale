@@ -92,7 +92,7 @@
     message={'Back to the outpost'}
 />
 
- CHARACTERS 
+CHARACTERS
 
 <Character
     message="A hologram dances"
@@ -118,7 +118,7 @@
     characterId={23}
     rotation={0}
     chatRadius={2}
-    lookatPlayerWhenTalking={false}
+    lookatPlayerWhenTalking={true}
 />
 
 <!-- OBJECTS -->
@@ -166,12 +166,26 @@
     scale={0.9}
     position={[-0.5, 0.2, -2.5]}
     rotation.y={1.57}
-/> 
+/>
 
-<Pillar position={[5.5, 0, 3.5]} matrix={[2.5, -0.5, 0.5, -2.5, 3.5, 0.5, 1.5, -1.5, 4.5, 1.5, 2.5, -0.5, 5.5, 2.5, 3.5, 0.5]} />
+<Pillar
+    position={[5.5, 0, 3.5]}
+    hidePoints={[
+        { x: 6, z: 2 },
+        { x: 4, z: 4 },
+        { x: -1.5, z: -1 },
+        { x: 3, z: -1.5 }
+    ]}
+/>
 <Pillar
     position={[-0.5, 0, 3.5]}
-    matrix={[-3.5, -6.5, 0.5, -2.5, -2.5, -5.5, 1.5, -1.5, -1.5, -4.5, 2.5, -0.5, -0.5, -3.5, 3.5, 0.5]}
+    rotation.y={1.57}
+    hidePoints={[
+        { x: 0, z: 2 },
+        { x: -2, z: 4 },
+        { x: -7, z: 1 },
+        { x: -5, z: -3.5 }
+    ]}
 />
 <Objects
     name={'crate'}
@@ -221,7 +235,13 @@
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
 
-<Item id={1} position={{ x: -9, y: 0, z: 5 }} rotation={[3.14,1.57,0]} scale={0.2} url="/objects/item_cardboardBox-transformed.glb" />-->
+<Item
+    id={1}
+    position={{ x: -9, y: 0, z: 5 }}
+    rotation={[3.14, 1.57, 0]}
+    scale={0.2}
+    url="/objects/item_cardboardBox-transformed.glb"
+/>-->
 <!--
  LIGHTS + AUDIO
 -->
@@ -247,7 +267,6 @@
         intensity={5}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
-
     </T.SpotLight>
 
     <T.SpotLight
@@ -268,6 +287,5 @@
         intensity={5}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
-
     </T.SpotLight>
 {/await}
