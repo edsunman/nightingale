@@ -92,7 +92,7 @@
     message={'Back to the outpost'}
 />
 
-CHARACTERS
+<!-- CHARACTERS  -->
 
 <Character
     message="A hologram dances"
@@ -241,10 +241,10 @@ CHARACTERS
     rotation={[3.14, 1.57, 0]}
     scale={0.2}
     url="/objects/item_cardboardBox-transformed.glb"
-/>-->
+/>
 <!--
- LIGHTS + AUDIO
--->
+ LIGHTS + AUDIO-->
+
 <T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 

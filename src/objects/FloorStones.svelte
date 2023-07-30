@@ -11,39 +11,38 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
 
     export const ref = new Group()
 
-    const gltf = useGltf('/objects/stone_floorTile-transformed.glb', { useDraco: true })
+    const gltf = useGltf('/objects/stone_brick-transformed.glb', { useDraco: true })
 
    // const component = forwardEventHandlers()
 
-    let sRandom = seedrandom('seed97')
+    let sRandom = seedrandom('seed14')
 
-    const rotationValues = [0, 1.5708, 3.14159]
+    const rotationValues = [0, 3.14159]
 
-    const items = Array.from({ length: 15 }, () => ({
+    const items = Array.from({ length: 21 }, () => ({
         x: sRandom() * 18 - 9,
         z: sRandom() * 7 - 3,
         scale: 0.1,
         rotation: {
             x: 0,
-            y: Math.floor(sRandom() * 3),
+            y: Math.floor(sRandom() * 2),
             z: 0
         }
     }))
-
 </script>
 
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
     <InstancedMeshes meshes={gltf.nodes} let:components={{ Mesh }} name={'floor stones'} castShadow receiveShadow>
-        <T.MeshToonMaterial color="#555555" />
+        <T.MeshToonMaterial color="#585858" />
         {#each items as item}
             <Mesh
                 position.y={0}
                 position.z={item.z}
                 position.x={item.x}
-                scale={[0.12, 0.02, 0.22]}
-                rotation.y={rotationValues[item.rotation.y]+0.22}
+                scale={[0.3, 0.05, 0.3]}
+                rotation.y={rotationValues[item.rotation.y]}
                 rotation.x={0}
                 rotation.z={0}
             />
@@ -54,18 +53,3 @@ Command: npx @threlte/gltf@1.0.0-next.12 floorStones.glb -T
 {/await}
 
 <slot {ref} />
-
-<!--<InstancedMeshes meshes={gltf.nodes} let:components={{ Rock }} castShadow receiveShadow>
-        <T.MeshToonMaterial color="#ac6130" />
-        {#each items as item}
-            <Rock
-                position.y={0}
-                position.z={item.z}
-                position.x={item.x}
-                scale={item.scale}
-                rotation.y={(item.rotation.y * Math.PI) / 180}
-                rotation.x={(item.rotation.x * Math.PI) / 180}
-                rotation.z={(item.rotation.z * Math.PI) / 180}
-            />
-        {/each}
-    </InstancedMeshes> -->

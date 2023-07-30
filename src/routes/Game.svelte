@@ -11,6 +11,8 @@
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
 
+    const scenes = [ Scene1, Scene2, Scene3 ]
+
     interactivity()
 
     export let script: Script
@@ -99,13 +101,7 @@
 <Audio src={'/audio/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
 <Audio src={'/audio/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
 
-{#if selectedScene === 1}
-    <Scene1 />
-{:else if selectedScene === 2}
-    <Scene2 />
-{:else if selectedScene === 3}
-    <Scene3 />
-{/if}
+<svelte:component this={scenes[selectedScene-1]} />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>

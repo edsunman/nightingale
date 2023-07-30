@@ -4,7 +4,7 @@
     import { Vector3, BufferGeometry, Line, LineBasicMaterial, CatmullRomCurve3, Color } from 'three'
 
     export let position : [x: number, y: number, z: number] = [0,0,0]
-    export let count = 15
+    export let count = 10
     let percent = 0
 
     const curveArray : CatmullRomCurve3[] = []
