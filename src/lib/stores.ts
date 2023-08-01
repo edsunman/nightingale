@@ -31,7 +31,7 @@ export const gameState : Writable<GameState> = writable({
     volumePreference : 0
 })
 
-export const gameScene = writable(2)
+export const gameScene = writable(1)
 export const gamePosition = writable({ x: 0, z: 0 })
 export const gameMovingTo = writable({ x: 0, z: 0 })
 export const gameSelectedCharacterPosition = writable({ x: 0, y: 0, z: 0 })

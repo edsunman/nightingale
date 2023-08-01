@@ -1,10 +1,11 @@
 <script>
-    import { ShaderMaterial, TextureLoader, RepeatWrapping } from 'three'
+    import { ShaderMaterial, TextureLoader, RepeatWrapping, SRGBColorSpace } from 'three'
     import { T, useFrame } from '@threlte/core'
 
     const texture = new TextureLoader().load('/texture/toy.jpg')
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
+    texture.colorSpace = SRGBColorSpace
 
     export let opacity = 1
     export let dotSize = 50

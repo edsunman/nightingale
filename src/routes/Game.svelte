@@ -83,7 +83,7 @@
 
     function compileScene(s: boolean) {
         if (s) {
-            console.log(scene)
+            //console.log(scene)
             audio.context.resume()
         }
     }

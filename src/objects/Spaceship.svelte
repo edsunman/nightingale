@@ -4,7 +4,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 spaceship.glb -T
 -->
 
 <script>
-    import { Group, sRGBEncoding } from 'three'
+    import { Group, SRGBColorSpace } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, useTexture } from '@threlte/extras'
 
@@ -29,7 +29,7 @@ Command: npx @threlte/gltf@1.0.0-next.12 spaceship.glb -T
         >
             {#await texture then t}
                 <T.MeshToonMaterial color="#ffffff">
-                    <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                    <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
                 </T.MeshToonMaterial>
             {/await}
         </T.Mesh>

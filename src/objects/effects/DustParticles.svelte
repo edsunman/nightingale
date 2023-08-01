@@ -43,7 +43,7 @@
 
 <InstancedMesh name={'dust'} {position} rotation.x={0.5} frustumCulled={false}>
     <T.DodecahedronGeometry args={[0.01, 0]} />
-    <T.MeshToonMaterial color="#888888" transparent={true} opacity={0.7} />
+    <T.MeshToonMaterial color={0xff0000} transparent={true} opacity={0.7} />
     {#each positionsArray as p}
         <Instance position={[p[0],p[1],p[2]]}></Instance>
     {/each}

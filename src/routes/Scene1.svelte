@@ -1,6 +1,5 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import { sRGBEncoding } from 'three'
     import { Audio } from '@threlte/extras'
 
     import Floor from './Floor.svelte'
