@@ -4,7 +4,7 @@
     import { T } from '@threlte/core'
     import { useCursor } from '$lib/util/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
-    import { sRGBEncoding, Group } from 'three'
+    import { SRGBColorSpace, Group } from 'three'
     import Sparkes from './effects/Sparkes.svelte'
 
     export let id: number
@@ -62,7 +62,7 @@
             >
                 {#await texture then t}
                     <T.MeshToonMaterial color="#ffffff">
-                        <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                        <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
                     </T.MeshToonMaterial>
                 {/await}
             </T.Mesh>

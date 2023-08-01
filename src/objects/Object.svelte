@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { sRGBEncoding } from 'three'
+    import { SRGBColorSpace } from 'three'
     import { T } from '@threlte/core'
     import { useGltf, useTexture } from '@threlte/extras'
     const texture = useTexture('/texture/objectAtlas.png')
@@ -13,7 +13,7 @@
     <T.Mesh {...$$restProps} geometry={gltf.nodes.Mesh.geometry} castShadow>
         {#await texture then t}
             <T.MeshToonMaterial color="#ffffff">
-                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
             </T.MeshToonMaterial>
         {/await}
     </T.Mesh>

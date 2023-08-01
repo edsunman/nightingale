@@ -4,7 +4,7 @@ Command: npx @threlte/gltf@1.0.0-next.13 desert_tent.glb -T
 -->
 
 <script>
-    import { sRGBEncoding } from 'three'
+    import { SRGBColorSpace } from 'three'
     import { Group, MeshToonMaterial } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
@@ -34,7 +34,7 @@ Command: npx @threlte/gltf@1.0.0-next.13 desert_tent.glb -T
                 <T.SkinnedMesh castShadow name="Cloth" geometry={gltf.nodes.Cloth.geometry} skeleton={gltf.nodes.Cloth.skeleton}>
                     {#await texture then t}
                         <T.MeshBasicMaterial color="#ffffff" gradientMap={null}>
-                            <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                            <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
                         </T.MeshBasicMaterial>
                     {/await}
                 </T.SkinnedMesh>
@@ -42,7 +42,7 @@ Command: npx @threlte/gltf@1.0.0-next.13 desert_tent.glb -T
             <T.Mesh castShadow name="Poles" geometry={gltf.nodes.Poles.geometry}>
                 {#await texture then t}
                     <T.MeshToonMaterial color="#ffffff">
-                        <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+                        <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
                     </T.MeshToonMaterial>
                 {/await}
             </T.Mesh>

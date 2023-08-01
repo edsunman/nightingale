@@ -2,7 +2,7 @@
     import { T, useFrame } from '@threlte/core'
     import { gamePosition } from '$lib/stores'
     import { useGltf, useTexture } from '@threlte/extras'
-    import { sRGBEncoding, Vector3, Line, BufferGeometry, LineBasicMaterial } from 'three'
+    import { SRGBColorSpace, Vector3, Line, BufferGeometry, LineBasicMaterial } from 'three'
 
     export let hidePoints: { x: number; z: number }[] = []
 
@@ -58,8 +58,8 @@
 {#await gltf then gltf}
     <T.Mesh {...$$restProps} name={'vanishing pillar'} geometry={gltf.nodes.Mesh.geometry}>
         {#await texture then t}
-            <T.MeshToonMaterial color="#ffffff" transparent {opacity}>
-                <T is={t} attach="map" flipY={false} encoding={sRGBEncoding} />
+            <T.MeshToonMaterial  transparent {opacity}>
+                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
             </T.MeshToonMaterial>
         {/await}
     </T.Mesh>
