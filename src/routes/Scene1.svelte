@@ -10,7 +10,6 @@
     import Wind from '../objects/effects/Wind.svelte'
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
-    import Sparkes from '../objects/effects/Sparkes.svelte'
     import DesertTent from '../objects/Desert_tent.svelte'
     import DesertSand from '../objects/Desert_sand.svelte'
     import TechSign from '../objects/Tech_sign.svelte'
@@ -97,7 +96,7 @@
     instances={[
         { position: [24, -0.05, -25.5], rotation: [0, 1.57, 0] },
         { position: [-23, -0.05, -20], rotation: [0, 0, 0] },
-        { position: [-8, -0.05, 24], rotation: [0, 1.57, 0] }
+        { position: [-11, -0.05, 24], rotation: [0, 1.57, 0] }
     ]}
 />
 <Object url={'/objects/tech_hologramPad-transformed.glb'} scale={0.4} position={[21, 0, -18]} rotation.y={-1.57} />
@@ -130,9 +129,10 @@
 />
 <DesertTent name={'tent'} scale={1.1} position={[10, 0, -4]} rotation.y={0.7} />
 
-<Object name={'building'} url={'/objects/tech_building-transformed.glb'} scale={1.5} position={[15.5, 0, 24.5]} rotation.y={-1.57} />
+<Object name={'building'} url={'/objects/tech_building-transformed.glb'} scale={1.5} position={[15.5, 0, 24.5]} rotation.y={-1.57} receiveShadow />
 <Object name={'church'} url={'/objects/stone_church-transformed.glb'} scale={1.85} position={[-45.5, 0, 17]} rotation.y={3.14} />
 <Object name={'spike building'} url={'/objects/tech_spikeBuilding-transformed.glb'} scale={1.5} position={[4.5, 0, 2]} rotation.y={-1.57} />
+<Object name={'small building'} url={'/objects/tech_smallBuilding-transformed.glb'} scale={1.5} position={[5, 0, 24]} rotation.y={0} receiveShadow/>
 <Objects
     url={'/objects/tech_shippingContainer-transformed.glb'}
     scale={0.75}

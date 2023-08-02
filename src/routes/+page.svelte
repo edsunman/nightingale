@@ -143,6 +143,11 @@
         <Game {selectedScene} {sceneFinishedLoading} {script} />
     </Canvas>
 </div>
+<div>
+    <p>
+        Made with <a href="https://www.threlte.xyz" >Threlte</a>. View the source code on <a href="https://github.com/edsunman/nightingale" >GitHub</a>.
+    </p>
+</div>
 {#if dev}
     <div
         class="mt-12 invisible md:visible"

@@ -22,7 +22,7 @@
         setTimeout(function () {
             clearInterval(flickeringInterval)
             lightBrightness = 1
-        }, 2000)
+        }, 3000)
 
         if(!$gameState.inventory.owned.includes(104)){
             $gameState.inventory.owned.push(104)
@@ -42,7 +42,7 @@
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[6, 0.01, 12]} />
-    <T.MeshStandardMaterial color="#595550" />
+    <T.MeshStandardMaterial color="#444441" />
 </T.Mesh>
 
 <Door
@@ -52,6 +52,7 @@
     activeSquare={{ x: 3, z: -1 }}
     scene={1}
     nextScenePosition={{ x: 20, z: 23 }}
+    message="Back to the outpost"
 />
 
 <Objects

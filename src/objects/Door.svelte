@@ -2,7 +2,8 @@
     import { gameScene, gameMessage, gamePosition, gameState } from '$lib/stores'
     import { T } from '@threlte/core'
     import { useCursor } from '$lib/util/useCursor'
-    import { useGltf } from '@threlte/extras'
+    import { useGltf, useTexture } from '@threlte/extras'
+    import { SRGBColorSpace } from 'three'
 
     export let position : [x:number,y:number,z:number]
     export let nextScenePosition = { x: 0, z: 0 }
@@ -13,13 +14,9 @@
     export let message : string = 'A door'
 
     const gltf = useGltf(url, { useDraco: true })
+     const texture = useTexture('/texture/objectAtlas.png')
 
     const { onPointerEnter, onPointerLeave } = useCursor()
-
-    function openDoor() {
-        $gameState.nextScenePosition = nextScenePosition
-        $gameScene = scene
-    }
 
     function doorClicked(e: any) {
         if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z && !$gameState.moveLock) {
@@ -36,12 +33,24 @@
             $gameMessage = message
         }
     }
+
+    function openDoor() {
+        $gameState.nextScenePosition = nextScenePosition
+        $gameScene = scene
+    }
+
 </script>
 
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
-    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes.Mesh.geometry} scale={0.45} />
+    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes.Mesh.geometry} scale={0.45} >
+      {#await texture then t}
+            <T.MeshBasicMaterial color="#ffffff">
+                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+            </T.MeshBasicMaterial>
+        {/await}
+    </T.Mesh>
 {:catch error}
     <slot name="error" {error} />
 {/await}

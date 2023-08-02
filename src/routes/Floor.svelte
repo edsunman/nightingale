@@ -56,6 +56,7 @@
             if (intersects.length > 0) {
                 // ^^^ pointing towards wall
                 // so move towards wall and stop
+                // TODO : proper pathfinding like Dijkstra or A*
                 const ip = intersects[0].point
                 let gridIp = { x: 0, z: 0 }
 

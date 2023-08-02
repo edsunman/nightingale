@@ -206,11 +206,11 @@
     name="sun"
     intensity={playerState.sunIntensity}
     castShadow
-    shadow.mapSize.width={1800}
-    shadow.mapSize.height={1800}
+    shadow.mapSize.width={2048}
+    shadow.mapSize.height={2048}
     shadow.camera.top={9}
-    shadow.camera.right={4}
-    shadow.camera.left={-18}
+    shadow.camera.right={6.5}
+    shadow.camera.left={-16.5}
     shadow.camera.bottom={-6}
     position={[playerState.position.x + 12, 20, playerState.position.z + 20]}
     target={lightTarget}

@@ -34,9 +34,10 @@
             renderer?.setPixelRatio(p)
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
-            //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)
         }
     }
+
+    // TODO : sounds should be moved out
 
     $: inventoryOpenSound($gameState)
 
@@ -93,6 +94,7 @@
     })
 
     onMount(async () => {
+        console.log(stats.dom)
         document.body.appendChild(stats.dom)
     })
 </script>
