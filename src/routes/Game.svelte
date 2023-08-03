@@ -18,6 +18,7 @@
     export let script: Script
     export let selectedScene: number
     export let sceneFinishedLoading: boolean
+    export let dev: boolean
     let audio: any
     const stats = new Stats()
     const { scene, renderer, camera } = useThrelte()
@@ -89,14 +90,15 @@
         }
     }
 
-    useFrame(() => {
-        stats.update()
-    })
+    if(dev) {
+        useFrame(() => {
+            stats.update()
+        })
 
-    onMount(async () => {
-        console.log(stats.dom)
-        document.body.appendChild(stats.dom)
-    })
+        onMount(async () => {
+            document.body.appendChild(stats.dom)
+        })
+    }
 </script>
 
 <AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />

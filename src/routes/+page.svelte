@@ -140,7 +140,7 @@
     <Objectives />
 
     <Canvas>
-        <Game {selectedScene} {sceneFinishedLoading} {script} />
+        <Game {selectedScene} {sceneFinishedLoading} {script} {dev}/>
     </Canvas>
 </div>
 <div>
@@ -165,9 +165,14 @@
         ><br />
         <button
             on:click={() => {
-                $gameState.dev.avoidObjactsVisible = !$gameState.dev.avoidObjactsVisible
+                $gameState.dev.avoidObjectsVisible = !$gameState.dev.avoidObjectsVisible
             }}>avoid objects</button
-        ><br /><br />
+        >
+         <p>
+            Place objects:
+            <input type="checkbox" bind:checked={$gameState.dev.avoidObjectsPlaceable} />
+        </p>
+        <br /><br />
         <p>Player position:</p>
         <p>
             x: {$gamePosition.x.toFixed(3)}<br />

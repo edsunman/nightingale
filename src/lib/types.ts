@@ -51,7 +51,8 @@ export type GameState = {
         status: boolean
         camera: boolean
         grid: boolean
-        avoidObjactsVisible: boolean
+        avoidObjectsVisible: boolean
+        avoidObjectsPlaceable: boolean
     }
     nextScenePosition: { x: number; z: number }
     moveLock: boolean
@@ -72,3 +73,5 @@ export type GameState = {
     charctersSpokenWith: Array<number>
     volumePreference: number
 }
+
+export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }

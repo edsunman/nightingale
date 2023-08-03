@@ -5,16 +5,16 @@
     import Player from './Player.svelte'
     import { Raycaster, Vector3 } from 'three'
 
-    import type { PlayerState } from '$lib/types'
+    import type { PlayerState, AvoidObject } from '$lib/types'
 
     export let levelSize = { x: 100, z: 100 }
-    export let avoidArray: Array<{ x: number; z: number }> = []
+    export let avoidArray: AvoidObject[] = []
     export let startingPosition = { x: 0, z: 0 }
     export let startingRotation = { x: 0, z: 0 }
     export let floorType = 'sand'
     export let sunIntensity = 1
     let next = $gameState.nextScenePosition
-    
+
     let playerState: PlayerState = {
         position: next.x === 0 && next.z === 0 ? startingPosition : next,
         rotation: startingRotation,
@@ -39,7 +39,7 @@
 
     function floorClicked(e: any) {
         const p = playerState.position
-        
+
         const point = e.intersections[0].point
         const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {
@@ -96,7 +96,7 @@
             selectedSize = 0.4
         }
 
-        if ($gameState.dev.avoidObjactsVisible) {
+        if ($gameState.dev.avoidObjectsPlaceable) {
             let obj = avoidArray.find((o) => o.x === grid.x && o.z === grid.z)
             if (obj) {
                 avoidArray = avoidArray.filter(function (o) {
@@ -124,11 +124,11 @@
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
-<InstancedMesh visible={$gameState.dev.avoidObjactsVisible}>
+<InstancedMesh visible={$gameState.dev.avoidObjectsVisible}>
     {#each avoidArray as block}
         <Instance
             name={'avoid object'}
-            scale={[1, 1, 1]}
+            scale={[block.scaleX ? block.scaleX : 1, 1, block.scaleZ ? block.scaleZ : 1]}
             position={[block.x, 0, block.z]}
             on:create={({ ref }) => {
                 avoidObjects.push(ref)

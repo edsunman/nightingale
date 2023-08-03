@@ -8,7 +8,8 @@ export const gameState : Writable<GameState> = writable({
         status: false,
         camera: false,
         grid: false,
-        avoidObjactsVisible: false
+        avoidObjectsVisible: false,
+        avoidObjectsPlaceable: false
     },
     nextScenePosition: { x: 0, z: 0 },
     moveLock: false,

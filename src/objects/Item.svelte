@@ -5,7 +5,6 @@
     import { useCursor } from '$lib/util/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
     import { SRGBColorSpace, Group } from 'three'
-    import Sparkes from './effects/Sparkes.svelte'
 
     export let id: number
     export let position: { x: number; y: number; z: number }

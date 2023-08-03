@@ -216,4 +216,4 @@
     />
 {/if}
 
-<IncidentalDialogue {characterId} {position} bind:clicked={characterSelected} />
+<!--<IncidentalDialogue {characterId} {position} bind:clicked={characterSelected} /> -->
