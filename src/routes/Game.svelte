@@ -10,6 +10,7 @@
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
+    import SoundEffects from '../objects/SoundEffects.svelte'
 
     const scenes = [ Scene1, Scene2, Scene3 ]
 
@@ -17,17 +18,12 @@
 
     export let script: Script
     export let selectedScene: number
-    export let sceneFinishedLoading: boolean
     export let dev: boolean
-    let audio: any
-    const stats = new Stats()
-    const { scene, renderer, camera } = useThrelte()
-    const defaultPixelRatio = renderer?.getPixelRatio()
-    let inventoryOpen = false
-    let equippedItem = 0
-    let openInventoryAudio  : any
-    let itemSelectAudio : any
 
+    const stats = new Stats()
+    const { renderer } = useThrelte()
+    const defaultPixelRatio = renderer?.getPixelRatio()
+    
     $: changePixelRatio($gamePixelRatio)
 
     function changePixelRatio(p: number) {
@@ -35,39 +31,6 @@
             renderer?.setPixelRatio(p)
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
-        }
-    }
-
-    // TODO : sounds should be moved out
-
-    $: inventoryOpenSound($gameState)
-
-    function inventoryOpenSound(gs : any){
-        if (!inventoryOpen && gs.inventory.open) {
-            inventoryOpen = true
-            openInventoryAudio.play()
-        }
-        if(!gs.inventory.open) {
-            inventoryOpen = false
-        }
-    }
-
-    $: itemEquippedSound($gameState)
-
-    function itemEquippedSound(gs : any){
-        if (equippedItem !== gs.inventory.equipped) {
-            console.log('play')
-            //itemSelectAudio.play()
-
-            const source = itemSelectAudio.context.createBufferSource()
-            const gainNode = itemSelectAudio.context.createGain()
-            source.buffer = itemSelectAudio.buffer
-            gainNode.gain.value = $gameVolume
-            source.connect(gainNode)
-            gainNode.connect(itemSelectAudio.context.destination)
-            source.start()
-
-            equippedItem = gs.inventory.equipped
         }
     }
 
@@ -81,15 +44,6 @@
             }
     }
 
-    $: compileScene(sceneFinishedLoading)
-
-    function compileScene(s: boolean) {
-        if (s) {
-            //console.log(scene)
-            audio.context.resume()
-        }
-    }
-
     if(dev) {
         useFrame(() => {
             stats.update()
@@ -101,10 +55,7 @@
     }
 </script>
 
-<AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
-<Audio src={'/audio/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
-<Audio src={'/audio/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
-
+<SoundEffects />
 <svelte:component this={scenes[selectedScene-1]} />
 
 {#if $gameConversation[0] !== 0}

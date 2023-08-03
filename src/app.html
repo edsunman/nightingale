@@ -8,8 +8,28 @@
         %sveltekit.head%
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Viga&display=swap" as="style">
-        <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Viga&display=swap" rel="stylesheet">
+        <link
+            rel="preload"
+            href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Viga&display=swap"
+            as="style"
+            crossorigin
+        />
+        <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Viga&display=swap" rel="stylesheet" crossorigin/>
+        <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/breeserif/v17/4UaHrEJCrhhnVA3DgluA96Tp56N1.woff2"
+            crossorigin
+            as="font"
+            type="font/woff2"
+        />
+        <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/breeserif/v17/4UaHrEJCrhhnVA3DgluA96rp5w.woff2"
+            crossorigin
+            as="font"
+            type="font/woff2"
+        />
+        <link rel="prefetch" as="image" href="/texture/paint-bg.jpg" />
     </head>
     <body class="bg-neutral-950 font-sans font-normal font-base tracking-wider">
         <div style="display: contents" class="h-screen relative">%sveltekit.body%</div>

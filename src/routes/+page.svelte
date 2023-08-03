@@ -116,10 +116,10 @@
     {#if welcomeMessage}
         <div>
             <div
-                class="painted z-20 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
+                class="painted z-30 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
             >
                 <h3 class="text-xl text-center py-6">Welcome to Nightigale!</h3>
-                <p class="pb-6">Nightingale is a rough 'proof of concept' attempt at a point and click adventure game.</p>
+                <p class="pb-6">Nightingale is an early attempt at a point and click adventure game.</p>
                 <p class="pb-6">
                     Set in the far future on a distant planet, your ship has run out of fuel and you are marooned at a remote desert
                     outpost.
@@ -140,13 +140,8 @@
     <Objectives />
 
     <Canvas>
-        <Game {selectedScene} {sceneFinishedLoading} {script} {dev}/>
+        <Game {selectedScene} {script} {dev} />
     </Canvas>
-</div>
-<div>
-    <p>
-        Made with <a href="https://www.threlte.xyz" >Threlte</a>. View the source code on <a href="https://github.com/edsunman/nightingale" >GitHub</a>.
-    </p>
 </div>
 {#if dev}
     <div

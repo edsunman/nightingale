@@ -2,11 +2,22 @@
     import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition, gameState } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
-    import { Vector3, Matrix4, Euler, Quaternion, Group, ShaderMaterial, LoopOnce, LoopPingPong, TextureLoader, RepeatWrapping } from 'three'
+    import {
+        Vector3,
+        Matrix4,
+        Euler,
+        Quaternion,
+        Group,
+        ShaderMaterial,
+        LoopOnce,
+        LoopPingPong,
+        TextureLoader,
+        RepeatWrapping
+    } from 'three'
     import { useCursor } from '$lib/util/useCursor'
     import { onMount, onDestroy } from 'svelte'
     import IncidentalDialogue from './IncidentalDialogue.svelte'
-    import HolgramMaterial from './effects/HolgramMaterial.svelte'
+    import HolgramMaterial from './materials/HolgramMaterial.svelte'
 
     export const ref = new Group()
     export let position = { x: 1, y: 0, z: 1 }
@@ -18,9 +29,10 @@
     export let beforeDialogueActionKey = ''
     export let isHologram = false
     export let lookatPlayer = false
-    export let lookatPlayerWhenTalking = true
+    export let lookatPlayerWhenTalking = false
     export let pingPongIdle = false
     export let chatRadius = 1
+    export let extraChatPositions: { x: number; z: number }[] = []
 
     const gltf = useGltf(url, { useDraco: true })
     export const { actions, mixer } = useGltfAnimations(gltf, ref)
@@ -32,7 +44,7 @@
     let flickerInterval: any
     let flickeringInterval: any
     let staticAudio: any
-    let characterSelected : any
+    //let characterSelected : any
 
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
@@ -74,28 +86,22 @@
         }
     }
 
-    useFrame((state, delta) => {
-        if (lookatPlayer) {
-            playerVector.set($gamePosition.x, 0, $gamePosition.z)
-            rotationMatrix.lookAt(playerVector, currentPosition, upVector)
-            endRotation.setFromRotationMatrix(rotationMatrix)
-        }
-        if (ref) {
-            ref.quaternion.rotateTowards(endRotation, delta * 20)
-        }
-    })
-
     function clicked(e: any) {
         if (!$gameState.moveLock) {
             const player = $gamePosition
+            let extraSpace = false
+            extraChatPositions.forEach((p) => {
+                if (player.x === p.x && player.z === p.z) extraSpace = true
+            })
             if (
-                player.x >= position.x - chatRadius &&
-                player.x <= position.x + chatRadius &&
-                player.z >= position.z - chatRadius &&
-                player.z <= position.z + chatRadius
+                (player.x >= position.x - chatRadius &&
+                    player.x <= position.x + chatRadius &&
+                    player.z >= position.z - chatRadius &&
+                    player.z <= position.z + chatRadius) ||
+                extraSpace
             ) {
-                characterSelected()
-                if(lookatPlayerWhenTalking) {
+                //characterSelected()
+                if (lookatPlayerWhenTalking) {
                     playerVector.set(player.x, 0, player.z)
                     rotationMatrix.lookAt(playerVector, currentPosition, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
@@ -107,7 +113,7 @@
                 if (player.x <= position.x && player.z <= position.z) {
                     nudgeDialogueAmount = 0.5
                 }
-                $gameSelectedCharacterPosition = { x: position.x, y: 2.6 + nudgeDialogueAmount, z: position.z}
+                $gameSelectedCharacterPosition = { x: position.x, y: 2.6 + nudgeDialogueAmount, z: position.z }
                 $gameConversation = [characterId, 1]
                 if (!$gameState.charctersSpokenWith.includes(characterId)) {
                     $gameState.charctersSpokenWith.push(characterId)
@@ -131,6 +137,17 @@
             staticAudio.stop()
         }, Math.random() * 1500 + 100)
     }
+
+    useFrame((state, delta) => {
+        if (lookatPlayer) {
+            playerVector.set($gamePosition.x, 0, $gamePosition.z)
+            rotationMatrix.lookAt(playerVector, currentPosition, upVector)
+            endRotation.setFromRotationMatrix(rotationMatrix)
+        }
+        if (ref) {
+            ref.quaternion.rotateTowards(endRotation, delta * 10)
+        }
+    })
 
     onMount(() => {
         if (isHologram) {
@@ -156,7 +173,7 @@
     })
 </script>
 
-<T is={ref} dispose={false} {...$$restProps} name={"character " + characterId} position={[position.x, position.y, position.z]}>
+<T is={ref} dispose={false} {...$$restProps} name={'character ' + characterId} position={[position.x, position.y, position.z]}>
     {#await gltf}
         <slot name="fallback" />
     {:then gltf}
@@ -168,10 +185,9 @@
                     name="Body"
                     geometry={gltf.nodes.Body.geometry}
                     skeleton={gltf.nodes.Body.skeleton}
-                    
                 >
                     {#if isHologram}
-                        <HolgramMaterial opacity={hologramOpacity} dotSize={60}/>
+                        <HolgramMaterial opacity={hologramOpacity} dotSize={60} />
                     {:else}
                         <!--{#await useTexture('/rick.jpg') then texture}
                             <T.MeshToonMaterial color="#ffffff">
@@ -201,7 +217,6 @@
     }}
 >
     <T.BoxGeometry args={[0.5, 1.5, 0.5]} />
-    
 </T.Mesh>
 
 {#if isHologram}

@@ -1,12 +1,12 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import Floor from './Floor.svelte'
+    import Floor from '../objects/Floor.svelte'
     import Door from '../objects/Door.svelte'
     import { useTexture } from '@threlte/extras'
     import Character from '../objects/Character.svelte'
-    import FloorStones from '../objects/FloorStones.svelte'
-    import Pillar from '../objects/Pillar.svelte'
-    import DustParticles from '../objects/effects/DustParticles.svelte'
+    import FloorStones from '../objects/scene2/FloorStones.svelte'
+    import Pillar from '../objects/scene2/Pillar.svelte'
+    import DustParticles from '../objects/scene2/DustParticles.svelte'
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
     import Item from '../objects/Item.svelte'
@@ -64,8 +64,8 @@
     url={'/objects/hologram-transformed.glb'}
     characterId={0}
     currentActionKey={'dance'}
-    isHologram={true}
-    pingPongIdle={true}
+    isHologram
+    pingPongIdle
 />
 <Character
     message="Bartender"
@@ -74,6 +74,7 @@
     characterId={22}
     rotation={1.5708}
     chatRadius={2}
+    lookatPlayerWhenTalking
 />
 <Character
     message="An old soldier"
@@ -81,8 +82,8 @@
     url={'/objects/hologram-transformed.glb?v=3'}
     characterId={23}
     rotation={0}
-    chatRadius={2}
-    lookatPlayerWhenTalking={true}
+    chatRadius={1}
+    extraChatPositions={[{x:2,z:-1},{x:3,z:-1},{x:4,z:-1}]}
 />
 
 <!-- OBJECTS -->

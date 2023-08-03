@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .painted {
-    background-image: url('/texture/paint-bg.png');
+    background-image: url('/texture/paint-bg.jpg');
     background-position: center;
 }
 

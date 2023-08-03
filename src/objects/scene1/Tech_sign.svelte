@@ -7,7 +7,7 @@ Command: npx @threlte/gltf@1.0.0-next.13 tech_sign.glb -T
     import { Group, ShaderMaterial, SkinnedMesh } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf } from '@threlte/extras'
-    import HolgramMaterial from './effects/HolgramMaterial.svelte'
+    import HolgramMaterial from '../materials/HolgramMaterial.svelte'
 
     export const ref = new Group()
 

@@ -1,17 +1,17 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { Audio } from '@threlte/extras'
-    import Floor from './Floor.svelte'
+    import Floor from '../objects/Floor.svelte'
     import Character from '../objects/Character.svelte'
-    import Rocks from '../objects/Rocks.svelte'
+    import Rocks from '../objects/scene1/Rocks.svelte'
     import Door from '../objects/Door.svelte'
-    import Spaceship from '../objects/Spaceship.svelte'
-    import Wind from '../objects/effects/Wind.svelte'
+    import Spaceship from '../objects/scene1/Spaceship.svelte'
+    import Wind from '../objects/scene1/Wind.svelte'
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
-    import DesertTent from '../objects/Desert_tent.svelte'
-    import DesertSand from '../objects/Desert_sand.svelte'
-    import TechSign from '../objects/Tech_sign.svelte'
+    import DesertTent from '../objects/scene1/Desert_tent.svelte'
+    import DesertSand from '../objects/scene1/Desert_sand.svelte'
+    import TechSign from '../objects/scene1/Tech_sign.svelte'
 
     import type { AvoidObject } from '$lib/types'
 
@@ -88,8 +88,8 @@
     rotation={1.5708}
     currentActionKey={'idle'}
     beforeDialogueActionKey={'wave'}
-    isHologram={true}
-    lookatPlayer={true}
+    isHologram
+    lookatPlayer
 />
 <Character
     message="A soldier"
@@ -98,8 +98,7 @@
     characterId={2}
     rotation={1.5708}
     currentActionKey={'idle'}
-    lookatPlayerWhenTalking={false}
-    chatRadius={2}
+    extraChatPositions={[{x:13,z:-4},{x:13,z:-3},{x:13,z:-2}]}
 />
 <Character
     message="An elderly woman"
@@ -107,7 +106,7 @@
     url={'/objects/hologram-transformed.glb?v=3'}
     characterId={20}
     currentActionKey={'idle'}
-    chatRadius={2}
+    extraChatPositions={[{x:-17,z:-21},{x:-16,z:-21},{x:-15,z:-21}]}
 />
 <Character
     message="A soldier guards the door"

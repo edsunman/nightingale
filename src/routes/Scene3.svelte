@@ -2,7 +2,7 @@
     import { gameState } from '$lib/stores'
     import { T } from '@threlte/core'
     import { onMount } from 'svelte'
-    import Floor from './Floor.svelte'
+    import Floor from '../objects/Floor.svelte'
     import Door from '../objects/Door.svelte'
     import Item from '../objects/Item.svelte'
     import Object from '../objects/Object.svelte'
