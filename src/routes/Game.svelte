@@ -10,7 +10,7 @@
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
-    import SoundEffects from '../objects/SoundEffects.svelte'
+    import UIAudio from '../objects/audio/UIAudio.svelte'
 
     const scenes = [ Scene1, Scene2, Scene3 ]
 
@@ -21,7 +21,7 @@
     export let dev: boolean
 
     const stats = new Stats()
-    const { renderer } = useThrelte()
+    const { renderer, scene } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
     
     $: changePixelRatio($gamePixelRatio)
@@ -51,11 +51,12 @@
 
         onMount(async () => {
             document.body.appendChild(stats.dom)
+            console.log(scene)
         })
     }
 </script>
 
-<SoundEffects />
+<UIAudio/>
 <svelte:component this={scenes[selectedScene-1]} />
 
 {#if $gameConversation[0] !== 0}

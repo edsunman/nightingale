@@ -41,6 +41,7 @@
 		"@threlte/core": "^6.0.0",
 		"@threlte/extras": "^5.0.1",
 		"@tweenjs/tween.js": "^19.0.0",
+		"@types/tweenjs": "^1.0.4",
 		"postprocessing": "^6.30.2",
 		"seedrandom": "^3.0.5",
 		"three": "^0.153.0"

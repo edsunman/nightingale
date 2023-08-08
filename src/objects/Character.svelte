@@ -2,21 +2,10 @@
     import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition, gameState } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
-    import {
-        Vector3,
-        Matrix4,
-        Euler,
-        Quaternion,
-        Group,
-        ShaderMaterial,
-        LoopOnce,
-        LoopPingPong,
-        TextureLoader,
-        RepeatWrapping
-    } from 'three'
+    import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong, SRGBColorSpace } from 'three'
+    import * as TWEEN from '@tweenjs/tween.js'
     import { useCursor } from '$lib/util/useCursor'
     import { onMount, onDestroy } from 'svelte'
-    import IncidentalDialogue from './IncidentalDialogue.svelte'
     import HolgramMaterial from './materials/HolgramMaterial.svelte'
 
     export const ref = new Group()
@@ -26,32 +15,41 @@
     export let message: string
     export let rotation = 0
     export let currentActionKey = 'idle'
-    export let beforeDialogueActionKey = ''
     export let isHologram = false
-    export let lookatPlayer = false
-    export let lookatPlayerWhenTalking = false
+    export let rotateTowardsPlayer = false
+    export let rotateTowardsPlayerWhenTalking = false
+    export let spinHeadWhenTalking = false
     export let pingPongIdle = false
     export let chatRadius = 1
     export let extraChatPositions: { x: number; z: number }[] = []
+    export let animation: { key: string; repeatTime: number; stopWhenSpokenTo?: boolean } = { key: '', repeatTime: 0 }
 
     const gltf = useGltf(url, { useDraco: true })
-    export const { actions, mixer } = useGltfAnimations(gltf, ref)
+    const characterTexture = useTexture('/texture/characterAtlas.png')
+    const { actions, mixer } = useGltfAnimations(gltf, ref)
     const { onPointerEnter, onPointerLeave } = useCursor()
-
-    let spinning = false
-    let hologramOpacity = 1
-    let beforeDialogueInterval: any
-    let flickerInterval: any
-    let flickeringInterval: any
-    let staticAudio: any
-    //let characterSelected : any
-
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
     const currentPosition = new Vector3(position.x, 0, position.z)
     const playerVector = new Vector3(0, 0, 0)
-    const upVector = new Vector3(0, 1, 0)
     const defaultEuler = new Euler(0, rotation, 0)
+    const defaultHeadRotation = new Quaternion()
+    const headRotation = new Quaternion()
+    const headHeightVector = new Vector3(0, 1.5, 0)
+    const headVector = new Vector3(0, 1, 0)
+    const upVector = new Vector3(0, 1, 0)
+
+    let spinning = false
+    let hologramOpacity = 1
+    let animationInterval: any
+    let flickerInterval: any
+    let flickeringInterval: any
+    let staticAudio: any
+    let inConversation = false
+    let counter = { count: 0 }
+    let rotatingHead = false
+    let tween: any
+    let isPlayerInFrontOfCharacter = false
 
     $: {
         if (pingPongIdle) {
@@ -60,29 +58,40 @@
         $actions[currentActionKey]?.play()
     }
 
-    function transitionTo(nextActionKey: string, duration = 0.2) {
+    $: if ($gameState.charctersSpokenWith.includes(characterId) && animation.stopWhenSpokenTo) {
+        clearInterval(animationInterval)
+    }
+
+    $: conversationOver($gameConversation)
+
+    function conversationOver(gc: any) {
+        if (gc[0] === 0) {
+            inConversation = false
+            endRotation.setFromEuler(defaultEuler)
+            if (tween) {
+                tween.to({ count: 0 }, 700).startFromCurrentValues()
+            }
+        }
+    }
+
+    function transitionTo(nextActionKey: string, duration = 0.5) {
         const currentAction = $actions[currentActionKey]
         const nextAction = $actions[nextActionKey]
         if (!nextAction || currentAction === nextAction) return
         nextAction.enabled = true
         nextAction.clampWhenFinished = true
+        nextAction.stop()
+        nextAction.play()
         if (currentAction) {
             currentAction.crossFadeTo(nextAction, duration, true)
         }
-        nextAction.stop()
-        nextAction.timeScale = 1
         currentActionKey = nextActionKey
     }
 
-    $: rotateBack($gameConversation)
-
-    $: if ($gameState.charctersSpokenWith.includes(characterId)) {
-        clearInterval(beforeDialogueInterval)
-    }
-
-    function rotateBack(gc: any) {
-        if (gc[0] === 0) {
-            endRotation.setFromEuler(defaultEuler)
+    function pause(p = true) {
+        const currentAction = $actions[currentActionKey]
+        if (currentAction) {
+            currentAction.paused = p
         }
     }
 
@@ -100,9 +109,24 @@
                     player.z <= position.z + chatRadius) ||
                 extraSpace
             ) {
-                //characterSelected()
-                if (lookatPlayerWhenTalking) {
-                    playerVector.set(player.x, 0, player.z)
+                playerVector.set(player.x, 0, player.z)
+                if ((rotation === 1.57 && player.x > Math.ceil(position.x)) || (rotation === 0 && player.z > Math.ceil(position.z))) {
+                    isPlayerInFrontOfCharacter = true
+                } else {
+                    isPlayerInFrontOfCharacter = false
+                }
+                if (spinHeadWhenTalking && $gltf && isPlayerInFrontOfCharacter) {
+                    pause()
+                    rotatingHead = true
+                    headVector.copy(playerVector).add(headHeightVector)
+                    defaultHeadRotation.copy($gltf.nodes.mixamorigHead.quaternion)
+                    $gltf.nodes.mixamorigHead.lookAt(headVector)
+                    headRotation.copy($gltf.nodes.mixamorigHead.quaternion)
+                    tween = new TWEEN.Tween(counter)
+                    tween.easing(TWEEN.Easing.Quadratic.InOut)
+                    tween.to({ count: 1 }, 500).start()
+                }
+                if (rotateTowardsPlayerWhenTalking) {
                     rotationMatrix.lookAt(playerVector, currentPosition, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
                 }
@@ -115,6 +139,7 @@
                 }
                 $gameSelectedCharacterPosition = { x: position.x, y: 2.6 + nudgeDialogueAmount, z: position.z }
                 $gameConversation = [characterId, 1]
+                inConversation = true
                 if (!$gameState.charctersSpokenWith.includes(characterId)) {
                     $gameState.charctersSpokenWith.push(characterId)
                 }
@@ -138,27 +163,44 @@
         }, Math.random() * 1500 + 100)
     }
 
-    useFrame((state, delta) => {
-        if (lookatPlayer) {
-            playerVector.set($gamePosition.x, 0, $gamePosition.z)
-            rotationMatrix.lookAt(playerVector, currentPosition, upVector)
-            endRotation.setFromRotationMatrix(rotationMatrix)
-        }
-        if (ref) {
-            ref.quaternion.rotateTowards(endRotation, delta * 10)
-        }
-    })
+    useFrame(
+        (state, delta) => {
+            if (rotateTowardsPlayer) {
+                playerVector.set($gamePosition.x, 0, $gamePosition.z)
+                rotationMatrix.lookAt(playerVector, currentPosition, upVector)
+                endRotation.setFromRotationMatrix(rotationMatrix)
+            }
+            if (ref) {
+                ref.quaternion.rotateTowards(endRotation, delta * 10)
+            }
+            if ($gltf) {
+                if (inConversation && spinHeadWhenTalking && isPlayerInFrontOfCharacter) {
+                    $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
+                } else if (rotatingHead) {
+                    $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
+                    if (counter.count <= 0) {
+                        pause(false)
+                        rotatingHead = false
+                    }
+                }
+            }
+            TWEEN.update()
+        },
+        { order: 1 }
+    )
 
     onMount(() => {
         if (isHologram) {
             flickerInterval = setInterval(flicker, 6000)
         }
-        if (beforeDialogueActionKey.length > 0) {
-            beforeDialogueInterval = setInterval(() => {
-                $actions[beforeDialogueActionKey]?.setLoop(LoopOnce, 1)
-                transitionTo(beforeDialogueActionKey)
-            }, 8000)
+
+        if (animation.key.length > 0) {
+            animationInterval = setInterval(() => {
+                $actions[animation.key]?.setLoop(LoopOnce, 1)
+                transitionTo(animation.key)
+            }, animation.repeatTime)
         }
+
         mixer.addEventListener('finished', () => {
             transitionTo('idle')
         })
@@ -169,7 +211,7 @@
             clearInterval(flickerInterval)
             clearInterval(flickeringInterval)
         }
-        clearInterval(beforeDialogueInterval)
+        clearInterval(animationInterval)
     })
 </script>
 
@@ -189,11 +231,11 @@
                     {#if isHologram}
                         <HolgramMaterial opacity={hologramOpacity} dotSize={60} />
                     {:else}
-                        <!--{#await useTexture('/rick.jpg') then texture}
+                        {#await characterTexture then t}
                             <T.MeshToonMaterial color="#ffffff">
-                                <T is={texture} attach="map" flipY={false} encoding={sRGBEncoding} />
+                                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
                             </T.MeshToonMaterial>
-                        {/await} -->
+                        {/await}
                     {/if}
                 </T.SkinnedMesh>
             </T.Group>
@@ -230,5 +272,3 @@
         bind:ref={staticAudio}
     />
 {/if}
-
-<!--<IncidentalDialogue {characterId} {position} bind:clicked={characterSelected} /> -->

@@ -28,8 +28,9 @@
         { x: 3, z: -3 },
         { x: -7, z: 0.5, scaleZ: 4 },
         { x: -8, z: 0 },
-        { x: -9, z: 3.5, scaleZ: 2 },
-        { x: -9, z: -3.5, scaleZ: 2 },
+        { x: -9, z: 0 },
+        { x: -9, z: 4 },
+        { x: -9, z: -3.5, scaleZ: 2 }
     ]
 
     const windowTexture = useTexture('/texture/window.png')
@@ -56,34 +57,47 @@
     message={'Back to the outpost'}
 />
 
-<!-- CHARACTERS  -->
+<!-- CHARACTERS   -->
 
 <Character
     message="A hologram dances"
     position={{ x: -0.5, y: 1.8, z: -2.5 }}
-    url={'/objects/hologram-transformed.glb'}
+    url={'/objects/character_hologram-transformed.glb'}
     characterId={0}
     currentActionKey={'dance'}
     isHologram
     pingPongIdle
 />
+
 <Character
     message="Bartender"
-    position={{ x: -8, y: 0, z: 0 }}
-    url={'/objects/hologram-transformed.glb?v=2'}
+    position={{ x:-8.4, y: 0, z: 0 }}
+    url={'/objects/character_bartender-transformed.glb'}
     characterId={22}
-    rotation={1.5708}
-    chatRadius={2}
-    lookatPlayerWhenTalking
+    rotation={1.57}
+    scale={1.1}
+    spinHeadWhenTalking
+    extraChatPositions={[
+        { x: -6, z: -1 },
+        { x: -6, z: 0 },
+        { x: -6, z: 1 },
+        { x: -6, z: 2 }
+    ]}
 />
 <Character
     message="An old soldier"
     position={{ x: 3, y: 0, z: -3 }}
-    url={'/objects/hologram-transformed.glb?v=3'}
+    url={'/objects/character_major-transformed.glb'}
     characterId={23}
     rotation={0}
     chatRadius={1}
-    extraChatPositions={[{x:2,z:-1},{x:3,z:-1},{x:4,z:-1}]}
+    extraChatPositions={[
+        { x: 2, z: -1 },
+        { x: 3, z: -1 },
+        { x: 4, z: -1 }
+    ]}
+    scale={1.1}
+    animation={{ key: 'drink', repeatTime: 16000 }}
 />
 
 <!-- OBJECTS -->
@@ -164,9 +178,9 @@
 <Objects
     name={'table'}
     url={'/objects/stone_table-transformed.glb'}
-    scale={0.32}
+    scale={[0.32, 0.34, 0.32]}
     instances={[
-        { position: [2, 0, -2], rotation: [0, 0, 0] },
+        { position: [2.2, 0, -2.2], rotation: [0, 0, 0] },
         { position: [9, 0, -3], rotation: [0, 1.57, 0] },
         { position: [-3, 0, 4], rotation: [0, 1.57, 0] }
     ]}
@@ -174,7 +188,7 @@
 <Objects
     name={'stool'}
     url={'/objects/stone_stool-transformed.glb'}
-    scale={0.22}
+    scale={0.18}
     instances={[
         { position: [-2, 0, 4], rotation: [0, 0.4, 0] },
         { position: [7.7, 0, -2], rotation: [0, 1, 0] },
@@ -190,9 +204,9 @@
         { position: [-6.7, 0, 2], rotation: [0, 0, 0] },
         { position: [-9, 0, -4], rotation: [0, 1, 0] },
         { position: [-9, 0, -3], rotation: [0, 2, 0] },
-        { position: [-9, 0, 3], rotation: [0, 2, 0] },
-        { position: [-9, 0.9, 3], rotation: [0, 1, 0] },
-        { position: [-9, 0, 4], rotation: [0, 0, 0] }
+        { position: [-9, 0, 4], rotation: [0, 2, 0] },
+        { position: [-9, 0.9, 4], rotation: [0, 1, 0] },
+        { position: [-8.7, 0, 0], rotation: [0, 0, 0] }
     ]}
 />
 
@@ -206,8 +220,7 @@
     scale={0.2}
     url="/objects/item_cardboardBox-transformed.glb"
 />
-<!--
- LIGHTS + AUDIO-->
+<!-- LIGHTS + AUDIO-->
 
 <T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
