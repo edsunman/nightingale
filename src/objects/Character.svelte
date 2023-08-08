@@ -4,7 +4,7 @@
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
     import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong, SRGBColorSpace } from 'three'
     import * as TWEEN from '@tweenjs/tween.js'
-    import { useCursor } from '$lib/util/useCursor'
+    import { useCursor } from '$lib/useCursor'
     import { onMount, onDestroy } from 'svelte'
     import HolgramMaterial from './materials/HolgramMaterial.svelte'
 

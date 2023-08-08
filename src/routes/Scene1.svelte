@@ -14,6 +14,8 @@
     import TechSign from '../objects/scene1/Tech_sign.svelte'
 
     import type { AvoidObject } from '$lib/types'
+    import Area from '../objects/Area.svelte'
+    import GameOverAction from '../objects/GameOverAction.svelte'
 
     const avoidArray: AvoidObject[] = [
         // ship
@@ -56,6 +58,10 @@
         { x: 20, z: 22 }
     ]
 </script>
+
+<Area id={1} points={[{x:24,z:-25},{x:24,z:-21},{x:28,z:-21},{x:28,z:-25}]} let:inArea noRepeat requiredItem={2}>
+    <GameOverAction {inArea} />
+</Area>
 
 <Floor {avoidArray} startingPosition={{ x: 26, z: -22 }} startingRotation={{ x: 26, z: -21 }} levelSize={{ x: 70, z: 70 }} />
 

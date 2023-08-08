@@ -21,10 +21,10 @@ export type Character = {
 export type Speech = {
     id: number
     text: string
-    textRepeat? : string
+    textRepeat?: string
     linkId?: number
-    order? : number
-    incidental? : number
+    order?: number
+    incidental?: number
     options?: Array<{
         id: number
         text: string
@@ -72,6 +72,8 @@ export type GameState = {
     selectedItemId: number
     charctersSpokenWith: Array<number>
     volumePreference: number
+    areasEntered: Array<number>
+    gameOver : boolean
 }
 
 export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }

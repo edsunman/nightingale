@@ -1,5 +1,6 @@
 <script lang="ts">
     import { gameVolume } from '$lib/stores'
+    import { onDestroy } from 'svelte'
     import { Audio } from '@threlte/extras'
 
     export let floorType: string
@@ -39,6 +40,10 @@
         gainNode.connect(runAudio.context.destination)
         source.start(runAudio.context.currentTime + 0.08, step, 1)
     }
+
+    onDestroy(() => {
+        clearInterval(footstepInterval)
+    })
 
 </script>
 

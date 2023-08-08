@@ -6,7 +6,7 @@
 
     const i: Items = items
     let inventory: Item[] = []
-    let selectedItem: Item
+    let selectedItem: Item | undefined
 
     $: setInventory($gameState)
 
@@ -16,7 +16,7 @@
             const item = i.find((x) => x.id === itemid)
             if (item?.isSecretKey === false) {
                 if (!selectedItem) {
-                    selectedItem = item
+                    //selectedItem = item
                 }
                 inventory.push(item)
             }
@@ -36,8 +36,14 @@
     }
 
     function selectItem(item: Item) {
-        selectedItem = item
-        $gameState.inventory.equipped = item.id
+        if(selectedItem === item) {
+            selectedItem = undefined
+            $gameState.inventory.equipped = 0
+            
+        } else {
+            selectedItem = item
+            $gameState.inventory.equipped = item.id
+        }
     }
 </script>
 

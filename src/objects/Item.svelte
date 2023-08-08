@@ -2,7 +2,7 @@
     import { gamePosition, gameMessage, gameState } from '$lib/stores'
     import { items } from '$lib/items'
     import { T } from '@threlte/core'
-    import { useCursor } from '$lib/util/useCursor'
+    import { useCursor } from '$lib/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
     import { SRGBColorSpace, Group } from 'three'
 

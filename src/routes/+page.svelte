@@ -33,10 +33,21 @@
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
     let messageTimeout: number
+    let finishedMessage = false
+    let seenFinishedMessage = false
 
     const { progress, item } = useProgress()
 
     // $ : console.log('Loaded : '+$item)
+
+    $: showFinishedMessage($gameState)
+
+    function showFinishedMessage(go: any){
+        if(go.gameOver && !seenFinishedMessage){
+            seenFinishedMessage = true
+            finishedMessage = true
+        }
+    }
 
     $: fadeInMessage($gameMessage)
 
@@ -131,6 +142,25 @@
                         on:click={() => {
                             welcomeMessage = false
                         }}>Start game</button
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="w-full h-full bg-black opacity-0 z-20  absolute" />
+    {/if}
+    {#if finishedMessage}
+        <div>
+            <div
+                class="painted z-30 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
+            >
+                <h3 class="text-xl text-center py-6">Well done!</h3>
+                <p class="pb-6 text-center">You sucessfuly refueled your ship.</p>
+                <div class="text-center py-6">
+                    <button
+                        class="tracking-wider flex-1 mr-6 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
+                        on:click={() => {
+                            finishedMessage = false
+                        }}>Ok</button
                     >
                 </div>
             </div>
@@ -237,6 +267,12 @@
         <p>Selected options:</p>
         <p>
             {#each $gameState.selectedConvoOptions as o, i}
+                {o},{#if i % 5 === 0}<br/>{/if}
+            {/each}
+        </p>
+         <p>Areas entered:</p>
+        <p>
+            {#each $gameState.areasEntered as o, i}
                 {o},{#if i % 5 === 0}<br/>{/if}
             {/each}
         </p>
