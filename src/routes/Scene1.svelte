@@ -12,10 +12,12 @@
     import DesertTent from '../objects/scene1/Desert_tent.svelte'
     import DesertSand from '../objects/scene1/Desert_sand.svelte'
     import TechSign from '../objects/scene1/Tech_sign.svelte'
-
-    import type { AvoidObject } from '$lib/types'
     import Area from '../objects/Area.svelte'
     import GameOverAction from '../objects/GameOverAction.svelte'
+    import Smoke from '../objects/scene1/Smoke.svelte'
+
+    import type { AvoidObject } from '$lib/types'
+    
 
     const avoidArray: AvoidObject[] = [
         // ship
@@ -195,7 +197,7 @@
     rotation.y={-1.57}
     receiveShadow
 />
-<Object name={'church'} url={'/objects/stone_church-transformed.glb'} scale={1.85} position={[-45.5, 0, 17]} rotation.y={3.14} />
+<Object name={'church'} url={'/objects/stone_church-transformed.glb'} scale={1.85} position={[-45.5, 0, 17]} rotation.y={3.14} receiveShadow/>
 <Object
     name={'spike building'}
     url={'/objects/tech_spikeBuilding-transformed.glb'}
@@ -234,6 +236,7 @@
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
 
 <Wind />
+<Smoke />
 
 <!-- LIGHTS + AUDIO -->
 

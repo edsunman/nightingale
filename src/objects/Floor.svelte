@@ -14,9 +14,11 @@
     export let floorType = 'sand'
     export let sunIntensity = 1
     let next = $gameState.nextScenePosition
+    let p = next.x === 0 && next.z === 0 ? startingPosition : next
+    $gameMovingTo = p
 
     let playerState: PlayerState = {
-        position: next.x === 0 && next.z === 0 ? startingPosition : next,
+        position:p,
         rotation: startingRotation,
         annimation: 'idle',
         path: [],
