@@ -1,6 +1,7 @@
 <script lang="ts">
     import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores'
 
+    export let version : string
     let selected: number
 
     function onKeyDown(e: any) {
@@ -38,7 +39,7 @@
         )
         localStorage.setItem('Nightingale Save Data', s)
         $gameState.settings.open = false
-        $gameMessage = 'Game saved'
+        $gameMessage = { 'message' : 'Game saved' , type : 0 }
     }
 
     function loadGame() {
@@ -115,6 +116,8 @@
                         >github</a
                     >.
                 </p>
+                <p class="text-xs text-neutral-600">Version {version}</p>
+                
             </div>
         </div>
     </div>

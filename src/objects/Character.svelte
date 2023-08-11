@@ -144,10 +144,10 @@
                     $gameState.charctersSpokenWith.push(characterId)
                 }
             } else {
-                $gameMessage = message
+                $gameMessage = { 'message' : message , 'type' : 0 }
             }
         } else {
-            $gameMessage = message
+            $gameMessage = { 'message' : message , 'type' : 0 }
         }
     }
 

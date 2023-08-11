@@ -66,7 +66,6 @@
             }
         }
     }
-
     function setOptions(g: any) {
         optionsArray.length = 0
         if (g[0] !== 0) {
@@ -80,7 +79,6 @@
                     }
                     if (option.item) {
                         const item = itemsArray.find((x) => x.id === option.item)
-                        console.log(item)
                         option.itemName = item?.name
                     }
                     if (!(option.hideItem && $gameState.inventory.owned.includes(option.hideItem))) {
@@ -112,7 +110,7 @@
                 const ownedArray = $gameState.inventory.owned
                 ownedArray.indexOf(option.receiveItem) === -1 ? ownedArray.push(option.receiveItem) : null
                 if (!item.isSecretKey) {
-                    $gameMessage = 'You received ' + item.name
+                    $gameMessage = { 'message' : 'You received a ' + item.name , 'type' : 2 }
                 }
             }
         }
@@ -121,7 +119,7 @@
             if (item) {
                 $gameState.inventory.owned = $gameState.inventory.owned.filter((m) => m !== option.giveItem)
                 $gameState.inventory.equipped === option.giveItem ? ($gameState.inventory.equipped = 0) : null
-                $gameMessage = 'You gave ' + item.name
+                $gameMessage = { 'message' : 'You gave ' + character.name + ' the ' + item.name , 'type' : 2 }
             }
         }
         if (!option.linkId) {

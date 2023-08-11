@@ -15,7 +15,7 @@ export const load = (async ({ url }) => {
         }
     }
 
-    console.log(version)
+    //console.log('version : ' + version)
 
     const s  = <Script>structuredClone(script)
     return { script : s, dev, version }

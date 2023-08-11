@@ -78,6 +78,8 @@ export type GameState = {
     charctersSpokenWith: Array<number>
     volumePreference: number
     areasEntered: Array<number>
+    objectivesShown: Array<number>
+    objectivesComplete: Array<number>
     gameOver: boolean
 }
 

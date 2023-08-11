@@ -24,13 +24,13 @@
                 if ($gameState.inventory.owned.includes(key)||$gameState.inventory.equipped===1) {
                     openDoor()
                 } else {
-                    $gameMessage = 'The door is locked'
+                    $gameMessage = { 'message' : 'The door is locked' , 'type' : 0 }
                 }
             } else {
                 openDoor()
             }
         } else {
-            $gameMessage = message
+            $gameMessage = { 'message' : message , 'type' : 0 }
         }
     }
 

@@ -34,12 +34,12 @@
             if (item?.id) itemId = item?.id
             $gameState.inventory.owned.push(itemId)
             $gameState = $gameState
-            $gameMessage = 'You picked up a ' + item?.name
+            $gameMessage = { 'message' : 'You picked up a ' + item?.name , 'type' : 0 }
            // $gameState.selectedItemId = itemId
             //$gameState.itemDescription.open = true
             //$gameState.moveLock = true
         } else {
-            $gameMessage = item?.message ?? ''
+            $gameMessage = { 'message' : 'You picked up a ' + item?.message , 'type' : 0 }
         }
     }
 </script>
