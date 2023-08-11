@@ -34,16 +34,6 @@
         }
     }
 
-    let dialogueHeight = 0
-    $: nudgeDialogue($gameSelectedCharacterPosition)
-    function nudgeDialogue(sc: any) {
-            if ($gamePosition.x <= sc.x && $gamePosition.z <= sc.z) {
-               // dialogueHeight = 3.1
-            } else {
-                dialogueHeight = 2.6
-            }
-    }
-
     if(dev) {
         useFrame(() => {
             stats.update()
@@ -61,10 +51,10 @@
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
-        <div
-            class="z-20 text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-4 py-2 select-none whitespace-nowrap "
-        >
+        <div class="w-96 h-20 inline-flex items-end justify-center">
+            <div class="z-20 text-neutral-100 rounded-md bg-neutral-900 px-4 py-2 select-none text-center">
             <Dialogue {script} />
+            </div>
         </div>
     </HTML>
 {/if}

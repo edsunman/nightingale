@@ -15,8 +15,8 @@
         gs.inventory.owned.forEach((itemid: number) => {
             const item = i.find((x) => x.id === itemid)
             if (item?.isSecretKey === false) {
-                if (!selectedItem) {
-                    //selectedItem = item
+                if (item.id === $gameState.inventory.equipped) {
+                    selectedItem = item
                 }
                 inventory.push(item)
             }
@@ -24,7 +24,7 @@
     }
 
     function onKeyDown(e: any) {
-        if (e.keyCode == 69) {
+        if (e.keyCode == 69 || e.keyCode == 73) {
             toggleInventory()
         }
     }
@@ -78,7 +78,7 @@
                         style="background-image:url('/icons/{item.image}')"
                     />
                 {/each}
-                {#each { length: 6 - inventory.length } as _, i}
+                {#each { length: 3 - inventory.length } as _, i}
                     <div class="m-2 w-14 h-14 bg-neutral-900 rounded-md" />
                 {/each}
             </div>

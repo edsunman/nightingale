@@ -13,12 +13,13 @@
     export let startingRotation = { x: 0, z: 0 }
     export let floorType = 'sand'
     export let sunIntensity = 1
+
     let next = $gameState.nextScenePosition
-    let p = next.x === 0 && next.z === 0 ? startingPosition : next
-    $gameMovingTo = p
+    let playerPosition = next.x === 0 && next.z === 0 ? startingPosition : next
+    $gameMovingTo = playerPosition
 
     let playerState: PlayerState = {
-        position:p,
+        position: playerPosition,
         rotation: startingRotation,
         annimation: 'idle',
         path: [],
@@ -53,12 +54,12 @@
             raycaster.set(playerVector, direction)
 
             const intersects = raycaster.intersectObjects(avoidObjects, false)
-            const dist = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
+            const distance = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
 
-            if (intersects.length > 0) {
+            if (intersects.length > 0 && intersects[0].distance < distance) {
                 // ^^^ pointing towards wall
                 // so move towards wall and stop
-                // TODO : proper pathfinding like Dijkstra or A*
+                // TODO : proper pathfinding using navmesh https://github.com/donmccurdy/three-pathfinding
                 const ip = intersects[0].point
                 let gridIp = { x: 0, z: 0 }
 
@@ -78,15 +79,9 @@
                     gridIp.z = Math.round(ip.z)
                 }
 
-                if (intersects[0].distance > dist) {
-                    $gameMovingTo = { x: grid.x, z: grid.z }
-                    playerState.path.push({ x: grid.x, z: grid.z })
-                    selectedColour = 'White'
-                } else {
-                    $gameMovingTo = { x: gridIp.x, z: gridIp.z }
-                    playerState.path.push({ x: gridIp.x, z: gridIp.z })
-                    selectedColour = 'Red'
-                }
+                $gameMovingTo = { x: gridIp.x, z: gridIp.z }
+                playerState.path.push({ x: gridIp.x, z: gridIp.z })
+                selectedColour = 'Red'
             } else {
                 $gameMovingTo = { x: grid.x, z: grid.z }
                 playerState.path.push({ x: grid.x, z: grid.z })

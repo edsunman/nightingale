@@ -73,6 +73,14 @@ export const items : Items = [
         image: "",
         description: "entered store",
         isSecretKey:true
+    },
+     {
+        id: 105,
+        name: "",
+        message: "",
+        image: "",
+        description: "spoken to hologram",
+        isSecretKey:true
     }
 
 ]

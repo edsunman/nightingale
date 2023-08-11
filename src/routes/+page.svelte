@@ -23,6 +23,8 @@
     import Objectives from '../components/Objectives.svelte'
 
     export let data: PageData
+    export let version
+    console.log(version)
     const script = data.script
     const dev = data.dev
 
@@ -93,7 +95,7 @@
 </script>
 
 <div
-    class="h-screen lg:h-[700px] lg:aspect-[16/9] m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden"
+    class="h-screen xl:h-[700px] xl:aspect-[16/9] m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden"
     bind:clientWidth
     bind:clientHeight
 >
@@ -157,7 +159,7 @@
                 <p class="pb-6 text-center">You sucessfuly refueled your ship.</p>
                 <div class="text-center py-6">
                     <button
-                        class="tracking-wider flex-1 mr-6 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
+                        class="tracking-wider flex-1 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
                         on:click={() => {
                             finishedMessage = false
                         }}>Ok</button
@@ -232,10 +234,11 @@
             }}>3</button
         >
         <br /><br />
+        <p>Equipped Item: {$gameState.inventory.equipped}</p>
         <p>Owned Items:</p>
         <p>
-            {#each $gameState.inventory.owned as item}
-                {item},
+            {#each $gameState.inventory.owned as item, i}
+                {item},{#if i % 5 === 0}<br/>{/if}
             {/each}
         </p>
         <br /><br />
@@ -257,6 +260,7 @@
             }}>clear all items</button
         >
         <br /><br />
+        <!--
         <p>Seen speech:</p>
         <p>
             {#each $gameState.seenSpeech as s}
@@ -269,7 +273,7 @@
             {#each $gameState.selectedConvoOptions as o, i}
                 {o},{#if i % 5 === 0}<br/>{/if}
             {/each}
-        </p>
+        </p>-->
          <p>Areas entered:</p>
         <p>
             {#each $gameState.areasEntered as o, i}

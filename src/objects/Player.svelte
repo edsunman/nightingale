@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition,  gameLoaded } from '$lib/stores'
-    import { useGltf, useGltfAnimations,  useTexture } from '@threlte/extras'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded } from '$lib/stores'
+    import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
     import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
     import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
-
 
     export let playerState: PlayerState
     export const ref = new Group()
@@ -20,11 +19,11 @@
     const upVector = new Vector3(0, 1, 0)
     const rotationMatrix = new Matrix4().lookAt(destinationVector, playerVector, upVector)
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
-    
+
     let mesh: any
     let currentActionKey = playerState.annimation
     let lightTarget: any
-    let runningSound : any
+    let runningSound: any
     let zoom = 8
 
     $: $actions[playerState.annimation]?.play()
@@ -44,7 +43,6 @@
         nextAction.play()
         currentActionKey = nextActionKey
     }
-
 
     $: rotateTowards($gameState.moveLock)
 
@@ -83,11 +81,8 @@
                     playerVector.set(p.x, 0, p.z)
                     rotationMatrix.lookAt(destinationVector, playerVector, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
-
                     transitionTo('run')
-                    if (!playerState.running) {
-                       runningSound()
-                    }
+                    !playerState.running && runningSound()
                     playerState.running = true
                 }
                 playerState.settingOff = false
@@ -105,9 +100,7 @@
             }
             playerState.arrived = true
         }
-        if (ref) {
-            ref.quaternion.rotateTowards(endRotation, delta * 10)
-        }
+        ref && ref.quaternion.rotateTowards(endRotation, delta * 10)
         $gamePosition = playerState.position
     })
 </script>
@@ -121,9 +114,7 @@
     position.y={0}
     position.z={playerState.position.z}
 >
-    {#await gltf}
-        <slot name="fallback" />
-    {:then gltf}
+    {#await gltf then gltf}
         <T.Group name="Scene">
             <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
                 <T is={gltf.nodes.mixamorigHips} />
@@ -156,11 +147,7 @@
                 {/if}
             </T.Group>
         </T.Group>
-    {:catch error}
-        <slot name="error" {error} />
     {/await}
-
-    <slot {ref} />
 </T>
 
 {#if !$gameState.dev.camera}

@@ -137,7 +137,7 @@
                 if (player.x <= position.x && player.z <= position.z) {
                     nudgeDialogueAmount = 0.5
                 }
-                $gameSelectedCharacterPosition = { x: position.x, y: 2.6 + nudgeDialogueAmount, z: position.z }
+                $gameSelectedCharacterPosition = { x: position.x, y: 2.8 + nudgeDialogueAmount, z: position.z }
                 $gameConversation = [characterId, 1]
                 inConversation = true
                 if (!$gameState.charctersSpokenWith.includes(characterId)) {
