@@ -4,28 +4,41 @@ Command: npx @threlte/gltf@1.0.0-next.12 spaceship.glb -T
 -->
 
 <script>
+    import { gameState } from '$lib/stores'
     import { Group, SRGBColorSpace } from 'three'
-    import { T, forwardEventHandlers } from '@threlte/core'
-    import { useGltf, useTexture } from '@threlte/extras'
+    import { T, useFrame } from '@threlte/core'
+    import { useGltf, useTexture, Instance, InstancedMesh } from '@threlte/extras'
 
     export const ref = new Group()
 
     const gltf = useGltf('/objects/spaceship-transformed.glb', { useDraco: true })
-    const texture = useTexture('/texture/shipAtlas.png')
+    const texture = useTexture('/texture/objectAtlas.png')
+    const thrusterTexture = useTexture('/texture/thruster.png')
+    
+    let thrusterOpacity = 0
+    let fadeUp =  true
+    let fadeSpeed = 0.3
 
-    const component = forwardEventHandlers()
+  //  $ : $gameState
+
+useFrame(()=>{
+    if($gameState.gameOver){
+        
+            if(fadeUp) {
+                thrusterOpacity >= 0.6 ? fadeUp = false : thrusterOpacity += 0.01 * fadeSpeed
+            } else {
+                thrusterOpacity <= 0.2 ? fadeUp = true : thrusterOpacity -= 0.01 * fadeSpeed
+            }
+      
+    }  })
+
 </script>
 
-<T is={ref} dispose={false} {...$$restProps} bind:this={$component}>
-    {#await gltf}
-        <slot name="fallback" />
-    {:then gltf}
+<T is={ref} dispose={false} {...$$restProps}>
+    {#await gltf then gltf}
         <T.Mesh
             castShadow
             geometry={gltf.nodes.Mesh.geometry}           
-            position={[-2.42, 0.06, 0]}
-            rotation={[0, 0, -Math.PI / 2]}
-            scale={[0.46, 0.86, 0.46]}
         >
             {#await texture then t}
                 <T.MeshToonMaterial color="#ffffff">
@@ -33,9 +46,22 @@ Command: npx @threlte/gltf@1.0.0-next.12 spaceship.glb -T
                 </T.MeshToonMaterial>
             {/await}
         </T.Mesh>
-    {:catch error}
-        <slot name="error" {error} />
     {/await}
-
-    <slot {ref} />
+ {#await thrusterTexture then t}
+    <InstancedMesh>
+        <T.CircleGeometry />
+       
+            <T.MeshToonMaterial color="#13c2ed" transparent opacity={thrusterOpacity} >
+                <T is={t}  attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+            </T.MeshToonMaterial>
+      
+        <Instance position={[-1.5,-0.05,1.8]} rotation.x={-1.57} scale={0.35}/>
+        <Instance position={[-1.5,-0.05,-1.8]} rotation.x={-1.57} scale={0.35}/>
+        <Instance position={[-0.1,0.11,-1.54]} rotation.x={-1.57} scale={0.25}/>
+        <Instance position={[-0.1,0.11,1.54]} rotation.x={-1.57} scale={0.25}/>
+        <Instance position={[3.1,-0.08,1.05]} rotation.x={-1.57} scale={0.12}/>
+        <Instance position={[3.1,-0.08,-1.05]} rotation.x={-1.57} scale={0.12}/>
+    </InstancedMesh>
+      {/await}
 </T>
+

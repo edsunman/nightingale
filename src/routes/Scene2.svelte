@@ -10,6 +10,7 @@
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
     import Item from '../objects/Item.svelte'
+    import Smoke from '../objects/scene2/Smoke.svelte'
 
     import type { AvoidObject } from '$lib/types'
 
@@ -212,6 +213,7 @@
 
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
+<Smoke />
 
 <Item
     id={1}

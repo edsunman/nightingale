@@ -152,13 +152,14 @@
     }
 
     function flicker() {
-        flickeringInterval = setInterval(function () {
+        flickeringInterval = setInterval(() => {
             hologramOpacity = Math.random() * 1 + 0
         }, 30)
         staticAudio.offset = Math.floor(Math.random() * 3)
         staticAudio.play()
-        setTimeout(function () {
-            clearInterval(flickeringInterval), (hologramOpacity = 1)
+        setTimeout(() => {
+            clearInterval(flickeringInterval)
+            hologramOpacity = 1
             staticAudio.stop()
         }, Math.random() * 1500 + 100)
     }

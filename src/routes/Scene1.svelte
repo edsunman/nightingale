@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { T } from '@threlte/core'
+    import { T, useThrelte  } from '@threlte/core'
+    import { onDestroy } from 'svelte'
     import { Audio } from '@threlte/extras'
     import Floor from '../objects/Floor.svelte'
     import Character from '../objects/Character.svelte'
@@ -17,6 +18,8 @@
     import Smoke from '../objects/scene1/Smoke.svelte'
 
     import type { AvoidObject } from '$lib/types'
+
+    const { scene } = useThrelte()
     
 
     const avoidArray: AvoidObject[] = [
@@ -57,19 +60,31 @@
         { x: 8.5, z: -4.5, scaleX: 2, scaleZ: 2 },
         { x: 7.5, z: -2.5, scaleX: 2, scaleZ: 2 },
         // guard
-        { x: 20, z: 22 }
+        { x: 20, z: 22 },
+        // gravestones
+        { x: -28, z: 10 },
+        { x: -26, z: 14 },
+        { x: -30, z: 24 }
+
     ]
+
+    onDestroy(() => {
+        scene.fog = null
+    })
 </script>
+
+<T.Fog  near={35} far={45} color={"#bc733f"} on:create={({ ref }) => {
+  scene.fog = ref
+}} />-
 
 <Area id={1} points={[{x:24,z:-25},{x:24,z:-21},{x:28,z:-21},{x:28,z:-25}]} let:inArea noRepeat requiredItem={2}>
     <GameOverAction {inArea} />
 </Area>
-
 <Floor {avoidArray} startingPosition={{ x: 26, z: -22 }} startingRotation={{ x: 26, z: -21 }} levelSize={{ x: 70, z: 70 }} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[100, 0.01, 100]} />
-    <T.MeshToonMaterial color="#a6663d" />
+    <T.MeshToonMaterial color="#a6663d"  />
 </T.Mesh>
 
 <Door
@@ -187,6 +202,7 @@
     scale={0.22}
     instances={[{ position: [2, 0, 2], rotation: [0, 0, 0] }]}
 />
+
 <DesertTent name={'tent'} scale={1.1} position={[10, 0, -4]} rotation.y={0.7} />
 
 <Object
@@ -221,7 +237,8 @@
         { position: [-15, 0, -31], rotation: [0, 0, 0] },
         { position: [-15, 3.1, -29], rotation: [0, 0, 0] },
         { position: [-4, 0, -27.5], rotation: [0, 0, 0] },
-        { position: [-23.5, 0, -4], rotation: [0, 1.57, 0] }
+        { position: [-23.5, 0, -4], rotation: [0, 1.57, 0] },
+        { position: [-23, 0, -20], rotation: [0, 0, 0] }
     ]}
 />
 <Objects
@@ -232,7 +249,14 @@
         { position: [-22, 0, -10], rotation: [0, 3.14, 0] }
     ]}
 />
-
+<Objects
+    name={'gravestone'}
+    url={'/objects/stone_gravestone-transformed.glb'}
+    scale={0.5}
+    instances={[{ position: [-28, -0.1, 10], rotation: [-0.1, 3.14, -0.2] },
+    { position: [-26, -0.1, 14], rotation: [0, 0, 0.1] },
+    { position: [-30, -0.1, 24], rotation: [0.1,  3.14, 0] }]}
+/>
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
 
 <Wind />
