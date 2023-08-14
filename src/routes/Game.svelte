@@ -10,6 +10,7 @@
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
+    import UIAudio from '../objects/audio/UIAudio.svelte'
 
     const scenes = [ Scene1, Scene2, Scene3 ]
 
@@ -17,16 +18,12 @@
 
     export let script: Script
     export let selectedScene: number
-    export let sceneFinishedLoading: boolean
-    let audio: any
-    const stats = new Stats()
-    const { scene, renderer, camera } = useThrelte()
-    const defaultPixelRatio = renderer?.getPixelRatio()
-    let inventoryOpen = false
-    let equippedItem = 0
-    let openInventoryAudio  : any
-    let itemSelectAudio : any
+    export let dev: boolean
 
+    const stats = new Stats()
+    const { renderer, scene } = useThrelte()
+    const defaultPixelRatio = renderer?.getPixelRatio()
+    
     $: changePixelRatio($gamePixelRatio)
 
     function changePixelRatio(p: number) {
@@ -34,81 +31,30 @@
             renderer?.setPixelRatio(p)
         } else {
             renderer?.setPixelRatio(defaultPixelRatio ? defaultPixelRatio : 1)
-            //console.log('set to :'+defaultPixelRatio ? defaultPixelRatio : 1)
         }
     }
 
-    $: inventoryOpenSound($gameState)
+    if(dev) {
+        useFrame(() => {
+            stats.update()
+        })
 
-    function inventoryOpenSound(gs : any){
-        if (!inventoryOpen && gs.inventory.open) {
-            inventoryOpen = true
-            openInventoryAudio.play()
-        }
-        if(!gs.inventory.open) {
-            inventoryOpen = false
-        }
+        onMount(async () => {
+            document.body.appendChild(stats.dom)
+            console.log(scene)
+        })
     }
-
-    $: itemEquippedSound($gameState)
-
-    function itemEquippedSound(gs : any){
-        if (equippedItem !== gs.inventory.equipped) {
-            console.log('play')
-            //itemSelectAudio.play()
-
-            const source = itemSelectAudio.context.createBufferSource()
-            const gainNode = itemSelectAudio.context.createGain()
-            source.buffer = itemSelectAudio.buffer
-            gainNode.gain.value = $gameVolume
-            source.connect(gainNode)
-            gainNode.connect(itemSelectAudio.context.destination)
-            source.start()
-
-            equippedItem = gs.inventory.equipped
-        }
-    }
-
-    let dialogueHeight = 0
-    $: nudgeDialogue($gameSelectedCharacterPosition)
-    function nudgeDialogue(sc: any) {
-            if ($gamePosition.x <= sc.x && $gamePosition.z <= sc.z) {
-               // dialogueHeight = 3.1
-            } else {
-                dialogueHeight = 2.6
-            }
-    }
-
-    $: compileScene(sceneFinishedLoading)
-
-    function compileScene(s: boolean) {
-        if (s) {
-            //console.log(scene)
-            audio.context.resume()
-        }
-    }
-
-    useFrame(() => {
-        stats.update()
-    })
-
-    onMount(async () => {
-        document.body.appendChild(stats.dom)
-    })
 </script>
 
-<AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
-<Audio src={'/audio/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
-<Audio src={'/audio/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
-
+<UIAudio/>
 <svelte:component this={scenes[selectedScene-1]} />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
-        <div
-            class="z-20 text-neutral-100 rounded-md bg-neutral-900 hidden md:block px-4 py-2 select-none whitespace-nowrap "
-        >
-            <Dialogue {script} />
+        <div class="w-96 h-20 md:inline-flex items-end justify-center hidden">
+            <div class="z-20 text-neutral-100 rounded-md bg-neutral-900 px-4 py-2 select-none text-center">
+                <Dialogue {script} />
+            </div>
         </div>
     </HTML>
 {/if}

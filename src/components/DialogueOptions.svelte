@@ -1,19 +1,19 @@
 <script lang="ts">
     import { gameState, gameConversation, gameMessage } from '$lib/stores'
-    //import { script } from '$lib/script'
     import { items } from '$lib/items'
 
     import { fade } from 'svelte/transition'
 
-    import type { Script, Items, Character, Speech } from '$lib/types'
+    import type { Script, Items, Character, Speech, Option } from '$lib/types'
 
     export let script: Script
     const itemsArray: Items = items
-    const optionsArray: any[] = []
+    const optionsArray: Option[] = []
     let character: Character
     let speech: Speech
     let characterPosition
     let showDialogueOptions = false
+    let timeOut : number
 
     $: updateDialogue($gameConversation)
 
@@ -21,7 +21,7 @@
         if (gc[0] !== 0) {
             const characterLookup = script.find((x) => x.id === gc[0])
             characterPosition = script.findIndex((x) => x.id === gc[0])
-            if(!characterLookup) {
+            if (!characterLookup) {
                 console.error('No character found with id ' + gc[0])
                 return
             }
@@ -32,34 +32,40 @@
             } else {
                 speechLookup = script[characterPosition].speech.find((x) => x.id === gc[1])
             }
-            if(!speechLookup) {
+            if (!speechLookup) {
                 console.error('No character found with id ' + gc[0])
                 return
             }
             speech = speechLookup
-            if(speech.incidental){
-
+            if (speech.incidental) {
             } else {
                 $gameState.inventory.open = false
                 showDialogueOptions = false
                 setOptions(gc)
                 $gameState.moveLock = true
                 if (speech.options && speech.options.length > 0) {
-                    setTimeout(() => {
-                        showDialogueOptions = true
+                    timeOut = setTimeout(() => {
+                        nextStep()
                     }, 1500)
                 } else if (speech.linkId) {
-                    setTimeout(() => {
-                        $gameConversation = [gc[0], speech.linkId]
+                    timeOut = setTimeout(() => {
+                        nextStep()
                     }, 4000)
                 }
             }
-
         }
     }
 
-    //$: setOptions($gameConversation)
-
+    function nextStep() {
+        if ($gameState.moveLock) {
+            clearTimeout(timeOut)
+            if (speech.options && speech.options.length > 0) {
+                    showDialogueOptions = true
+            } else if (speech.linkId) {
+                    $gameConversation = [character.id, speech.linkId]
+            }
+        }
+    }
     function setOptions(g: any) {
         optionsArray.length = 0
         if (g[0] !== 0) {
@@ -71,10 +77,16 @@
                     if ($gameState.selectedConvoOptions.includes(option.id) && option.linkId) {
                         option.alreadyChosen = true
                     }
-                    if (option.item && $gameState.inventory.owned.includes(option.item)) {
-                        optionsArray.push(option)
-                    } else if (!option.item) {
-                        optionsArray.push(option)
+                    if (option.item) {
+                        const item = itemsArray.find((x) => x.id === option.item)
+                        option.itemName = item?.name
+                    }
+                    if (!(option.hideItem && $gameState.inventory.owned.includes(option.hideItem))) {
+                        if (option.item && $gameState.inventory.owned.includes(option.item)) {
+                            optionsArray.push(option)
+                        } else if (!option.item) {
+                            optionsArray.push(option)
+                        }
                     }
                 })
             }
@@ -98,8 +110,16 @@
                 const ownedArray = $gameState.inventory.owned
                 ownedArray.indexOf(option.receiveItem) === -1 ? ownedArray.push(option.receiveItem) : null
                 if (!item.isSecretKey) {
-                    $gameMessage = 'You received ' + item.name
+                    $gameMessage = { 'message' : 'You received a ' + item.name , 'type' : 2 }
                 }
+            }
+        }
+        if (option.giveItem) {
+            const item = itemsArray.find((x) => x.id === option.giveItem)
+            if (item) {
+                $gameState.inventory.owned = $gameState.inventory.owned.filter((m) => m !== option.giveItem)
+                $gameState.inventory.equipped === option.giveItem ? ($gameState.inventory.equipped = 0) : null
+                $gameMessage = { 'message' : 'You gave ' + character.name + ' the ' + item.name , 'type' : 2 }
             }
         }
         if (!option.linkId) {
@@ -121,21 +141,25 @@
             selectSpeech(2)
         } else if (e.keyCode == 52) {
             selectSpeech(3)
+        } else if (e.keyCode == 32) { // spacebar
+            nextStep()
         }
     }
 </script>
 
 {#if showDialogueOptions}
-    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
+    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-20 md:bottom-6 select-none">
         <div class="inline-block">
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
                     class="font-serif tracking-wide flex-1 mr-4 max-w-sm px-6 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
     {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-50'}
-    {optionsArray.length === i + 1 ? '' : 'mb-3'} "
+    {optionsArray.length === i + 1 ? '' : 'mb-2 md:mb-3'} "
                 >
-                    <small class="text-neutral-500">{i + 1}.</small>
+                    <small class="text-neutral-500 font-sans">{i + 1}.</small>
+                    {#if option.item && option.item < 100}<small class="font-sans text-cyan-500">&nbsp[{option.itemName}]&nbsp</small>
+                    {/if}
                     {option.text}
                     {#if !option.linkId}
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 250 250" class="inline w-5 h-5 ml-1">

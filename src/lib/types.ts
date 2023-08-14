@@ -21,18 +21,23 @@ export type Character = {
 export type Speech = {
     id: number
     text: string
-    textRepeat? : string
+    textRepeat?: string
     linkId?: number
-    order? : number
-    incidental? : number
-    options?: Array<{
-        id: number
-        text: string
-        linkId?: number
-        item?: number
-        receiveItem?: number
-        alreadyChosen?: boolean
-    }>
+    order?: number
+    incidental?: number
+    options?: Option[]
+}
+
+export type Option = {
+    id: number
+    text: string
+    linkId?: number
+    item?: number
+    receiveItem?: number
+    giveItem?: number
+    hideItem?: number    
+    alreadyChosen?: boolean
+    itemName?: string
 }
 
 export type Item = {
@@ -51,7 +56,8 @@ export type GameState = {
         status: boolean
         camera: boolean
         grid: boolean
-        avoidObjactsVisible: boolean
+        avoidObjectsVisible: boolean
+        avoidObjectsPlaceable: boolean
     }
     nextScenePosition: { x: number; z: number }
     moveLock: boolean
@@ -71,4 +77,10 @@ export type GameState = {
     selectedItemId: number
     charctersSpokenWith: Array<number>
     volumePreference: number
+    areasEntered: Array<number>
+    objectivesShown: Array<number>
+    objectivesComplete: Array<number>
+    gameOver: boolean
 }
+
+export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }

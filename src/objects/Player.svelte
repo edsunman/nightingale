@@ -1,47 +1,36 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition, gameVolume, gameLoaded } from '$lib/stores'
-    import { useGltf, useGltfAnimations, Audio, useTexture } from '@threlte/extras'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded } from '$lib/stores'
+    import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
     import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
+    import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
 
     export let playerState: PlayerState
-
     export const ref = new Group()
+
     const gltf = useGltf('/objects/player-transformed.glb', { useDraco: true })
-    export const { actions, mixer } = useGltfAnimations(gltf, ref)
-    const component = forwardEventHandlers()
     const texture = useTexture('/texture/playerAtlas.png')
-
-    let mesh: any
-    let currentActionKey = playerState.annimation
-    let lightTarget: any
-    let runAudio: any
-    let audioSrc: string
-    let footstepInterval: number
-    let footstepVolume = 0.4
-    let zoom = 8
-
+    const { actions } = useGltfAnimations(gltf, ref)
+    const component = forwardEventHandlers()
     const playerVector = new Vector3(playerState.position.x, 0, playerState.position.z)
     const destinationVector = new Vector3(playerState.rotation.x, 0, playerState.rotation.z)
     const upVector = new Vector3(0, 1, 0)
     const rotationMatrix = new Matrix4().lookAt(destinationVector, playerVector, upVector)
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
 
-    if (playerState.floorType === 'stone') {
-        audioSrc = '/audio/footstep-stone.mp3'
-    } else {
-        audioSrc = '/audio/footstep-sand.mp3'
-    }
+    let mesh: any
+    let currentActionKey = playerState.annimation
+    let lightTarget: any
+    let runningSound: any
+    let zoom = 8
 
     $: $actions[playerState.annimation]?.play()
 
     $: {
         zoom = $gameLoaded ? 80 : 8
     }
-
-    $: rotateTowards($gameState.moveLock)
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
         const currentAction = $actions[currentActionKey]
@@ -55,20 +44,7 @@
         currentActionKey = nextActionKey
     }
 
-    function playFootstep() {
-        const source = runAudio.context.createBufferSource()
-        const gainNode = runAudio.context.createGain()
-        let randomGain = Math.random()
-        let step = Math.floor(Math.random() * 3)
-        if (randomGain < 0.5) randomGain += 0.5
-        randomGain = randomGain * $gameVolume * footstepVolume
-        source.detune.value = Math.floor(Math.random() * 400)
-        source.buffer = runAudio.buffer
-        gainNode.gain.value = randomGain
-        source.connect(gainNode)
-        gainNode.connect(runAudio.context.destination)
-        source.start(runAudio.context.currentTime + 0.08, step, 1)
-    }
+    $: rotateTowards($gameState.moveLock)
 
     function rotateTowards(ml: any) {
         if (ml) {
@@ -105,21 +81,13 @@
                     playerVector.set(p.x, 0, p.z)
                     rotationMatrix.lookAt(destinationVector, playerVector, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
-
                     transitionTo('run')
-                    // TODO : move this audio stuff out
-                    if (!playerState.running) {
-                        clearInterval(footstepInterval)
-                        playFootstep()
-                        footstepInterval = window.setInterval(function () {
-                            playFootstep()
-                        }, 330)
-                    }
+                    !playerState.running && runningSound()
                     playerState.running = true
                 }
                 playerState.settingOff = false
                 if (delta < 0.5) {
-                    // ^^^^^^ don't move if there are one off spikes caused by switching tabs etc
+                    // ^^^^^^ don't move if there are one off frame time spikes caused by switching tabs etc
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
                 }
@@ -128,13 +96,11 @@
             if (!playerState.arrived) {
                 playerState.running = false
                 transitionTo('idle')
-                clearInterval(footstepInterval)
+                runningSound(false)
             }
             playerState.arrived = true
         }
-        if (ref) {
-            ref.quaternion.rotateTowards(endRotation, delta * 10)
-        }
+        ref && ref.quaternion.rotateTowards(endRotation, delta * 10)
         $gamePosition = playerState.position
     })
 </script>
@@ -148,9 +114,7 @@
     position.y={0}
     position.z={playerState.position.z}
 >
-    {#await gltf}
-        <slot name="fallback" />
-    {:then gltf}
+    {#await gltf then gltf}
         <T.Group name="Scene">
             <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
                 <T is={gltf.nodes.mixamorigHips} />
@@ -183,11 +147,7 @@
                 {/if}
             </T.Group>
         </T.Group>
-    {:catch error}
-        <slot name="error" {error} />
     {/await}
-
-    <slot {ref} />
 </T>
 
 {#if !$gameState.dev.camera}
@@ -206,11 +166,11 @@
     name="sun"
     intensity={playerState.sunIntensity}
     castShadow
-    shadow.mapSize.width={1800}
-    shadow.mapSize.height={1800}
+    shadow.mapSize.width={2048}
+    shadow.mapSize.height={2048}
     shadow.camera.top={9}
-    shadow.camera.right={4}
-    shadow.camera.left={-18}
+    shadow.camera.right={6.5}
+    shadow.camera.left={-16.5}
     shadow.camera.bottom={-6}
     position={[playerState.position.x + 12, 20, playerState.position.z + 20]}
     target={lightTarget}
@@ -234,4 +194,4 @@
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
 
-<Audio src={audioSrc} bind:ref={runAudio} autoplay={false} loop={true} volume={0} />
+<RunningAudio floorType={playerState.floorType} bind:runningSound />

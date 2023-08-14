@@ -1,16 +1,21 @@
 <script lang="ts">
     import { gameState } from '$lib/stores'
-    import { T, useFrame, useThrelte } from '@threlte/core'
-    import Floor from './Floor.svelte'
-    import Door from '../objects/Door.svelte'
+    import { T } from '@threlte/core'
     import { onMount } from 'svelte'
+    import Floor from '../objects/Floor.svelte'
+    import Door from '../objects/Door.svelte'
     import Item from '../objects/Item.svelte'
     import Object from '../objects/Object.svelte'
     import Objects from '../objects/Objects.svelte'
 
-    const avoidArray: Array<{ x: number; z: number }> = [{x:-1,z:2},{x:-2,z:3}]
+    import type { AvoidObject } from '$lib/types'
 
-    const { scene } = useThrelte()
+    const avoidArray: AvoidObject[] = [
+        { x: -1, z: 2 },
+        { x: -2, z: 3 },
+        { x: 0.5, z: -5, scaleX: 4 },
+        {x:-2,z:-4}
+    ]
 
     let flickeringInterval: ReturnType<typeof setInterval>
     let lightBrightness: number
@@ -22,9 +27,9 @@
         setTimeout(function () {
             clearInterval(flickeringInterval)
             lightBrightness = 1
-        }, 2000)
+        }, 3000)
 
-        if(!$gameState.inventory.owned.includes(104)){
+        if (!$gameState.inventory.owned.includes(104)) {
             $gameState.inventory.owned.push(104)
             $gameState = $gameState
         }
@@ -42,7 +47,7 @@
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[6, 0.01, 12]} />
-    <T.MeshStandardMaterial color="#595550" />
+    <T.MeshStandardMaterial color="#444441" />
 </T.Mesh>
 
 <Door
@@ -52,18 +57,19 @@
     activeSquare={{ x: 3, z: -1 }}
     scene={1}
     nextScenePosition={{ x: 20, z: 23 }}
+    message="Back to the outpost"
 />
 
 <Objects
     url={'/objects/tech_wall-transformed.glb'}
     scale={[1.5, 1.2, 0.05]}
     instances={[
-        { position: [2,1.2,-5.5], rotation: [0, 0, 0] },
+        { position: [2, 1.2, -5.5], rotation: [0, 0, 0] },
         { position: [-1.0, 1.2, -5.5], rotation: [0, 0, 0] },
         { position: [-2.5, 1.2, -4.0], rotation: [0, 1.57, 0] },
         { position: [-2.5, 1.2, -1.0], rotation: [0, 1.57, 0] },
         { position: [-2.5, 1.2, 2.0], rotation: [0, 1.57, 0] },
-        { position: [-2.5, 1.2, 5], rotation: [0, 1.57, 0] },
+        { position: [-2.5, 1.2, 5], rotation: [0, 1.57, 0] }
     ]}
 />
 
@@ -82,7 +88,6 @@
 
 <Object name={'table'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[0.5, -0.45, -5]} rotation.y={0} />
 <Object name={'server'} url={'/objects/tech_server-transformed.glb'} scale={0.45} position={[-2, -0.1, -4]} rotation.y={-1.57} />
-
 
 <T.Mesh position={[0.5, 2.5, 0]} visible={true} name="light-box">
     <T.BoxGeometry args={[0.2, 0.1, 2]} />

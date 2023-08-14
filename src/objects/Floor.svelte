@@ -5,18 +5,21 @@
     import Player from './Player.svelte'
     import { Raycaster, Vector3 } from 'three'
 
-    import type { PlayerState } from '$lib/types'
+    import type { PlayerState, AvoidObject } from '$lib/types'
 
     export let levelSize = { x: 100, z: 100 }
-    export let avoidArray: Array<{ x: number; z: number }> = []
+    export let avoidArray: AvoidObject[] = []
     export let startingPosition = { x: 0, z: 0 }
     export let startingRotation = { x: 0, z: 0 }
     export let floorType = 'sand'
     export let sunIntensity = 1
+
     let next = $gameState.nextScenePosition
-    
+    let playerPosition = next.x === 0 && next.z === 0 ? startingPosition : next
+    $gameMovingTo = playerPosition
+
     let playerState: PlayerState = {
-        position: next.x === 0 && next.z === 0 ? startingPosition : next,
+        position: playerPosition,
         rotation: startingRotation,
         annimation: 'idle',
         path: [],
@@ -39,7 +42,7 @@
 
     function floorClicked(e: any) {
         const p = playerState.position
-        
+
         const point = e.intersections[0].point
         const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {
@@ -51,11 +54,12 @@
             raycaster.set(playerVector, direction)
 
             const intersects = raycaster.intersectObjects(avoidObjects, false)
-            const dist = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
+            const distance = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
 
-            if (intersects.length > 0) {
+            if (intersects.length > 0 && intersects[0].distance < distance) {
                 // ^^^ pointing towards wall
                 // so move towards wall and stop
+                // TODO : proper pathfinding using navmesh https://github.com/donmccurdy/three-pathfinding
                 const ip = intersects[0].point
                 let gridIp = { x: 0, z: 0 }
 
@@ -75,15 +79,9 @@
                     gridIp.z = Math.round(ip.z)
                 }
 
-                if (intersects[0].distance > dist) {
-                    $gameMovingTo = { x: grid.x, z: grid.z }
-                    playerState.path.push({ x: grid.x, z: grid.z })
-                    selectedColour = 'White'
-                } else {
-                    $gameMovingTo = { x: gridIp.x, z: gridIp.z }
-                    playerState.path.push({ x: gridIp.x, z: gridIp.z })
-                    selectedColour = 'Red'
-                }
+                $gameMovingTo = { x: gridIp.x, z: gridIp.z }
+                playerState.path.push({ x: gridIp.x, z: gridIp.z })
+                selectedColour = 'Red'
             } else {
                 $gameMovingTo = { x: grid.x, z: grid.z }
                 playerState.path.push({ x: grid.x, z: grid.z })
@@ -95,7 +93,7 @@
             selectedSize = 0.4
         }
 
-        if ($gameState.dev.avoidObjactsVisible) {
+        if ($gameState.dev.avoidObjectsPlaceable) {
             let obj = avoidArray.find((o) => o.x === grid.x && o.z === grid.z)
             if (obj) {
                 avoidArray = avoidArray.filter(function (o) {
@@ -123,11 +121,11 @@
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
-<InstancedMesh visible={$gameState.dev.avoidObjactsVisible}>
+<InstancedMesh visible={$gameState.dev.avoidObjectsVisible}>
     {#each avoidArray as block}
         <Instance
             name={'avoid object'}
-            scale={[1, 1, 1]}
+            scale={[block.scaleX ? block.scaleX : 1, 1, block.scaleZ ? block.scaleZ : 1]}
             position={[block.x, 0, block.z]}
             on:create={({ ref }) => {
                 avoidObjects.push(ref)

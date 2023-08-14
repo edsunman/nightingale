@@ -30,7 +30,7 @@
 
     useFrame((state, delta) => {
         if (delta < 0.5) {
-            percent += 0.02 * delta
+            percent += 0.01 * delta
         }
         if(percent > 1) percent = 0
         positionsArray.length = 0

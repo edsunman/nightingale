@@ -23,7 +23,7 @@ export const items : Items = [
         image: "medal.svg",
         description : "An old, tattered relic of only sentimental value",
         isSecretKey:false
-    },{
+    },/*{
         id: 4,
         name: "Keycard",
         message: "",
@@ -38,7 +38,7 @@ export const items : Items = [
         image: "cardboardBox.svg",
         description : "",
         isSecretKey:false
-    },
+    },*/
     
     // SECRET KEYS
 
@@ -72,6 +72,22 @@ export const items : Items = [
         message: "",
         image: "",
         description: "entered store",
+        isSecretKey:true
+    },
+     {
+        id: 105,
+        name: "",
+        message: "",
+        image: "",
+        description: "spoken to hologram",
+        isSecretKey:true
+    },
+    {
+        id: 106,
+        name: "",
+        message: "",
+        image: "",
+        description: "game started",
         isSecretKey:true
     }
 

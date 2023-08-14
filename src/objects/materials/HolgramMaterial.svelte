@@ -2,7 +2,7 @@
     import { ShaderMaterial, TextureLoader, RepeatWrapping, SRGBColorSpace } from 'three'
     import { T, useFrame } from '@threlte/core'
 
-    const texture = new TextureLoader().load('/texture/toy.jpg')
+    const texture = new TextureLoader().load('/texture/toy.png')
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
     texture.colorSpace = SRGBColorSpace
@@ -39,7 +39,7 @@
                 vec4 baseColor = vec4( 0.11, 0.91, 0.91, opacity / 4. ); // transparent base color
 				vec4 texColor =  vec4(0.11, 0.91, 0.91, opacity); // blue color
                 vec2 uv = vUv;
-                float offset = texture(texture1, uv * 10. + vec2(time * 1. + sin(time) * .2, 0)).x;
+                float offset = texture(texture1, uv * 5. + vec2(time * 1. + sin(time) * .1, 0)).x;
                 uv *= dotSize;
                 uv += vec2(offset);
                 vec3 dotColor = vec3(float(length(uv - round(uv)) < 0.3));
