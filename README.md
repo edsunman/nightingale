@@ -1,6 +1,3 @@
+# nightingale
 
-
-# road to 0.1
-
-- wind sound effect
-- save game
+An early attempt at a point and click adventure game.

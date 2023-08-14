@@ -1,7 +1,6 @@
 <script lang="ts">
     import { T, useThrelte  } from '@threlte/core'
     import { onDestroy } from 'svelte'
-    import { Audio } from '@threlte/extras'
     import Floor from '../objects/Floor.svelte'
     import Character from '../objects/Character.svelte'
     import Rocks from '../objects/scene1/Rocks.svelte'
