@@ -148,14 +148,14 @@
 </script>
 
 {#if showDialogueOptions}
-    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-12 md:bottom-6">
+    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-20 md:bottom-6 select-none">
         <div class="inline-block">
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
                     class="font-serif tracking-wide flex-1 mr-4 max-w-sm px-6 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
     {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-50'}
-    {optionsArray.length === i + 1 ? '' : 'mb-3'} "
+    {optionsArray.length === i + 1 ? '' : 'mb-2 md:mb-3'} "
                 >
                     <small class="text-neutral-500 font-sans">{i + 1}.</small>
                     {#if option.item && option.item < 100}<small class="font-sans text-cyan-500">&nbsp[{option.itemName}]&nbsp</small>

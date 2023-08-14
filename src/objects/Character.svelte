@@ -156,7 +156,9 @@
             hologramOpacity = Math.random() * 1 + 0
         }, 30)
         staticAudio.offset = Math.floor(Math.random() * 3)
-        staticAudio.play()
+        if(staticAudio.context.state === 'running') {
+            staticAudio.play()
+        }
         setTimeout(() => {
             clearInterval(flickeringInterval)
             hologramOpacity = 1

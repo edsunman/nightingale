@@ -23,7 +23,7 @@
   
   {#if showObjective}
         <div out:fade={{ duration: 300 }}>
-            <ul class="list-disc absolute mt-16 pt-2 mx-6 text-neutral-100">
+            <ul class="list-disc absolute mt-16 pt-2 mx-6 text-neutral-100 select-none">
                 {#each objectives as objective}
                     {#if (objective.id && $gameState.objectivesShown.includes(objective.id))}
                         <li
@@ -45,7 +45,7 @@
         on:mouseleave={() => {
             showObjective = false
         }}
-        class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-100 opacity-50 hover:opacity-100"
+        class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-100 opacity-50 hover:opacity-100 select-none"
     >
         <p><small class="uppercase">Objective:</small></p>
         <p>Find a fuel cell</p>

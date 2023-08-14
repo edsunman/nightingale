@@ -31,10 +31,11 @@
             JSON.stringify({
                 scene: $gameScene,
                 position: $gamePosition,
-                inventory: $gameState.inventory,
-                spokenWith: $gameState.charctersSpokenWith,
-                seenSpeech: $gameState.seenSpeech,
-                selectedConvoOptions: $gameState.selectedConvoOptions
+                gameState: $gameState
+               // inventory: $gameState.inventory,
+               // spokenWith: $gameState.charctersSpokenWith,
+               // seenSpeech: $gameState.seenSpeech,
+               // selectedConvoOptions: $gameState.selectedConvoOptions
             })
         )
         localStorage.setItem('Nightingale Save Data', s)
@@ -46,6 +47,7 @@
         const s = localStorage.getItem('Nightingale Save Data')
         if (s) {
             const j = JSON.parse(atob(s))
+            $gameState = j.gameState
             $gameState.nextScenePosition = j.position
             if ($gameScene === j.scene) {
                 $gameScene = 0
@@ -55,11 +57,7 @@
             } else {
                 $gameScene = j.scene
             }
-            $gameState.inventory = j.inventory
             $gameState.settings.open = false
-            $gameState.charctersSpokenWith = j.spokenWith
-            $gameState.seenSpeech = j.seenSpeech
-            $gameState.selectedConvoOptions = j.selectedConvoOptions
         }
     }
 

@@ -9,7 +9,6 @@
 
     function fadeInMessage(m: { message: string; type: number }) {
         if (m.message) {
-            console.log(m.type)
             messageVisible = true
             clearTimeout(messageTimeout)
             messageTimeout = setTimeout(function () {

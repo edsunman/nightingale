@@ -16,6 +16,7 @@
     import Area from '../objects/Area.svelte'
     import GameOverAction from '../objects/GameOverAction.svelte'
     import Smoke from '../objects/scene1/Smoke.svelte'
+    import WindAudio from '../objects/audio/WindAudio.svelte'
 
     import type { AvoidObject } from '$lib/types'
 
@@ -265,4 +266,4 @@
 <!-- LIGHTS + AUDIO -->
 
 <T.AmbientLight intensity={0.1} />
-<Audio src={'/audio/wind.ogg'} on:create={({ ref }) => {}} autoplay={true} loop={true} volume={1} />
+<WindAudio />

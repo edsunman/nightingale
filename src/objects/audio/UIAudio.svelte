@@ -34,7 +34,7 @@
             source.connect(gainNode)
             gainNode.connect(itemSelectAudio.context.destination)
             source.start()
-
+            
             equippedItem = gs.inventory.equipped
         }
     }

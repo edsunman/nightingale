@@ -51,9 +51,9 @@
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
-        <div class="w-96 h-20 inline-flex items-end justify-center">
+        <div class="w-96 h-20 md:inline-flex items-end justify-center hidden">
             <div class="z-20 text-neutral-100 rounded-md bg-neutral-900 px-4 py-2 select-none text-center">
-            <Dialogue {script} />
+                <Dialogue {script} />
             </div>
         </div>
     </HTML>

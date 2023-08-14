@@ -25,9 +25,9 @@ useFrame(()=>{
     if($gameState.gameOver){
         
             if(fadeUp) {
-                thrusterOpacity >= 0.6 ? fadeUp = false : thrusterOpacity += 0.01 * fadeSpeed
+                thrusterOpacity >= 0.5 ? fadeUp = false : thrusterOpacity += 0.01 * fadeSpeed
             } else {
-                thrusterOpacity <= 0.2 ? fadeUp = true : thrusterOpacity -= 0.01 * fadeSpeed
+                thrusterOpacity <= 0 ? fadeUp = true : thrusterOpacity -= 0.01 * fadeSpeed
             }
       
     }  })

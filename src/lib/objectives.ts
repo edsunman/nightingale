@@ -2,7 +2,7 @@ export const objectives = [
     {
         id: 1,
         text: 'Explore the outpost',
-        itemsStrike: [103, 104, 101],
+        itemsStrike: [103, 101, 2],
         itemRequired : 105
     },
     {
