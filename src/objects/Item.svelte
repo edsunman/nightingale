@@ -1,7 +1,7 @@
 <script lang="ts">
     import { gamePosition, gameMessage, gameState } from '$lib/stores'
     import { items } from '$lib/items'
-    import { T } from '@threlte/core'
+    import { T, useThrelte } from '@threlte/core'
     import { useCursor } from '$lib/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
     import { SRGBColorSpace, Group } from 'three'
@@ -19,7 +19,8 @@
     let owned = false
     const item = items.find((x) => x.id === id)
 
-    const { onPointerEnter, onPointerLeave } = useCursor()
+    const threlte = useThrelte()
+    const { onPointerEnter, onPointerLeave } = useCursor(...[,,],threlte.renderer?.domElement,'cursorHover')
 
     $: isOwned($gameState)
 

@@ -118,6 +118,8 @@
             const item = itemsArray.find((x) => x.id === option.giveItem)
             if (item) {
                 $gameState.inventory.owned = $gameState.inventory.owned.filter((m) => m !== option.giveItem)
+                console.log('gs.i.e = ' + $gameState.inventory.equipped )
+                console.log('o.gi = ' + option.giveItem )
                 $gameState.inventory.equipped === option.giveItem ? ($gameState.inventory.equipped = 0) : null
                 $gameMessage = { 'message' : 'You gave ' + character.name + ' the ' + item.name , 'type' : 2 }
             }

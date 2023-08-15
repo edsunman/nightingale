@@ -117,7 +117,8 @@
                     Set in the far future on a distant planet, your ship has run out of fuel and you are marooned at a remote desert
                     outpost.
                 </p>
-                <p>Your objective is to find a fuel cell to power your ship.</p>
+                <p class="pb-6">Your objective is to find a fuel cell to power your ship.</p>
+                <p>Hint: stand next to people and items to interact.</p>
                 <div class="text-center py-6">
                     <button
                         class="tracking-wider flex-1 mr-6 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"

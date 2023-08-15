@@ -21,6 +21,9 @@
                 inventory.push(item)
             }
         })
+        if($gameState.inventory.equipped === 0){
+            selectedItem = undefined
+        }
     }
 
     function onKeyDown(e: any) {

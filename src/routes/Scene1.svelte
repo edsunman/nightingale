@@ -92,7 +92,7 @@
     position={[-31.5, 0, 17]}
     activeSquare={{ x: -31, z: 17 }}
     scene={2}
-    message="A makeshift door to an ancient ruin"
+    message="An ancient wooden door"
 />
 <Door
     url={'/objects/tech_door-transformed.glb'}

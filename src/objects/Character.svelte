@@ -1,6 +1,6 @@
 <script lang="ts">
     import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition, gameState } from '$lib/stores'
-    import { T, useFrame } from '@threlte/core'
+    import { T, useFrame, useThrelte } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
     import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong, SRGBColorSpace } from 'three'
     import * as TWEEN from '@tweenjs/tween.js'
@@ -27,7 +27,8 @@
     const gltf = useGltf(url, { useDraco: true })
     const characterTexture = useTexture('/texture/characterAtlas.png')
     const { actions, mixer } = useGltfAnimations(gltf, ref)
-    const { onPointerEnter, onPointerLeave } = useCursor()
+    const threlte = useThrelte()
+    const { onPointerEnter, onPointerLeave } = useCursor(...[,,],threlte.renderer?.domElement,'cursorHover')
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
     const currentPosition = new Vector3(position.x, 0, position.z)
