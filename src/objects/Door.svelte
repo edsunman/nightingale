@@ -1,6 +1,6 @@
 <script lang="ts">
     import { gameScene, gameMessage, gamePosition, gameState } from '$lib/stores'
-    import { T } from '@threlte/core'
+    import { T, useThrelte } from '@threlte/core'
     import { useCursor } from '$lib/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
     import { SRGBColorSpace } from 'three'
@@ -16,7 +16,8 @@
     const gltf = useGltf(url, { useDraco: true })
      const texture = useTexture('/texture/objectAtlas.png')
 
-    const { onPointerEnter, onPointerLeave } = useCursor()
+    const threlte = useThrelte()
+    const { onPointerEnter, onPointerLeave } = useCursor(...[,,],threlte.renderer?.domElement,'cursorHover')
 
     function doorClicked(e: any) {
         if ($gamePosition.x === activeSquare.x && $gamePosition.z === activeSquare.z && !$gameState.moveLock) {

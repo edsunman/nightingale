@@ -11,7 +11,6 @@
     function takeItem(id : number){
         $gameState.inventory.owned.push($gameState.selectedItemId)
         $gameState = $gameState
-        console.log(id)
         closeDescription()
     } 
 

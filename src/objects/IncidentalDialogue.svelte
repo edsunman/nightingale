@@ -4,7 +4,6 @@
 
     import { gameMovingTo, gameConversation, gameSelectedCharacterPosition } from '$lib/stores'
     import { page } from '$app/stores'
-    import { onMount } from 'svelte'
     import type { Speech } from '$lib/types'
 
     export let position = { x: 1, y: 0, z: 1 }
@@ -53,7 +52,6 @@
         running = true
         clearInterval(interval)
         interval = setInterval(() => {
-          //  console.log(intervalCount)
             showDialogue(incidentalDialogue[intervalCount])
             intervalCount++
         }, waitTime)
@@ -73,8 +71,4 @@
             $gameConversation = [0,0]
         }
     }
-
-    onMount(() => {
-        //console.log(characterSpeech)
-    })
 </script>

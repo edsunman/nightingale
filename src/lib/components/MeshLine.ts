@@ -393,7 +393,7 @@ MeshLine.prototype.advance = function (position: any) {
     this._attributes.next.needsUpdate = true
 }
 
-THREE.ShaderChunk['meshline_vert'] = [
+const vertexShader = [
     '',
     THREE.ShaderChunk.logdepthbuf_pars_vertex,
     THREE.ShaderChunk.fog_pars_vertex,
@@ -474,7 +474,8 @@ THREE.ShaderChunk['meshline_vert'] = [
     '}'
 ].join('\n')
 
-THREE.ShaderChunk['meshline_frag'] = [
+//THREE.ShaderChunk['meshline_frag'] = [
+const fragmentShader = [
     '',
     THREE.ShaderChunk.fog_pars_fragment,
     THREE.ShaderChunk.logdepthbuf_pars_fragment,
@@ -555,9 +556,9 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
                 repeat: { value: new THREE.Vector2(1, 1) }
             }),
 
-            vertexShader: THREE.ShaderChunk.meshline_vert,
+            vertexShader: vertexShader,
 
-            fragmentShader: THREE.ShaderChunk.meshline_frag
+            fragmentShader: fragmentShader
         })
         this.isMeshLineMaterial = true
         this.type = 'MeshLineMaterial'
