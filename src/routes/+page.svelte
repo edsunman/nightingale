@@ -24,9 +24,7 @@
     import type { PageData } from './$types'
 
     export let data: PageData
-    const script = data.script
-    const dev = data.dev
-    const version = data.version
+    const { gameData, script, dev, version } = data
 
     let clientWidth, clientHeight
     let loadingScreen = false
@@ -154,7 +152,7 @@
     <Objectives />
 
     <Canvas>
-        <Game {selectedScene} {script} {dev} />
+        <Game {selectedScene} {gameData} {script} {dev} />
     </Canvas>
 </div>
 {#if dev}

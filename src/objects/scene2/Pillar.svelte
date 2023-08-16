@@ -12,7 +12,7 @@
     const debug = false
     const debugLine = new Line()
 
-    const gltf = useGltf('/objects/stone_pillar-transformed.glb', { useDraco: true })
+    const gltf = useGltf('/objects/stone_assets-transformed.glb', { useDraco: true })
     const texture = useTexture('/texture/objectAtlas.png')
 
     if (debug && hidePoints.length > 0) {
@@ -44,7 +44,7 @@
 </script>
 
 {#await gltf then gltf}
-    <T.Mesh {...$$restProps} name={'vanishing pillar'} geometry={gltf.nodes.Mesh.geometry}>
+    <T.Mesh {...$$restProps} name={'vanishing pillar'} geometry={gltf.nodes.Pillar.geometry}>
         {#await texture then t}
             <T.MeshToonMaterial  transparent {opacity}>
                 <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />

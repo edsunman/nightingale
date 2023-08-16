@@ -5,10 +5,11 @@
     import Floor from '../objects/Floor.svelte'
     import Door from '../objects/Door.svelte'
     import Item from '../objects/Item.svelte'
-    import Object from '../objects/Object.svelte'
-    import Objects from '../objects/Objects.svelte'
+    import SceneData from '../objects/SceneData.svelte'
 
-    import type { AvoidObject } from '$lib/types'
+    import type { AvoidObject, GameData } from '$lib/types'
+
+    export let gameData : GameData
 
     const avoidArray: AvoidObject[] = [
         { x: -1, z: 2 },
@@ -51,7 +52,8 @@
 </T.Mesh>
 
 <Door
-    url={'/objects/tech_door-transformed.glb'}
+    url={'/objects/tech_assets-transformed.glb'}
+    nodeName={'Door'}
     name="Door"
     position={[3.5, 0, -1]}
     activeSquare={{ x: 3, z: -1 }}
@@ -60,41 +62,14 @@
     message="Back to the outpost"
 />
 
-<Objects
-    url={'/objects/tech_wall-transformed.glb'}
-    scale={[1.5, 1.2, 0.05]}
-    instances={[
-        { position: [2, 1.2, -5.5], rotation: [0, 0, 0] },
-        { position: [-1.0, 1.2, -5.5], rotation: [0, 0, 0] },
-        { position: [-2.5, 1.2, -4.0], rotation: [0, 1.57, 0] },
-        { position: [-2.5, 1.2, -1.0], rotation: [0, 1.57, 0] },
-        { position: [-2.5, 1.2, 2.0], rotation: [0, 1.57, 0] },
-        { position: [-2.5, 1.2, 5], rotation: [0, 1.57, 0] }
-    ]}
-/>
-
-<!-- OBJECTS -->
-
-<Objects
-    url={'/objects/tech_crate-transformed.glb'}
-    scale={[0.5, 0.5, 0.5]}
-    instances={[
-        { position: [-1.0, 0.4, 2], rotation: [0, 1, 0] },
-        { position: [-1.8, 0.4, 3.2], rotation: [0, 1.57, 0] }
-    ]}
-/>
+<SceneData sceneId={3} {gameData} />
 
 <Item id={2} position={{ x: -1, y: 1.25, z: 2 }} scale={0.2} url="/objects/item_fuelCell-transformed.glb" />
-
-<Object name={'table'} url={'/objects/tech_desk-transformed.glb'} scale={1.2} position={[0.5, -0.45, -5]} rotation.y={0} />
-<Object name={'server'} url={'/objects/tech_server-transformed.glb'} scale={0.45} position={[-2, -0.1, -4]} rotation.y={-1.57} />
 
 <T.Mesh position={[0.5, 2.5, 0]} visible={true} name="light-box">
     <T.BoxGeometry args={[0.2, 0.1, 2]} />
     <T.MeshToonMaterial color="#ffffff" emissive="#ffffff" transparent={true} opacity={lightBrightness * 0.8} />
 </T.Mesh>
-
-<!-- LIGHTS -->
 
 <T.PointLight
     position={[0.5, 4, 0]}

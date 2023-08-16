@@ -1,7 +1,8 @@
 import { building, version } from '$app/environment'
 import script from '../../static/script.json'
+import gameData from '../../static/gameData.json'
 import type { PageServerLoad } from './$types'
-import type { Script } from '$lib/types'
+import type { Script, GameData } from '$lib/types'
 
 export const load = (async ({ url }) => {
 
@@ -16,6 +17,7 @@ export const load = (async ({ url }) => {
     }
 
     const s  = <Script>structuredClone(script)
-    return { script : s, dev, version }
+    const gd  = <GameData>structuredClone(gameData)
+    return { gameData: gd, script : s, dev, version }
 
 }) satisfies PageServerLoad
