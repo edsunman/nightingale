@@ -18,7 +18,7 @@
 
     function changeVolume(gv: number) {
         if (globalGainNode) {
-            globalGainNode.gain.value = $gameVolume
+            globalGainNode.gain.value = gv
             !playing && playWind()
         }
     }

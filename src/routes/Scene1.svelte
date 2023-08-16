@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { T, useThrelte  } from '@threlte/core'
+    import { T, useThrelte } from '@threlte/core'
     import { onDestroy } from 'svelte'
     import Floor from '../objects/Floor.svelte'
     import Character from '../objects/Character.svelte'
@@ -7,20 +7,19 @@
     import Door from '../objects/Door.svelte'
     import Spaceship from '../objects/scene1/Spaceship.svelte'
     import Wind from '../objects/scene1/Wind.svelte'
-    import Object from '../objects/Object.svelte'
-    import Objects from '../objects/Objects.svelte'
     import DesertTent from '../objects/scene1/Desert_tent.svelte'
     import DesertSand from '../objects/scene1/Desert_sand.svelte'
-    import TechSign from '../objects/scene1/Tech_sign.svelte'
     import Area from '../objects/Area.svelte'
     import GameOverAction from '../objects/GameOverAction.svelte'
     import Smoke from '../objects/scene1/Smoke.svelte'
     import WindAudio from '../objects/audio/WindAudio.svelte'
+    import SceneData from '../objects/SceneData.svelte'
 
-    import type { AvoidObject } from '$lib/types'
+    import type { AvoidObject, GameData } from '$lib/types'
+    
+    export let gameData: GameData
 
     const { scene } = useThrelte()
-    
 
     const avoidArray: AvoidObject[] = [
         // ship
@@ -65,7 +64,6 @@
         { x: -28, z: 10 },
         { x: -26, z: 14 },
         { x: -30, z: 24 }
-
     ]
 
     onDestroy(() => {
@@ -73,29 +71,47 @@
     })
 </script>
 
-<T.Fog  near={35} far={45} color={"#bc733f"} on:create={({ ref }) => {
-  scene.fog = ref
-}} />-
+<T.Fog
+    near={35}
+    far={45}
+    color={'#bc733f'}
+    on:create={({ ref }) => {
+        scene.fog = ref
+    }}
+/>-
 
-<Area id={1} points={[{x:24,z:-25},{x:24,z:-21},{x:28,z:-21},{x:28,z:-25}]} let:inArea noRepeat requiredItem={2}>
+<Area
+    id={1}
+    points={[
+        { x: 24, z: -25 },
+        { x: 24, z: -21 },
+        { x: 28, z: -21 },
+        { x: 28, z: -25 }
+    ]}
+    let:inArea
+    noRepeat
+    requiredItem={2}
+>
     <GameOverAction {inArea} />
 </Area>
 <Floor {avoidArray} startingPosition={{ x: 26, z: -22 }} startingRotation={{ x: 26, z: -21 }} levelSize={{ x: 70, z: 70 }} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[100, 0.01, 100]} />
-    <T.MeshToonMaterial color="#a6663d"  />
+    <T.MeshToonMaterial color="#a6663d" />
 </T.Mesh>
 
 <Door
-    url={'/objects/stone_door-transformed.glb'}
+    url={'/objects/stone_assets-transformed.glb'}
+    nodeName={'Door'}
     position={[-31.5, 0, 17]}
     activeSquare={{ x: -31, z: 17 }}
     scene={2}
     message="An ancient wooden door"
 />
 <Door
-    url={'/objects/tech_door-transformed.glb'}
+    url={'/objects/tech_assets-transformed.glb'}
+    nodeName={'Door'}
     position={[18.5, 0, 23]}
     activeSquare={{ x: 19, z: 23 }}
     scene={3}
@@ -157,108 +173,9 @@
 <!-- OBJECTS -->
 <DesertSand />
 <Rocks />
-<TechSign position={[4.2, 10, 3.5]} scale={1.2} rotation.y={-1.57} />
-<Objects
-    receiveShadow
-    url={'/objects/tech_landingPad-transformed.glb'}
-    scale={[4.9, 5.2, 5.4]}
-    instances={[
-        { position: [24, -0.05, -25.5], rotation: [0, 1.57, 0] },
-        { position: [-23, -0.05, -20], rotation: [0, 0, 0] },
-        { position: [-11, -0.05, 24], rotation: [0, 1.57, 0] }
-    ]}
-/>
-<Object url={'/objects/tech_hologramPad-transformed.glb'} scale={0.4} position={[21, 0, -18]} rotation.y={-1.57} />
-<Objects
-    url={'/objects/tech_crate-transformed.glb'}
-    scale={[0.5, 0.5, 0.5]}
-    instances={[
-        { position: [18, 0.4, -19], rotation: [0, 1, 0] },
-        { position: [19, 0.4, -17.5], rotation: [0, 1.57, 0] },
-        { position: [9, 0.4, -1], rotation: [0, -0.3, 0] },
-        { position: [9, 1.3, -1], rotation: [0, 1, 0] },
-        { position: [11, 0.4, -6], rotation: [0, 1.3, 0] }
-    ]}
-/>
-<Object
-    name={'satalite'}
-    url={'/objects/tech_satalite-transformed.glb'}
-    scale={0.5}
-    position={[9, 1.8, -1]}
-    rotation={[1.57, 0, 1.8]}
-/>
-<Object
-    name={'table tech'}
-    url={'/objects/tech_desk-transformed.glb'}
-    scale={[1.2, 1.28, 1.2]}
-    position={[12, -0.45, -3.1]}
-    rotation.y={-1.57}
-/>
-<Object name={'bench'} url={'/objects/stone_table-transformed.glb'} scale={0.32} position={[-16, 0, -22]} rotation.y={0} />
-<Object name={'bench'} url={'/objects/stone_table-transformed.glb'} scale={0.32} position={[-21, 0, -10]} rotation.y={1.57} />
-<Objects
-    name={'stool'}
-    url={'/objects/stone_stool-transformed.glb'}
-    scale={0.22}
-    instances={[{ position: [2, 0, 2], rotation: [0, 0, 0] }]}
-/>
-
+<SceneData sceneId={1} {gameData} />
 <DesertTent name={'tent'} scale={1.1} position={[10, 0, -4]} rotation.y={0.7} />
-
-<Object
-    name={'building'}
-    url={'/objects/tech_building-transformed.glb'}
-    scale={1.5}
-    position={[15.5, 0, 24.5]}
-    rotation.y={-1.57}
-    receiveShadow
-/>
-<Object name={'church'} url={'/objects/stone_church-transformed.glb'} scale={1.85} position={[-45.5, 0, 17]} rotation.y={3.14} receiveShadow/>
-<Object
-    name={'spike building'}
-    url={'/objects/tech_spikeBuilding-transformed.glb'}
-    scale={1.5}
-    position={[5, 0, 2.5]}
-    rotation.y={-1.57}
-/>
-<Object
-    name={'small building'}
-    url={'/objects/tech_smallBuilding-transformed.glb'}
-    scale={1.5}
-    position={[5, 0, 24.5]}
-    rotation.y={0}
-    receiveShadow
-/>
-<Objects
-    url={'/objects/tech_shippingContainer-transformed.glb'}
-    scale={0.75}
-    instances={[
-        { position: [-16.5, 0, -26], rotation: [0, 1.57, 0] },
-        { position: [-15, 0, -31], rotation: [0, 0, 0] },
-        { position: [-15, 3.1, -29], rotation: [0, 0, 0] },
-        { position: [-4, 0, -27.5], rotation: [0, 0, 0] },
-        { position: [-23.5, 0, -4], rotation: [0, 1.57, 0] },
-        { position: [-23, 0, -20], rotation: [0, 0, 0] }
-    ]}
-/>
-<Objects
-    url={'/objects/desert_stall-transformed.glb'}
-    scale={0.4}
-    instances={[
-        { position: [-16, 0, -23], rotation: [0, 1.57, 0] },
-        { position: [-22, 0, -10], rotation: [0, 3.14, 0] }
-    ]}
-/>
-<Objects
-    name={'gravestone'}
-    url={'/objects/stone_gravestone-transformed.glb'}
-    scale={0.5}
-    instances={[{ position: [-28, -0.1, 10], rotation: [-0.1, 3.14, -0.2] },
-    { position: [-26, -0.1, 14], rotation: [0, 0, 0.1] },
-    { position: [-30, -0.1, 24], rotation: [0.1,  3.14, 0] }]}
-/>
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
-
 <Wind />
 <Smoke />
 

@@ -35,7 +35,7 @@ export type Option = {
     item?: number
     receiveItem?: number
     giveItem?: number
-    hideItem?: number    
+    hideItem?: number
     alreadyChosen?: boolean
     itemName?: string
 }
@@ -84,3 +84,30 @@ export type GameState = {
 }
 
 export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }
+
+export type InstanceObject = {
+    name: string
+    scale: [number, number, number]
+    instances: {
+        position: [number, number, number]
+        rotation: [number, number, number]
+    }[]
+    receiveShadow?: boolean
+    material?: string
+}
+
+export type SceneObject = {
+    name : string
+    url : string
+    objects: InstanceObject[]
+}
+
+
+export type GameData = {
+    name: string
+    scenes: {
+        id: number,
+        name: string,
+        objects: SceneObject[]
+    }[]
+}

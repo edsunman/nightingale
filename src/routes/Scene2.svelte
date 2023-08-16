@@ -7,12 +7,13 @@
     import FloorStones from '../objects/scene2/FloorStones.svelte'
     import Pillar from '../objects/scene2/Pillar.svelte'
     import DustParticles from '../objects/scene2/DustParticles.svelte'
-    import Object from '../objects/Object.svelte'
-    import Objects from '../objects/Objects.svelte'
     import Item from '../objects/Item.svelte'
     import Smoke from '../objects/scene2/Smoke.svelte'
+    import SceneData from '../objects/SceneData.svelte'
 
-    import type { AvoidObject } from '$lib/types'
+    import type { AvoidObject, GameData } from '$lib/types'
+
+    export let gameData : GameData
 
     const avoidArray: AvoidObject[] = [
         { x: 5.5, z: -2.5, scaleX: 2, scaleZ: 2 },
@@ -50,7 +51,8 @@
     <T.MeshStandardMaterial color="#555555" />
 </T.Mesh>
 <Door
-    url={'/objects/stone_door-transformed.glb'}
+    url={'/objects/stone_assets-transformed.glb'}
+    nodeName={'Door'}
     position={[10.5, 0, 1]}
     activeSquare={{ x: 10, z: 1 }}
     scene={1}
@@ -103,50 +105,7 @@
 
 <!-- OBJECTS -->
 
-<FloorStones />
-
-<Objects
-    name={'wall'}
-    url={'/objects/stone_wall-transformed.glb'}
-    instances={[
-        { position: [-9.5, 0, 0.5], rotation: [0, 3.14, 0] },
-        { position: [-9.5, 0, -4.5], rotation: [0, 1.57, 0] },
-        { position: [-9.5, 0, 5.5], rotation: [0, 3.14, 0] },
-        { position: [-4.5, 0, -4.5], rotation: [0, 1.57, 0] },
-        { position: [0.5, 0, -4.5], rotation: [0, 1.57, 0] }
-    ]}
-/>
-<Object name={'wall end'} url={'/objects/stone_wallEnd-transformed.glb'} position={[5.5, 0, -4.5]} rotation.y={1.57} />
-<Objects
-    name={'pillar base'}
-    url={'/objects/stone_pillarBase-transformed.glb'}
-    scale={[0.9, 0.9, 0.9]}
-    instances={[
-        { position: [5.5, 0.2, -2.5], rotation: [0, 0, 0] },
-        { position: [-0.5, 0.2, -2.5], rotation: [0, 1.57, 0] },
-        { position: [-6.5, 0.2, -2.5], rotation: [0, -1.57, 0] },
-        { position: [-6.5, 0.2, 3.5], rotation: [0, 3.14, 0] },
-        { position: [5.5, 0.2, 3.5], rotation: [0, 1.5, 0] },
-        { position: [-0.5, 0.2, 3.5], rotation: [0, 0, 0] }
-    ]}
-/>
-<Objects
-    name={'pillar'}
-    url={'/objects/stone_pillar-transformed.glb'}
-    scale={[0.9, 0.9, 0.9]}
-    instances={[
-        { position: [5.5, 0.2, -2.5], rotation: [0, 0, 0] },
-        { position: [-6.5, 0.2, -2.5], rotation: [0, -1.57, 0] },
-        { position: [-6.5, 0.2, 3.5], rotation: [0, 3.14, 0] }
-    ]}
-/>
-<Object
-    name={'small pillar'}
-    url={'/objects/stone_pillarSmall-transformed.glb'}
-    scale={0.9}
-    position={[-0.5, 0.2, -2.5]}
-    rotation.y={1.57}
-/>
+<SceneData {gameData} sceneId={2} />
 
 <Pillar
     position={[5.5, 0, 3.5]}
@@ -167,54 +126,11 @@
         { x: -5, z: -3.5 }
     ]}
 />
-<Objects
-    name={'crate'}
-    url={'/objects/tech_crate-transformed.glb'}
-    scale={[0.5, 0.5, 0.5]}
-    instances={[
-        { position: [-6.8, 0.4, -1], rotation: [0, 1, 0] },
-        { position: [-7, 0.4, 0.5], rotation: [0, 1.57, 0] }
-    ]}
-/>
-<Objects
-    name={'table'}
-    url={'/objects/stone_table-transformed.glb'}
-    scale={[0.32, 0.34, 0.32]}
-    instances={[
-        { position: [2.2, 0, -2.2], rotation: [0, 0, 0] },
-        { position: [9, 0, -3], rotation: [0, 1.57, 0] },
-        { position: [-3, 0, 4], rotation: [0, 1.57, 0] }
-    ]}
-/>
-<Objects
-    name={'stool'}
-    url={'/objects/stone_stool-transformed.glb'}
-    scale={0.18}
-    instances={[
-        { position: [-2, 0, 4], rotation: [0, 0.4, 0] },
-        { position: [7.7, 0, -2], rotation: [0, 1, 0] },
-        { position: [3, 0, -3], rotation: [0, 0, 0] }
-    ]}
-/>
-<Object name={'plank'} url={'/objects/stone_plank-transformed.glb'} scale={[0.55, 0.55, 0.65]} position={[-6.9, 0.9, 0.25]} />
-<Objects
-    name={'barrel'}
-    url={'/objects/stone_barrel-transformed.glb'}
-    scale={0.36}
-    instances={[
-        { position: [-6.7, 0, 2], rotation: [0, 0, 0] },
-        { position: [-9, 0, -4], rotation: [0, 1, 0] },
-        { position: [-9, 0, -3], rotation: [0, 2, 0] },
-        { position: [-9, 0, 4], rotation: [0, 2, 0] },
-        { position: [-9, 0.9, 4], rotation: [0, 1, 0] },
-        { position: [-8.7, 0, 0], rotation: [0, 0, 0] }
-    ]}
-/>
 
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
 <Smoke />
-
+<FloorStones />
 <Item
     id={1}
     position={{ x: -9, y: 0, z: 5 }}

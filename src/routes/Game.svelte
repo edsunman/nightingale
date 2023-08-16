@@ -5,17 +5,19 @@
     import { onMount } from 'svelte'
     import { interactivity, OrbitControls, HTML, useProgress, AudioListener, Audio } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
-    import type { Script } from '$lib/types'
+    import type { Script, GameData } from '$lib/types'
 
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
+    import Scene0 from './Scene0.svelte'
     import UIAudio from '../objects/audio/UIAudio.svelte'
 
-    const scenes = [ Scene1, Scene2, Scene3 ]
+    const scenes = [ Scene0 ,Scene1, Scene2, Scene3 ]
 
     interactivity()
 
+    export let gameData: GameData
     export let script: Script
     export let selectedScene: number
     export let dev: boolean
@@ -47,7 +49,7 @@
 </script>
 
 <UIAudio/>
-<svelte:component this={scenes[selectedScene-1]} />
+<svelte:component this={scenes[selectedScene]} {gameData} />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>

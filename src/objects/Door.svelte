@@ -12,6 +12,7 @@
     export let key: number = 0
     export let url : string
     export let message : string = 'A door'
+    export let nodeName : string = 'Mesh'
 
     const gltf = useGltf(url, { useDraco: true })
      const texture = useTexture('/texture/objectAtlas.png')
@@ -45,7 +46,7 @@
 {#await gltf}
     <slot name="fallback" />
 {:then gltf}
-    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes.Mesh.geometry} scale={0.45} >
+    <T.Mesh {...$$restProps} {position} castShadow geometry={gltf.nodes[nodeName].geometry} scale={0.45} >
       {#await texture then t}
             <T.MeshBasicMaterial color="#ffffff">
                 <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
