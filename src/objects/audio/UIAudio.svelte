@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gameVolume, gamePosition, gameMessage } from '$lib/stores'
+    import { gameState, gameVolume, gameCameraPosition, gameMessage } from '$lib/stores'
     import { AudioListener, Audio } from '@threlte/extras'
 
     import type { GameState } from '$lib/types'
@@ -50,7 +50,7 @@
 
 </script>
 
-<AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gamePosition.x, 2, $gamePosition.z]} rotation.y={0.78} />
+<AudioListener bind:ref={audio}  masterVolume={$gameVolume} position={[$gameCameraPosition.x, 2, $gameCameraPosition.z]} rotation.y={0.78} />
 <Audio src={'/audio/openBag.mp3'}  bind:ref={openInventoryAudio} autoplay={false} loop={false} volume={1} />
 <Audio src={'/audio/item.mp3'}  bind:ref={itemSelectAudio} autoplay={false} loop={false} volume={1} />
 <Audio src={'/audio/objective.mp3'}  bind:ref={newObjectiveAudio} autoplay={false} loop={false} volume={1} />

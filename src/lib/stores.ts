@@ -12,7 +12,9 @@ export const gameState : Writable<GameState> = writable({
         avoidObjectsPlaceable: false
     },
     nextScenePosition: { x: 0, z: 0 },
-    moveLock: false,
+    moveLock: true,
+    mainMenu: true,
+    showHud: false,
     inventory: {
         open: false,
         equipped: 0,
@@ -38,6 +40,7 @@ export const gameState : Writable<GameState> = writable({
 
 export const gameScene = writable(1)
 export const gamePosition = writable({ x: 0, z: 0 })
+export const gameCameraPosition = writable({ x: 0, z: 0 })
 export const gameMovingTo = writable({ x: 0, z: 0 })
 export const gameSelectedCharacterPosition = writable({ x: 0, y: 0, z: 0 })
 export const gameMessage = writable({'message':'', 'type': 0}) // 0 : default, 1 : objective, 2 : item

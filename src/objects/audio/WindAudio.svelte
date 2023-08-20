@@ -17,7 +17,10 @@
     $: changeVolume($gameVolume)
 
     function changeVolume(gv: number) {
+        
         if (globalGainNode) {
+            audio.context.resume()
+           // console.log(audio.context)
             globalGainNode.gain.value = gv
             !playing && playWind()
         }
@@ -38,9 +41,13 @@
     }
 
     function playWind() {
+         
         if (!audio.context) return
-        if (audio.context.state !== 'running') return
+        audio.context.resume()
+        //console.log(audio.context.state)
+        //if (audio.context.state !== 'running') return
         playing = true
+       
         // create sources and link to local gain nodes
         source = audio.context.createBufferSource()
         source.buffer = audio.buffer

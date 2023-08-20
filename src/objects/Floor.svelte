@@ -11,6 +11,7 @@
     export let avoidArray: AvoidObject[] = []
     export let startingPosition = { x: 0, z: 0 }
     export let startingRotation = { x: 0, z: 0 }
+    export let cameraOffset = { x: 0, z: 0 }
     export let floorType = 'sand'
     export let sunIntensity = 1
 
@@ -116,7 +117,7 @@
     })
 </script>
 
-<Player {playerState} />
+<Player {playerState} {cameraOffset} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />

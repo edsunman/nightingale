@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded } from '$lib/stores'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
     import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
@@ -8,6 +8,7 @@
     import type { PlayerState } from '$lib/types'
 
     export let playerState: PlayerState
+    export let cameraOffset = { x: 0, z: 0 }
     export const ref = new Group()
 
     const gltf = useGltf('/objects/player-transformed.glb', { useDraco: true })
@@ -19,17 +20,47 @@
     const upVector = new Vector3(0, 1, 0)
     const rotationMatrix = new Matrix4().lookAt(destinationVector, playerVector, upVector)
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
+    const cameraHeight = 20
 
     let mesh: any
     let currentActionKey = playerState.annimation
     let lightTarget: any
     let runningSound: any
     let zoom = 8
+    let loaded = false
+    let cameraPosition = {
+        x: playerState.position.x,
+        z: playerState.position.z
+    }
 
     $: $actions[playerState.annimation]?.play()
+    
+    $: checkLoaded($gameLoaded)
 
-    $: {
-        zoom = $gameLoaded ? 80 : 8
+    function checkLoaded(gl:boolean){
+        if(gl) {
+            zoom = 80
+            setTimeout(()=>{
+                loaded = true
+                cameraPosition = {
+                    x: playerState.position.x + cameraOffset.x,
+                    z: playerState.position.z + cameraOffset.z
+                }
+            }, 500)
+        }
+
+    }
+
+    $: offsetCamera(cameraOffset)
+
+    function offsetCamera(cameraOffset: { x: number; z: number }) {
+        //console.log('offsetting camera')
+        if(loaded) {
+            cameraPosition = {
+                x: playerState.position.x + cameraOffset.x,
+                z: playerState.position.z + cameraOffset.z
+            }
+        }
     }
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
@@ -90,6 +121,8 @@
                     // ^^^^^^ don't move if there are one off frame time spikes caused by switching tabs etc
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
+                    cameraPosition.x = playerState.position.x + cameraOffset.x
+                    cameraPosition.z = playerState.position.z + cameraOffset.z
                 }
             }
         } else {
@@ -102,6 +135,7 @@
         }
         ref && ref.quaternion.rotateTowards(endRotation, delta * 10)
         $gamePosition = playerState.position
+        $gameCameraPosition = cameraPosition
     })
 </script>
 
@@ -116,7 +150,7 @@
 >
     {#await gltf then gltf}
         <T.Group name="Scene">
-            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01} >
                 <T is={gltf.nodes.mixamorigHips} />
                 <T is={gltf.nodes.Box_Bone} />
                 {#if $gameState.inventory.equipped !== 1}
@@ -154,9 +188,9 @@
     <T.OrthographicCamera
         name="main camera"
         makeDefault
-        position={[playerState.position.x + 19, 20, playerState.position.z + 19]}
+        position={[cameraPosition.x + 19, cameraHeight, cameraPosition.z + 19]}
         on:create={({ ref }) => {
-            ref.lookAt(playerState.position.x + 18, 19, playerState.position.z + 18)
+            ref.lookAt(cameraPosition.x + 18, cameraHeight - 1, cameraPosition.z + 18)
         }}
         {zoom}
     />
@@ -172,16 +206,11 @@
     shadow.camera.right={6.5}
     shadow.camera.left={-16.5}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x + 12, 20, playerState.position.z + 20]}
+    position={[cameraPosition.x + 12, 20, cameraPosition.z + 20]}
     target={lightTarget}
 />
 
-<T.Mesh
-    bind:ref={lightTarget}
-    visible={false}
-    scale={[1, 1, 1]}
-    position={[playerState.position.x + 8, 8, playerState.position.z + 8]}
-/>
+<T.Mesh bind:ref={lightTarget} visible={false} scale={[1, 1, 1]} position={[cameraPosition.x + 8, 8, cameraPosition.z + 8]} />
 
 <T.Mesh
     name="player grid square"

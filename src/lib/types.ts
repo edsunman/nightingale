@@ -61,6 +61,8 @@ export type GameState = {
     }
     nextScenePosition: { x: number; z: number }
     moveLock: boolean
+    mainMenu: boolean
+    showHud: boolean
     inventory: {
         open: boolean
         equipped: number

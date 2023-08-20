@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gamePosition } from '$lib/stores'
+    import { gameCameraPosition } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { Vector3, CatmullRomCurve3 } from 'three'
     import MeshLine from '$lib/components/MeshLine.svelte'
@@ -41,8 +41,8 @@
     generateLines()
 
     function moveLines() {
-        const pX = $gamePosition.x
-        const pZ = $gamePosition.z
+        const pX = $gameCameraPosition.x
+        const pZ = $gameCameraPosition.z
         const distance = 5
         position[0] = Math.random() * (pX + distance - (pX - distance)) + (pX - distance)
         position[2] = Math.random() * (pZ + distance - (pZ - distance)) + (pZ - distance)

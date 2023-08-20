@@ -126,6 +126,7 @@
                         },
                         {
                             "name": "SmallBuilding",
+                            "receiveShadow" : true,
                             "scale": [1.5, 1.5, 1.5],
                             "instances": [
                                 {
@@ -136,6 +137,7 @@
                         },
                         {
                             "name": "Building",
+                            "receiveShadow" : true,
                             "scale": [1.5, 1.5, 1.5],
                             "instances": [
                                 {

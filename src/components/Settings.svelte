@@ -1,12 +1,15 @@
 <script lang="ts">
-    import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores'
+    import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores' 
+    import { fade } from 'svelte/transition'
 
     export let version : string
     let selected: number
 
     function onKeyDown(e: any) {
         if (e.keyCode == 27) {
-            toggleSettings()
+            if (!$gameState.moveLock) {
+                toggleSettings()
+            }
         }
         if (e.keyCode == 77) {
             if ($gameVolume === 0) {
@@ -20,10 +23,8 @@
     }
 
     function toggleSettings() {
-        if (!$gameState.moveLock) {
             $gameState.inventory.open = false
             $gameState.settings.open = !$gameState.settings.open
-        }
     }
 
     function saveGame() {
@@ -73,6 +74,7 @@
     >
         <h3 class="text-xl text-center mb-4 uppercase">Settings</h3>
         <div class="painted px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+            {#if !$gameState.mainMenu}
             <div class="flex my-7">
                 <button
                     class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
@@ -83,6 +85,7 @@
                     on:click={() => loadGame()}>Load game</button
                 >
             </div>
+            {/if}
             <div class=" my-7">
                 <div class="text-sm text-neutral-300">Graphics resolution</div>
                 <select
@@ -125,26 +128,26 @@
         on:keydown={() => toggleSettings()}
     />
 {/if}
-
-<div class="absolute bottom-0">
-    <button
-        on:click={() => toggleSettings()}
-        class="
-        {$gameState.settings.open ? 'bg-white/20 text-neutral-50' : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
-        {$gameState.moveLock ? 'pointer-events-none opacity-50 ' : ''} 
-          text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10 m-5 rounded-md px-3 py-2 select-none m-e outline-none"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
-            <path
-                class="cursorHover"
-                d="m197.91,123.88l3.02-8.03,30.18-21.72-4.72-17.69-22.64-30.76-44.33,14.42-10.38-47.1-52.82,2.88-6.6,49.02-45.28-19.22-15.09,16.34-12.26,30.18,33.01,29.41.94,5.77-33.96,26.72,4.72,18.46,24.52,29.8,38.67-13.46,5.66,3.84,5.66,41.33,33.01,1.92,23.58-4.81,3.77-42.29,5.66-3.84,43.39,18.26,27.35-48.06-35.09-31.38Zm-50.75,23.69l-19.81,10-22.64-6.15-13.21-23.07,8.49-26.91,24.05-11.92,14.62,5.19,12.26,12.5,5.66,21.15-9.43,19.22Z"
-            />
-        </svg>
-    </button>
-</div>
+{#if $gameState.showHud}
+    <div class="absolute bottom-0" in:fade={{ duration: 500 }}>
+        <button
+            on:click={() => toggleSettings()}
+            class="
+            {$gameState.settings.open ? 'bg-white/20 text-neutral-50' : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
+            {$gameState.moveLock ? 'pointer-events-none opacity-50 ' : ''} 
+            text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10 m-5 rounded-md px-3 py-2 select-none m-e outline-none"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+                <path
+                    class="cursorHover"
+                    d="m197.91,123.88l3.02-8.03,30.18-21.72-4.72-17.69-22.64-30.76-44.33,14.42-10.38-47.1-52.82,2.88-6.6,49.02-45.28-19.22-15.09,16.34-12.26,30.18,33.01,29.41.94,5.77-33.96,26.72,4.72,18.46,24.52,29.8,38.67-13.46,5.66,3.84,5.66,41.33,33.01,1.92,23.58-4.81,3.77-42.29,5.66-3.84,43.39,18.26,27.35-48.06-35.09-31.38Zm-50.75,23.69l-19.81,10-22.64-6.15-13.21-23.07,8.49-26.91,24.05-11.92,14.62,5.19,12.26,12.5,5.66,21.15-9.43,19.22Z"
+                />
+            </svg>
+        </button>
+    </div>
 
 {#if $gameVolume === 0}
-    <div class="absolute bottom-0 left-20">
+    <div class="absolute bottom-0 left-20" in:fade={{ duration: 500 }}>
         <button
             on:click={() => {
                 $gameVolume = 0.6
@@ -161,5 +164,5 @@
         </button>
     </div>
 {/if}
-
+{/if}
 <svelte:window on:keyup|preventDefault={onKeyDown} />

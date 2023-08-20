@@ -1,6 +1,7 @@
 <script lang="ts">
     import { gameState } from '$lib/stores'
     import { items } from '$lib/items'
+    import { fade } from 'svelte/transition'
 
     import type { Item, Items } from '$lib/types'
 
@@ -89,7 +90,7 @@
     </div>
 {/if}
 
-<div class="absolute right-0 bottom-0">
+<div class="absolute right-0 bottom-0" in:fade={{ duration: 500 }}>
     <button
         on:click={() => toggleInventory()}
         class="

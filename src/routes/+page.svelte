@@ -10,16 +10,17 @@
     } from '$lib/stores'
     import { Canvas } from '@threlte/core'
     import { fade } from 'svelte/transition'
+    import { useProgress } from '@threlte/extras'
+    import { items } from '$lib/items'
     import Game from './Game.svelte'
     import DialogueOptions from '../components/DialogueOptions.svelte'
     import Dialogue from '../components/Dialogue.svelte'
     import Inventory from '../components/Inventory.svelte'
     import ItemDescription from '../components/ItemDescription.svelte'
     import Settings from '../components/Settings.svelte'
-    import { useProgress } from '@threlte/extras'
-    import { items } from '$lib/items'
     import Objectives from '../components/Objectives.svelte'
     import Message from '../components/Message.svelte'
+    import MainMenu from '../components/MainMenu.svelte'
 
     import type { PageData } from './$types'
 
@@ -28,7 +29,8 @@
 
     let clientWidth, clientHeight
     let loadingScreen = false
-    let welcomeMessage = true
+    let welcomeMessage = false
+
     let selectedScene: number = $gameScene
     let sceneFinishedLoading = false
     let finishedMessage = false
@@ -47,8 +49,6 @@
         }
     }
 
-   
-
     $: checkLoaded($progress)
 
     function checkLoaded(p: number) {
@@ -56,10 +56,9 @@
             setTimeout(() => {
                 $gameLoaded = true
                 setTimeout(() => {
-                    // $gameLoaded = true
                     loadingScreen = false
                     sceneFinishedLoading = true
-                }, 500)
+                }, 1000)
             }, 500)
         }
     }
@@ -85,16 +84,20 @@
     bind:clientHeight
 >
     {#if loadingScreen}
-        <div out:fade={{ duration: 300 }} class="w-full h-full opacity-100 bg-neutral-950 z-40 absolute text-white">
+        <div out:fade={{ duration: 300 }} class="w-full h-full opacity-40 bg-neutral-950 z-40 absolute text-white">
             {#if $progress < 1}
-                <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 100 }}>
+                <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 1000 }}>
                     <div class="bg-white h-full" style="width: {$progress * 100}%" />
                 </div>
             {/if}
         </div>
     {/if}
-    <Settings {version}/>
-    <Inventory />
+    
+        <Settings {version} />
+    {#if $gameState.showHud}
+        <Objectives />
+        <Inventory />
+    {/if}
     <ItemDescription />
     <DialogueOptions {script} />
     {#if $gameConversation[0] !== 0}
@@ -105,6 +108,7 @@
         </div>
     {/if}
     <Message />
+    <MainMenu/>
     {#if welcomeMessage}
         <div>
             <div
@@ -120,7 +124,8 @@
                 <div class="text-center py-6">
                     <button
                         class="tracking-wider flex-1 mr-6 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
-                        on:click={() => { $gameState.inventory.owned.push(105)
+                        on:click={() => {
+                            $gameState.inventory.owned.push(105)
                             $gameState = $gameState
                             welcomeMessage = false
                         }}>Start game</button
@@ -149,7 +154,6 @@
         </div>
         <div class="w-full h-full bg-black opacity-0 z-20 absolute" />
     {/if}
-    <Objectives />
 
     <Canvas>
         <Game {selectedScene} {gameData} {script} {dev} />

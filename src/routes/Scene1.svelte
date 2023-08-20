@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { gameState } from '$lib/stores'
     import { T, useThrelte } from '@threlte/core'
     import { onDestroy } from 'svelte'
     import Floor from '../objects/Floor.svelte'
@@ -10,14 +11,17 @@
     import DesertTent from '../objects/scene1/Desert_tent.svelte'
     import DesertSand from '../objects/scene1/Desert_sand.svelte'
     import Area from '../objects/Area.svelte'
-    import GameOverAction from '../objects/GameOverAction.svelte'
+    import GameOverAction from '../objects/scene1/actions/GameOverAction.svelte'
     import Smoke from '../objects/scene1/Smoke.svelte'
     import WindAudio from '../objects/audio/WindAudio.svelte'
     import SceneData from '../objects/SceneData.svelte'
+    import MainMenuAction from '../objects/scene1/actions/MainMenuAction.svelte'
 
     import type { AvoidObject, GameData } from '$lib/types'
     
     export let gameData: GameData
+
+    let cameraOffset : {x:number,z:number}
 
     const { scene } = useThrelte()
 
@@ -78,7 +82,7 @@
     on:create={({ ref }) => {
         scene.fog = ref
     }}
-/>-
+/>
 
 <Area
     id={1}
@@ -94,7 +98,10 @@
 >
     <GameOverAction {inArea} />
 </Area>
-<Floor {avoidArray} startingPosition={{ x: 26, z: -22 }} startingRotation={{ x: 26, z: -21 }} levelSize={{ x: 70, z: 70 }} />
+
+<MainMenuAction bind:cameraOffset />
+
+<Floor {avoidArray} startingPosition={{ x: 26, z: -22 }} startingRotation={{ x: 26, z: -21 }} levelSize={{ x: 70, z: 70 }} {cameraOffset}/>
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
     <T.BoxGeometry args={[100, 0.01, 100]} />
@@ -177,8 +184,9 @@
 <DesertTent name={'tent'} scale={1.1} position={[10, 0, -4]} rotation.y={0.7} />
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
 <Wind />
+<!--
 <Smoke />
-
+-->
 <!-- LIGHTS + AUDIO -->
 
 <T.AmbientLight intensity={0.1} />
