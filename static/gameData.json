@@ -4,7 +4,7 @@
         {
             "id": 1,
             "name": "Outpost",
-            "objects": [
+            "categories": [
                 {
                     "name": "tech",
                     "url": "/objects/tech_assets-transformed.glb",
@@ -233,7 +233,7 @@
         {
             "id": 2,
             "name": "Church",
-            "objects": [
+            "categories": [
                 {
                     "name": "tech",
                     "url": "/objects/tech_assets-transformed.glb",
@@ -435,7 +435,7 @@
         {
             "id": 3,
             "name": "Army Store",
-            "objects": [
+            "categories": [
                 {
                     "name": "tech",
                     "url": "/objects/tech_assets-transformed.glb",

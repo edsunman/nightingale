@@ -2,102 +2,117 @@
     import { gameCameraPosition } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
     import { Vector3, CatmullRomCurve3 } from 'three'
-    import MeshLine from '$lib/components/MeshLine.svelte'
+    import { quadInOut } from 'svelte/easing'
+    import { randomNumber } from '$lib/util'
+    import MeshLineMaterial from '$lib/components/MeshLineMaterial.svelte'
+    import MeshLineGeometry from '$lib/components/MeshLineGeometry.svelte'
 
-    let randomPos = () => Math.random() * (1 - 0) + 0
-    let windOffset = 0
-    let position: [number, number, number] = [0, 0.5, 0]
-    let randomLines: number[] = [0, 1, 2]
+    let fullPoints: any = []
+    let points: any = []
+    let groupPosition: [number, number, number] = [0, 1, 0]
+    let hide = false
+    let pointOffset = 0
+    let linearOpacity = 0
+    let opacity = 0
+    let fadingIn = true
 
-    const lines: any[] = []
-    const points: any[] = []
-
-    function genratePoints() {
-        const p = []
-        p.push(new Vector3(randomPos() / 1.5, randomPos() / 2, 6))
-        p.push(new Vector3(randomPos() / 1.5, randomPos() / 2, 4))
-        p.push(new Vector3(randomPos() / 1.5, randomPos() / 2, 0))
-        p.push(new Vector3(randomPos() / 1.5, randomPos() / 2, -4))
-        p.push(new Vector3(randomPos() / 1.5, randomPos() / 2, -6))
-        const curve = new CatmullRomCurve3(p)
-        points.push(curve.getPoints(50))
-    }
-
-    function line(this: any, i: number): any {
-        this.z = randomPos() * 3
-        this.x = i / 20
-        this.opacityTarget = i * 0.3 + 0.3
-        this.opacity = 0
-    }
-
-    function generateLines() {
-        lines.length = 0
-        for (let i = 0; i < 8; i++) {
-            lines.push(new (line as any)(i))
-            genratePoints()
+     const lines = [
+        {
+            width: 0.06,
+            rotationZ: 0,
+            opacity: 0.4
+        },
+        {
+            width: 0.09,
+            rotationZ: 1.885,
+            opacity: 0.7
+        },
+        {
+            width: 0.12,
+            rotationZ: 3.7699,
+            opacity: 1
         }
+    ]
+
+    const genratePoints =() => {
+        const p = []
+        p.push(new Vector3(randomNumber(-0.5,0.5), 0, 10))
+        p.push(new Vector3(randomNumber(-0.8,0), 0, 5))
+        p.push(new Vector3(randomNumber(0,0.8),0, 0))
+        p.push(new Vector3(randomNumber(-0.8,0), 0, -5))
+        p.push(new Vector3(randomNumber(-0.5,0.5), 0, -10))
+        const curve = new CatmullRomCurve3(p)
+        fullPoints = curve.getPoints(240)
     }
 
-    generateLines()
+    const selectPoints = (offset:number, length:number) : any => {
+        let pointsCount = fullPoints.length
+        let extraPoints = []
+        let offsetPoint = Math.floor((pointsCount+length) * offset)
 
-    function moveLines() {
+        for (let i = 0; i < length; i++) {
+            extraPoints.push(fullPoints[0])
+        }
+        for (let i = 0; i < pointsCount; i++) {
+            extraPoints.push(fullPoints[i])
+        }
+
+        for (let i = 0; i < length; i++) {
+            extraPoints.push(fullPoints[pointsCount-1])
+        }
+
+        return extraPoints.slice(offsetPoint,offsetPoint+length)
+    }
+
+    const moveLines = () => {
         const pX = $gameCameraPosition.x
         const pZ = $gameCameraPosition.z
-        const distance = 5
-        position[0] = Math.random() * (pX + distance - (pX - distance)) + (pX - distance)
-        position[2] = Math.random() * (pZ + distance - (pZ - distance)) + (pZ - distance)
+        const distance = 6
+        groupPosition[0] = randomNumber(pX - distance, pX + distance) 
+        groupPosition[2] = randomNumber(pZ - distance, pZ + distance) 
+        groupPosition[1] = hide ? -1 : 1
     }
 
-    function shuffleArray(array: any) {
-        let currentIndex = array.length,
-            randomIndex
-        while (currentIndex != 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex)
-            currentIndex-- ;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    genratePoints()
+
+    points = selectPoints(0,40)
+
+    useFrame((context, delta) => {
+        pointOffset += 0.007
+        if (pointOffset>=1) pointOffset = 0
+        if (linearOpacity<0) linearOpacity = 0
+        if (0.2<pointOffset && pointOffset<0.5){
+            fadingIn = true
+        } else if (pointOffset>0.5) {
+            fadingIn = false
+        }
+        if(fadingIn){
+            linearOpacity += 0.02
+        } else {
+            linearOpacity -= 0.02
+        }
+        if (linearOpacity<0) linearOpacity = 0
+        if (linearOpacity>1) linearOpacity = 1
+
+        if (pointOffset===0) {
+           genratePoints()
+           moveLines()
+           hide = !hide
         }
 
-        return array
-    }
+        
+        opacity = quadInOut(linearOpacity)
 
-    useFrame((state, delta) => {
-        if (delta < 0.5) {
-            windOffset += 0.6 * delta
-            for (let i = 0; i < 3; i++) {
-                if (windOffset < 0.5) {
-                    lines[randomLines[i]].opacity += delta * (i * 0.2 + 0.2)
-                } else {
-                    lines[randomLines[i]].opacity -= delta * (i * 0.2 + 0.2)
-                }
-                lines[randomLines[i]].dashOffset = -windOffset - 0.1
-            }
-        }
-        if (windOffset > 3) {
-            let ranNums = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7])
-            windOffset = 0
-            for (let i = 0; i < 3; i++) {
-                lines[randomLines[i]].opacity = 0
-                randomLines[i] = ranNums[i]
-            }
-            moveLines()
-        }
+        points = selectPoints(pointOffset,40)
     })
+
 </script>
 
-<T.Group {position}>
+<T.Group position={groupPosition}>
     {#each lines as line, i}
-        <MeshLine
-            transparent
-            depthWrite={false}
-            points={points[i]}
-            pointWidth={(p) => 1 * Math.pow(4 * p * (1 - p), 1)}
-            lineWidth={0.04}
-            dashArray={1}
-            dashRatio={0.8}
-            dashOffset={line.dashOffset}
-            opacity={line.opacity}
-            position.x={line.x}
-            position.z={line.z}
-        />
+        <T.Mesh rotation.z={i} position.z={i*1.2} >
+            <MeshLineGeometry {points} shape='taper'  />
+            <MeshLineMaterial opacity={opacity * line.opacity} width={line.width} transparent depthWrite={false} />
+        </T.Mesh>
     {/each}
 </T.Group>

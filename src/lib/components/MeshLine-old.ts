@@ -19,10 +19,10 @@ export interface MeshLine {
 
 export class MeshLine extends THREE.BufferGeometry {
     positions: number[]
-    isMeshLine: boolean
+   // isMeshLine: boolean
     previous: number[]
     next: number[]
-    type: string
+   // type: string
     side: number[]
     width: number[]
     indices_array: number[]
@@ -30,15 +30,15 @@ export class MeshLine extends THREE.BufferGeometry {
     counters: number[]
     _points: Float32Array | any[]
     widthCallback: any
-    matrixWorld: THREE.Matrix4
+ //   matrixWorld: THREE.Matrix4
     material: any
     raycast: any
     position: any
 
     constructor() {
         super()
-        this.isMeshLine = true
-        this.type = 'MeshLine'
+        //this.isMeshLine = true
+        //this.type = 'MeshLine'
         this.positions = []
         this.previous = []
         this.next = []
@@ -52,7 +52,7 @@ export class MeshLine extends THREE.BufferGeometry {
         this.widthCallback = null
 
         // Used to raycast
-        this.matrixWorld = new THREE.Matrix4()
+    //    this.matrixWorld = new THREE.Matrix4()
 
         Object.defineProperties(this, {
             // this is now a bufferGeometry
@@ -60,7 +60,7 @@ export class MeshLine extends THREE.BufferGeometry {
             geometry: {
                 enumerable: true,
                 get: function () {
-                    return this
+                   // return this
                 }
             },
             geom: {
@@ -69,7 +69,7 @@ export class MeshLine extends THREE.BufferGeometry {
                     return this._geom
                 },
                 set: function (value) {
-                    this.setGeometry(value, this.widthCallback)
+                   // this.setGeometry(value, this.widthCallback)
                 }
             },
             // for declaritive architectures
@@ -90,7 +90,7 @@ export class MeshLine extends THREE.BufferGeometry {
 }
 
 MeshLine.prototype.setMatrixWorld = function (matrixWorld) {
-    this.matrixWorld = matrixWorld
+  //  this.matrixWorld = matrixWorld
 }
 
 // setting via a geometry is rather superfluous
@@ -118,22 +118,22 @@ MeshLine.prototype.setPoints = function (points, wcb) {
         // could transform Vector3 array into the array used below
         // but this approach will only loop through the array once
         // and is more performant
-        for (let j = 0; j < points.length; j++) {
-            const p = points[j]
-            const c = j / points.length
+       for (let j = 0; j < points.length; j++) {
+           const p = points[j]
+           const c = j / points.length
             this.positions.push(p.x, p.y, p.z)
             this.positions.push(p.x, p.y, p.z)
             this.counters.push(c)
             this.counters.push(c)
         }
     } else {
-        for (let j = 0; j < points.length; j += 3) {
+   /*     for (let j = 0; j < points.length; j += 3) {
             const c = j / points.length
             this.positions.push(points[j], points[j + 1], points[j + 2])
             this.positions.push(points[j], points[j + 1], points[j + 2])
             this.counters.push(c)
             this.counters.push(c)
-        }
+        } */
     }
     this.process()
 }
@@ -151,13 +151,13 @@ function MeshLineRaycast(this: MeshLine, raycaster: any, intersects: any) {
 
     if (!geometry.boundingSphere) geometry.computeBoundingSphere()
     sphere.copy(geometry.boundingSphere)
-    sphere.applyMatrix4(this.matrixWorld)
+ //   sphere.applyMatrix4(this.matrixWorld)
 
     if (raycaster.ray.intersectSphere(sphere, interRay) === false) {
         return
     }
 
-    inverseMatrix.copy(this.matrixWorld).invert()
+ //   inverseMatrix.copy(this.matrixWorld).invert()
     ray.copy(raycaster.ray).applyMatrix4(inverseMatrix)
 
     const vStart = new THREE.Vector3()
@@ -186,7 +186,7 @@ function MeshLineRaycast(this: MeshLine, raycaster: any, intersects: any) {
 
             if (distSq > precisionSq) continue
 
-            interRay.applyMatrix4(this.matrixWorld) //Move back to world space for distance calculation
+      //      interRay.applyMatrix4(this.matrixWorld) //Move back to world space for distance calculation
 
             const distance = raycaster.ray.origin.distanceTo(interRay)
 
@@ -196,7 +196,7 @@ function MeshLineRaycast(this: MeshLine, raycaster: any, intersects: any) {
                 distance: distance,
                 // What do we want? intersection point on the ray or on the segment??
                 // point: raycaster.ray.at( distance ),
-                point: interSegment.clone().applyMatrix4(this.matrixWorld),
+          //      point: interSegment.clone().applyMatrix4(this.matrixWorld),
                 index: i,
                 face: null,
                 faceIndex: null,
@@ -207,7 +207,7 @@ function MeshLineRaycast(this: MeshLine, raycaster: any, intersects: any) {
         }
     }
 }
-MeshLine.prototype.raycast = MeshLineRaycast
+//MeshLine.prototype.raycast = MeshLineRaycast
 MeshLine.prototype.compareV3 = function (a, b) {
     const aa = a * 6
     const ab = b * 6
@@ -253,7 +253,7 @@ MeshLine.prototype.process = function () {
         // widths
         if (this.widthCallback) w = this.widthCallback(j / (l - 1))
         else w = 1
-        this.width.push(w)
+       this.width.push(w)
         this.width.push(w)
 
         // uvs
@@ -269,7 +269,7 @@ MeshLine.prototype.process = function () {
             // indices
             const n = j * 2
             this.indices_array.push(n, n + 1, n + 2)
-            this.indices_array.push(n + 2, n + 1, n + 3)
+           this.indices_array.push(n + 2, n + 1, n + 3)
         }
         if (j > 0) {
             // points after poisitions
@@ -509,6 +509,7 @@ const fragmentShader = [
     '    }',
     '    gl_FragColor = c;',
     '    gl_FragColor.a *= step(vCounters, visibility);',
+    '  // gl_FragColor = vec4(1.0,0.0,0.0,1.0 );',
     '',
     THREE.ShaderChunk.fog_fragment,
     '}'

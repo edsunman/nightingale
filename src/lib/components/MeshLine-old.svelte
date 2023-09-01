@@ -1,6 +1,6 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import { MeshLine, MeshLineMaterial } from '$lib/components/MeshLine'
+    import { MeshLine, MeshLineMaterial } from '$lib/components/MeshLine-old'
     import { Color, Mesh } from 'three'
     import type { MeshLineProps } from './MeshLine.svelte'
 
@@ -22,6 +22,8 @@
 
     const line = new MeshLine()
     line.setPoints(points, pointWidth)
+
+   // console.log(line)
 
     // Its probably not a good idea to allow reseting the points
     // It can lead to garbage collection issues 
@@ -45,6 +47,8 @@
     }
     
     // TODO : add proper disposal
+
+   // $ : console.log(ref)
 
 </script>
 

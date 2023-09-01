@@ -98,7 +98,7 @@ export type InstanceObject = {
     material?: string
 }
 
-export type SceneObject = {
+export type Category = {
     name : string
     url : string
     objects: InstanceObject[]
@@ -110,6 +110,6 @@ export type GameData = {
     scenes: {
         id: number,
         name: string,
-        objects: SceneObject[]
+        categories: Category[]
     }[]
 }

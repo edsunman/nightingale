@@ -29,6 +29,8 @@
 
     onMount(()=>{
         if($gameState.mainMenu){
+            $gameState.showHud = false
+            $gameState.moveLock = true
             cameraOffset = {x: 14, z: 14}
             tween = new TWEEN.Tween(cameraOffset)
             tween.easing(TWEEN.Easing.Quadratic.InOut)
