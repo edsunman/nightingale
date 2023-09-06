@@ -5,18 +5,12 @@
     import Floor from '../objects/Floor.svelte'
     import Door from '../objects/Door.svelte'
     import Item from '../objects/Item.svelte'
-    import SceneData from '../objects/SceneData.svelte'
+    import NodeObject from '../objects/NodeObject.svelte'
 
-    import type { AvoidObject, GameData } from '$lib/types'
+    import type { AvoidObject, GameData, Scene } from '$lib/types'
 
-    export let gameData : GameData
-
-    const avoidArray: AvoidObject[] = [
-        { x: -1, z: 2 },
-        { x: -2, z: 3 },
-        { x: 0.5, z: -5, scaleX: 4 },
-        {x:-2,z:-4}
-    ]
+    export let gameData: GameData
+    const scene = gameData.scenes.find((s) => s.id === 3) as Scene
 
     let flickeringInterval: ReturnType<typeof setInterval>
     let lightBrightness: number
@@ -38,8 +32,8 @@
 </script>
 
 <Floor
-    levelSize={{ x: 6, z: 12 }}
-    {avoidArray}
+    levelSize={{ x: scene.levelSize_x, z: scene.levelSize_z }}
+    blocks={scene.blocks}
     startingPosition={{ x: 2, z: -1 }}
     startingRotation={{ x: 1, z: -1 }}
     floorType="stone"
@@ -47,7 +41,7 @@
 />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
-    <T.BoxGeometry args={[6, 0.01, 12]} />
+    <T.BoxGeometry args={[scene.floorSize_x, 0.01, scene.floorSize_z]} />
     <T.MeshStandardMaterial color="#444441" />
 </T.Mesh>
 
@@ -62,7 +56,9 @@
     message="Back to the outpost"
 />
 
-<SceneData sceneId={3} {gameData} />
+{#each scene.categories as category}
+    <NodeObject objects={category.objects} url={category.url} />
+{/each}
 
 <Item id={2} position={{ x: -1, y: 1.25, z: 2 }} scale={0.2} url="/objects/item_fuelCell-transformed.glb" />
 

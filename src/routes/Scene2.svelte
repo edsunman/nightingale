@@ -9,38 +9,19 @@
     import DustParticles from '../objects/scene2/DustParticles.svelte'
     import Item from '../objects/Item.svelte'
     import Smoke from '../objects/scene2/Smoke.svelte'
-    import SceneData from '../objects/SceneData.svelte'
+    import NodeObject from '../objects/NodeObject.svelte'
 
-    import type { AvoidObject, GameData } from '$lib/types'
+    import type { AvoidObject, GameData, Scene } from '$lib/types'
 
-    export let gameData : GameData
-
-    const avoidArray: AvoidObject[] = [
-        { x: 5.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -0.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -6.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -6.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: 5.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: -0.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: 2, z: -2, scaleX: 3 },
-        { x: 9, z: -3, scaleZ: 3 },
-        { x: -3, z: 4, scaleZ: 3 },
-        { x: -2, z: 4 },
-        { x: 8, z: -2 },
-        { x: 3, z: -3 },
-        { x: -7, z: 0.5, scaleZ: 4 },
-        { x: -8, z: 0 },
-        { x: -9, z: 0 },
-        { x: -9, z: 4 },
-        { x: -9, z: -3.5, scaleZ: 2 }
-    ]
+    export let gameData: GameData
+    const scene = gameData.scenes.find((s) => s.id === 2) as Scene
 
     const windowTexture = useTexture('/texture/window.png')
 </script>
 
 <Floor
     levelSize={{ x: 20, z: 10 }}
-    {avoidArray}
+    blocks={scene.blocks}
     startingPosition={{ x: 9, z: 1 }}
     startingRotation={{ x: 0, z: 0 }}
     floorType="stone"
@@ -74,7 +55,7 @@
 
 <Character
     message="Bartender"
-    position={{ x:-8.4, y: 0, z: 0 }}
+    position={{ x: -8.4, y: 0, z: 0 }}
     url={'/objects/character_bartender-transformed.glb'}
     characterId={22}
     rotation={1.57}
@@ -105,7 +86,9 @@
 
 <!-- OBJECTS -->
 
-<SceneData {gameData} sceneId={2} />
+{#each scene.categories as category}
+    <NodeObject objects={category.objects} url={category.url} />
+{/each}
 
 <Pillar
     position={[5.5, 0, 3.5]}

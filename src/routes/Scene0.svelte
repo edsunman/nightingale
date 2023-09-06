@@ -36,7 +36,7 @@
                 color: color,
                 width: 0.3 + (i / 5)
             } as any
-            for (let j = 0; j < 50; j++) {
+            for (let j = 0; j < 0; j++) {
                 newLine.points.push(new Vector3(0, 0, 0))
             }
             lines.push(newLine)

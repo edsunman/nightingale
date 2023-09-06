@@ -89,27 +89,51 @@ export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: numb
 
 export type InstanceObject = {
     name: string
-    scale: [number, number, number]
+    scale_x: number
+    scale_y: number
+    scale_z: number
     instances: {
-        position: [number, number, number]
-        rotation: [number, number, number]
+        position_x: number
+        position_y: number
+        position_z: number
+        rotation_x: number
+        rotation_y: number
+        rotation_z: number
     }[]
     receiveShadow?: boolean
+    noClickThrough?: string
     material?: string
 }
 
 export type Category = {
-    name : string
-    url : string
+    name: string
+    url: string
     objects: InstanceObject[]
 }
 
-
 export type GameData = {
     name: string
-    scenes: {
-        id: number,
-        name: string,
-        categories: Category[]
-    }[]
+    scenes: Scene[]
+}
+
+export type Block = {
+    id: number
+    position_x: number
+    position_z: number
+    scale_x: number
+    scale_z: number
+    scene_id: number
+}
+export type Scene = {
+    id: number
+    name: string
+    levelSize_x: number
+    levelSize_z: number
+    floorSize_x: number
+    floorSize_z: number
+    floorColor: string
+    characters: Character[]
+    categories: Category[]
+    objects: InstanceObject[]
+    blocks: Block[]
 }

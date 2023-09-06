@@ -5,10 +5,10 @@
     import Player from './Player.svelte'
     import { Raycaster, Vector3 } from 'three'
 
-    import type { PlayerState, AvoidObject } from '$lib/types'
+    import type { PlayerState, Block } from '$lib/types'
 
     export let levelSize = { x: 100, z: 100 }
-    export let avoidArray: AvoidObject[] = []
+    export let blocks: Block[] = []
     export let startingPosition = { x: 0, z: 0 }
     export let startingRotation = { x: 0, z: 0 }
     export let cameraOffset = { x: 0, z: 0 }
@@ -93,20 +93,6 @@
             selectedOpacity = 1
             selectedSize = 0.4
         }
-
-        if ($gameState.dev.avoidObjectsPlaceable) {
-            let obj = avoidArray.find((o) => o.x === grid.x && o.z === grid.z)
-            if (obj) {
-                avoidArray = avoidArray.filter(function (o) {
-                    return !(o.x === grid.x && o.z === grid.z)
-                })
-                localStorage.setItem('Dev Avoid Array', JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
-            } else {
-                avoidArray.push(grid)
-                avoidArray = avoidArray
-                localStorage.setItem('Dev Avoid Array', JSON.stringify(avoidArray).replace(/"([^"]+)":/g, '$1:'))
-            }
-        }
     }
 
     useFrame((state, delta) => {
@@ -123,11 +109,11 @@
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />
 </T.Mesh>
 <InstancedMesh visible={$gameState.dev.avoidObjectsVisible}>
-    {#each avoidArray as block}
+    {#each blocks as block}
         <Instance
             name={'avoid object'}
-            scale={[block.scaleX ? block.scaleX : 1, 1, block.scaleZ ? block.scaleZ : 1]}
-            position={[block.x, 0, block.z]}
+            scale={[block.scale_x, 1, block.scale_z]}
+            position={[block.position_x, 0, block.position_z]}
             on:create={({ ref }) => {
                 avoidObjects.push(ref)
             }}
