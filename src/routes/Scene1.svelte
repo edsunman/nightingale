@@ -1,23 +1,19 @@
 <script lang="ts">
-    import { gameState } from '$lib/stores'
     import { T, useThrelte } from '@threlte/core'
     import { onDestroy } from 'svelte'
-    import Floor from '../objects/Floor.svelte'
     import Character from '../objects/Character.svelte'
     import Rocks from '../objects/scene1/Rocks.svelte'
     import Door from '../objects/Door.svelte'
     import Spaceship from '../objects/scene1/Spaceship.svelte'
     import Wind from '../objects/scene1/Wind.svelte'
     import DesertTent from '../objects/scene1/Desert_tent.svelte'
-    import DesertSand from '../objects/scene1/Desert_sand.svelte'
     import Area from '../objects/Area.svelte'
     import GameOverAction from '../objects/scene1/actions/GameOverAction.svelte'
-    import Smoke from '../objects/scene1/Smoke.svelte'
     import WindAudio from '../objects/audio/WindAudio.svelte'
-    import NodeObject from '../objects/NodeObject.svelte'
     import MainMenuAction from '../objects/scene1/actions/MainMenuAction.svelte'
 
-    import type { AvoidObject, GameData, Scene } from '$lib/types'
+    import type { GameData, Scene } from '$lib/types'
+    import SceneData from '../objects/SceneData.svelte'
 
     export let gameData: GameData
     const sceneData = gameData.scenes.find((s) => s.id === 1) as Scene
@@ -57,18 +53,7 @@
 
 <MainMenuAction bind:cameraOffset />
 
-<Floor
-    blocks={sceneData.blocks}
-    startingPosition={{ x: 26, z: -22 }}
-    startingRotation={{ x: 26, z: -21 }}
-    levelSize={{ x: 70, z: 70 }}
-    {cameraOffset}
-/>
-
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
-    <T.BoxGeometry args={[100, 0.01, 100]} />
-    <T.MeshToonMaterial color="#a6663d" />
-</T.Mesh>
+<SceneData scene={sceneData} {cameraOffset} />
 
 <Door
     url={'/objects/stone_assets-transformed.glb'}
@@ -140,11 +125,9 @@
 />
 
 <!-- OBJECTS -->
-<DesertSand />
+
 <Rocks />
-{#each sceneData.categories as category}
-    <NodeObject objects={category.objects} url={category.url} />
-{/each}
+
 <DesertTent name={'tent'} scale={1.1} position={[10, 0, -4]} rotation.y={0.7} />
 <Spaceship position={[23, 2, -25.5]} scale={1.8} rotation.y={0} />
 <Wind />

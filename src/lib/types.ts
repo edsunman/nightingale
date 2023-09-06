@@ -34,8 +34,8 @@ export type Option = {
     linkId?: number
     item?: number
     receiveItem?: number
-    giveItem?: number
-    hideItem?: number
+    giveItem?: number | null
+    hideItem?: number | null
     alreadyChosen?: boolean
     itemName?: string
 }
@@ -100,8 +100,8 @@ export type InstanceObject = {
         rotation_y: number
         rotation_z: number
     }[]
-    receiveShadow?: boolean
-    noClickThrough?: string
+    receiveShadow: number
+    noClickThrough: number
     material?: string
 }
 
@@ -114,6 +114,7 @@ export type Category = {
 export type GameData = {
     name: string
     scenes: Scene[]
+    characters: Character[]
 }
 
 export type Block = {
@@ -132,7 +133,12 @@ export type Scene = {
     floorSize_x: number
     floorSize_z: number
     floorColor: string
-    characters: Character[]
+    startingPosition_x: number
+    startingPosition_z: number
+    startingRotation_x: number
+    startingRotation_z: number
+    sunIntensity: number
+    floorType: string
     categories: Category[]
     objects: InstanceObject[]
     blocks: Block[]

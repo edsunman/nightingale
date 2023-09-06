@@ -25,7 +25,7 @@
     import type { PageData } from './$types'
 
     export let data: PageData
-    const { gameData, script, dev, version } = data
+    const { gameData, dev, version } = data
 
     let clientWidth, clientHeight
     let loadingScreen = false
@@ -92,23 +92,23 @@
             {/if}
         </div>
     {/if}
-    
-        <Settings {version} />
+
+    <Settings {version} />
     {#if $gameState.showHud}
         <Objectives />
         <Inventory />
     {/if}
     <ItemDescription />
-    <DialogueOptions {script} />
+    <DialogueOptions {gameData} />
     {#if $gameConversation[0] !== 0}
         <div class="z-20 absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
             <h3 class="text-neutral-100 rounded-md bg-neutral-900 md:hidden inline-block px-3 py-2 select-none">
-                <Dialogue {script} />
+                <Dialogue {gameData} />
             </h3>
         </div>
     {/if}
     <Message />
-    <MainMenu/>
+    <MainMenu />
     {#if welcomeMessage}
         <div>
             <div
@@ -156,7 +156,7 @@
     {/if}
 
     <Canvas>
-        <Game {selectedScene} {gameData} {script} {dev} />
+        <Game {selectedScene} {gameData} {dev} />
     </Canvas>
 </div>
 {#if dev}

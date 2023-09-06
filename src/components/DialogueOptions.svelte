@@ -4,16 +4,17 @@
 
     import { fade } from 'svelte/transition'
 
-    import type { Script, Items, Character, Speech, Option } from '$lib/types'
+    import type { Script, Items, Character, Speech, Option, GameData } from '$lib/types'
 
-    export let script: Script
+    export let gameData: GameData
+    const script = gameData.characters
     const itemsArray: Items = items
     const optionsArray: Option[] = []
     let character: Character
     let speech: Speech
     let characterPosition
     let showDialogueOptions = false
-    let timeOut : number
+    let timeOut: number
 
     $: updateDialogue($gameConversation)
 
@@ -60,9 +61,9 @@
         if ($gameState.moveLock) {
             clearTimeout(timeOut)
             if (speech.options && speech.options.length > 0) {
-                    showDialogueOptions = true
+                showDialogueOptions = true
             } else if (speech.linkId) {
-                    $gameConversation = [character.id, speech.linkId]
+                $gameConversation = [character.id, speech.linkId]
             }
         }
     }
@@ -110,7 +111,7 @@
                 const ownedArray = $gameState.inventory.owned
                 ownedArray.indexOf(option.receiveItem) === -1 ? ownedArray.push(option.receiveItem) : null
                 if (!item.isSecretKey) {
-                    $gameMessage = { 'message' : 'You received a ' + item.name , 'type' : 2 }
+                    $gameMessage = { message: 'You received a ' + item.name, type: 2 }
                 }
             }
         }
@@ -119,7 +120,7 @@
             if (item) {
                 $gameState.inventory.owned = $gameState.inventory.owned.filter((m) => m !== option.giveItem)
                 $gameState.inventory.equipped === option.giveItem ? ($gameState.inventory.equipped = 0) : null
-                $gameMessage = { 'message' : 'You gave ' + character.name + ' the ' + item.name , 'type' : 2 }
+                $gameMessage = { message: 'You gave ' + character.name + ' the ' + item.name, type: 2 }
             }
         }
         if (!option.linkId) {
@@ -141,7 +142,8 @@
             selectSpeech(2)
         } else if (e.keyCode == 52) {
             selectSpeech(3)
-        } else if (e.keyCode == 32) { // spacebar
+        } else if (e.keyCode == 32) {
+            // spacebar
             nextStep()
         }
     }

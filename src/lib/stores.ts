@@ -13,7 +13,7 @@ export const gameState: Writable<GameState> = writable({
     },
     nextScenePosition: { x: 0, z: 0 },
     moveLock: false,
-    mainMenu: false,
+    mainMenu: true,
     showHud: false,
     inventory: {
         open: false,

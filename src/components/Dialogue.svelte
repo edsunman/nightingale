@@ -1,9 +1,10 @@
 <script lang="ts">
     import { gameConversation, gameState } from '$lib/stores'
 
-    import type { Script, Character, Speech } from '$lib/types'
+    import type { Script, Character, Speech, GameData } from '$lib/types'
 
-    export let script: Script
+    export let gameData: GameData
+    const script = gameData.characters
     let character: Character
     let characterPosition
     let speech: Speech

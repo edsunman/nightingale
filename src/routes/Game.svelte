@@ -10,22 +10,21 @@
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
-    import Scene0 from './Scene0.svelte'
+    import Scene99 from './Scene99.svelte'
     import UIAudio from '../objects/audio/UIAudio.svelte'
 
-    const scenes = [ Scene0 ,Scene1, Scene2, Scene3 ]
+    const scenes = [Scene1, Scene2, Scene3, Scene99]
 
     interactivity()
 
     export let gameData: GameData
-    export let script: Script
     export let selectedScene: number
     export let dev: boolean
 
     const stats = new Stats()
     const { renderer, scene } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
-    
+
     $: changePixelRatio($gamePixelRatio)
 
     function changePixelRatio(p: number) {
@@ -36,7 +35,7 @@
         }
     }
 
-    if(dev) {
+    if (dev) {
         useFrame(() => {
             stats.update()
         })
@@ -48,14 +47,14 @@
     }
 </script>
 
-<UIAudio/>
-<svelte:component this={scenes[selectedScene]} {gameData} />
+<UIAudio />
+<svelte:component this={scenes[selectedScene - 1]} {gameData} />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
         <div class="w-96 h-20 md:inline-flex items-end justify-center hidden">
             <div class="z-20 text-neutral-100 rounded-md bg-neutral-900 px-4 py-2 select-none text-center">
-                <Dialogue {script} />
+                <Dialogue {gameData} />
             </div>
         </div>
     </HTML>
