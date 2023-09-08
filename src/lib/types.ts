@@ -70,6 +70,7 @@ export type GameState = {
     }
     settings: {
         open: boolean
+        fullScreen: boolean
     }
     itemDescription: {
         open: boolean

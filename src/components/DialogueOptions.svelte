@@ -150,7 +150,7 @@
 </script>
 
 {#if showDialogueOptions}
-    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-20 md:bottom-6 select-none">
+    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-20 md:bottom-6 xl:bottom-16 select-none">
         <div class="inline-block">
             {#each optionsArray as option, i}
                 <button

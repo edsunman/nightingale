@@ -1,8 +1,7 @@
 import { building, version } from '$app/environment'
-import script from '../../static/script.json'
 import gameData from '../../static/gameData.json'
 import type { PageServerLoad } from './$types'
-import type { Script, GameData } from '$lib/types'
+import type { GameData } from '$lib/types'
 
 export const load = (async ({ url }) => {
     let dev = false

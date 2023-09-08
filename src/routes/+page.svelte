@@ -79,7 +79,8 @@
 </script>
 
 <div
-    class="h-screen xl:h-[700px] xl:aspect-[16/9] m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden"
+    class="h-screen m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden
+        {$gameState.settings.fullScreen ? '' : 'min-[1408px]:h-[792px] xl:h-[720px] lg:aspect-[16/9] lg:h-[576px]'}"
     bind:clientWidth
     bind:clientHeight
 >

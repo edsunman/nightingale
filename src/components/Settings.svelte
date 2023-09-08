@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores' 
+    import { gameState, gamePixelRatio, gameVolume, gameScene, gamePosition, gameMessage } from '$lib/stores'
     import { fade } from 'svelte/transition'
 
-    export let version : string
+    export let version: string
     let selected: number
 
     function onKeyDown(e: any) {
@@ -23,8 +23,8 @@
     }
 
     function toggleSettings() {
-            $gameState.inventory.open = false
-            $gameState.settings.open = !$gameState.settings.open
+        $gameState.inventory.open = false
+        $gameState.settings.open = !$gameState.settings.open
     }
 
     function saveGame() {
@@ -33,15 +33,15 @@
                 scene: $gameScene,
                 position: $gamePosition,
                 gameState: $gameState
-               // inventory: $gameState.inventory,
-               // spokenWith: $gameState.charctersSpokenWith,
-               // seenSpeech: $gameState.seenSpeech,
-               // selectedConvoOptions: $gameState.selectedConvoOptions
+                // inventory: $gameState.inventory,
+                // spokenWith: $gameState.charctersSpokenWith,
+                // seenSpeech: $gameState.seenSpeech,
+                // selectedConvoOptions: $gameState.selectedConvoOptions
             })
         )
         localStorage.setItem('Nightingale Save Data', s)
         $gameState.settings.open = false
-        $gameMessage = { 'message' : 'Game saved' , type : 0 }
+        $gameMessage = { message: 'Game saved', type: 0 }
     }
 
     function loadGame() {
@@ -75,16 +75,16 @@
         <h3 class="text-xl text-center mb-4 uppercase">Settings</h3>
         <div class="painted px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
             {#if !$gameState.mainMenu}
-            <div class="flex my-7">
-                <button
-                    class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
-                    on:click={() => saveGame()}>Save game</button
-                >
-                <button
-                    class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
-                    on:click={() => loadGame()}>Load game</button
-                >
-            </div>
+                <div class="flex my-7">
+                    <button
+                        class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
+                        on:click={() => saveGame()}>Save game</button
+                    >
+                    <button
+                        class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
+                        on:click={() => loadGame()}>Load game</button
+                    >
+                </div>
             {/if}
             <div class=" my-7">
                 <div class="text-sm text-neutral-300">Graphics resolution</div>
@@ -96,6 +96,10 @@
                     <option value="1">Low</option>
                     <option value="2">High</option>
                 </select>
+            </div>
+            <div class=" my-7">
+                <div class="text-sm text-neutral-300">Full screen</div>
+                <input type="checkbox" bind:checked={$gameState.settings.fullScreen} class="" />
             </div>
             <div class="my-7">
                 <div class="text-sm text-neutral-300">Volume</div>
@@ -118,7 +122,6 @@
                     >.
                 </p>
                 <p class="text-xs text-neutral-600">Version {version}</p>
-                
             </div>
         </div>
     </div>
@@ -126,6 +129,7 @@
         class="w-full h-full bg-black opacity-0 z-10 absolute"
         on:click={() => toggleSettings()}
         on:keydown={() => toggleSettings()}
+        role="none"
     />
 {/if}
 {#if $gameState.showHud}
@@ -146,23 +150,23 @@
         </button>
     </div>
 
-{#if $gameVolume === 0}
-    <div class="absolute bottom-0 left-20" in:fade={{ duration: 500 }}>
-        <button
-            on:click={() => {
-                $gameVolume = 0.6
-            }}
-            class="
+    {#if $gameVolume === 0}
+        <div class="absolute bottom-0 left-20" in:fade={{ duration: 500 }}>
+            <button
+                on:click={() => {
+                    $gameVolume = 0.6
+                }}
+                class="
             {!$gameState.settings.open && !$gameState.moveLock ? '' : 'opacity-50 pointer-events-none '}
             text-neutral-50 bg-white/20 opacity-70 hover:opacity-100 backdrop-blur-md rounded-md px-3 py-2 select-none m-5 ml-0 outline-none"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
-                <polygon class="cursorHover" points="1 102 46 96 109 39 122 47 122 207 107 222 47 166 4 160 1 102" /><path
-                    d="m149.41,78.62l5.79-8.11s5.79-1.16,8.11,0,32.42,40.53,32.42,40.53l39.84-41.05,11.12,2.83,2.32,8.11-36.13,45.16,36.13,45.16-3.47,12.74-10.42-2.32-35.9-36.82-31.27,35.67-9.73,3.47-8.8-11.58,35.9-42.85-35.9-50.95Z"
-                />
-            </svg>
-        </button>
-    </div>
-{/if}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+                    <polygon class="cursorHover" points="1 102 46 96 109 39 122 47 122 207 107 222 47 166 4 160 1 102" /><path
+                        d="m149.41,78.62l5.79-8.11s5.79-1.16,8.11,0,32.42,40.53,32.42,40.53l39.84-41.05,11.12,2.83,2.32,8.11-36.13,45.16,36.13,45.16-3.47,12.74-10.42-2.32-35.9-36.82-31.27,35.67-9.73,3.47-8.8-11.58,35.9-42.85-35.9-50.95Z"
+                    />
+                </svg>
+            </button>
+        </div>
+    {/if}
 {/if}
 <svelte:window on:keyup|preventDefault={onKeyDown} />

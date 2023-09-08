@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gameConversation, gameSelectedCharacterPosition, gamePosition, gameVolume, gamePixelRatio } from '$lib/stores'
+    import { gameState, gameConversation, gameSelectedCharacterPosition, gamePixelRatio, gameZoom } from '$lib/stores'
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { onMount } from 'svelte'
@@ -22,8 +22,19 @@
     export let dev: boolean
 
     const stats = new Stats()
-    const { renderer, scene } = useThrelte()
+    const { renderer, scene, size } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
+
+    $: changeZoom($size)
+
+    function changeZoom(size: any) {
+        console.log(size.width)
+        if (size.width > 1250) {
+            $gameZoom = 80 + (size.width - 1250) / 15
+        } else {
+            $gameZoom = 80
+        }
+    }
 
     $: changePixelRatio($gamePixelRatio)
 

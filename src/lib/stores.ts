@@ -22,7 +22,8 @@ export const gameState: Writable<GameState> = writable({
         secretKeys: []
     },
     settings: {
-        open: false
+        open: false,
+        fullScreen: false
     },
     itemDescription: {
         open: false
@@ -48,3 +49,4 @@ export const gameConversation = writable([0, 0])
 export const gameVolume = writable(0)
 export const gamePixelRatio = writable(1)
 export const gameLoaded = writable(false)
+export const gameZoom = writable(80)

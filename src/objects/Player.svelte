@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition } from '$lib/stores'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition, gameZoom } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
     import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
@@ -34,13 +34,13 @@
     }
 
     $: $actions[playerState.annimation]?.play()
-    
+
     $: checkLoaded($gameLoaded)
 
-    function checkLoaded(gl:boolean){
-        if(gl) {
-            zoom = 80
-            setTimeout(()=>{
+    function checkLoaded(gl: boolean) {
+        if (gl) {
+            zoom = $gameZoom
+            setTimeout(() => {
                 loaded = true
                 cameraPosition = {
                     x: playerState.position.x + cameraOffset.x,
@@ -48,14 +48,17 @@
                 }
             }, 500)
         }
+    }
 
+    $: {
+        if (zoom > 8) zoom = $gameZoom
     }
 
     $: offsetCamera(cameraOffset)
 
     function offsetCamera(cameraOffset: { x: number; z: number }) {
         //console.log('offsetting camera')
-        if(loaded) {
+        if (loaded) {
             cameraPosition = {
                 x: playerState.position.x + cameraOffset.x,
                 z: playerState.position.z + cameraOffset.z
@@ -150,7 +153,7 @@
 >
     {#await gltf then gltf}
         <T.Group name="Scene">
-            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01} >
+            <T.Group name="Armature" bind:this={mesh} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
                 <T is={gltf.nodes.mixamorigHips} />
                 <T is={gltf.nodes.Box_Bone} />
                 {#if $gameState.inventory.equipped !== 1}
