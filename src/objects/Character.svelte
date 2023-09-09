@@ -6,6 +6,7 @@
     import * as TWEEN from '@tweenjs/tween.js'
     import { useCursor } from '$lib/useCursor'
     import { onMount, onDestroy } from 'svelte'
+    import { everyInterval, randomNumber } from '$lib/util'
     import HolgramMaterial from './materials/HolgramMaterial.svelte'
 
     export const ref = new Group()
@@ -28,7 +29,7 @@
     const characterTexture = useTexture('/texture/characterAtlas.png')
     const { actions, mixer } = useGltfAnimations(gltf, ref)
     const threlte = useThrelte()
-    const { onPointerEnter, onPointerLeave } = useCursor(...[,,],threlte.renderer?.domElement,'cursorHover')
+    const { onPointerEnter, onPointerLeave } = useCursor(...[, ,], threlte.renderer?.domElement, 'cursorHover')
     const endRotation = new Quaternion().setFromEuler(new Euler(0, rotation, 0))
     const rotationMatrix = new Matrix4()
     const currentPosition = new Vector3(position.x, 0, position.z)
@@ -145,58 +146,60 @@
                     $gameState.charctersSpokenWith.push(characterId)
                 }
             } else {
-                $gameMessage = { 'message' : message , 'type' : 0 }
+                $gameMessage = { message: message, type: 0 }
             }
         } else {
-            $gameMessage = { 'message' : message , 'type' : 0 }
+            $gameMessage = { message: message, type: 0 }
         }
     }
 
-    function flicker() {
-        flickeringInterval = setInterval(() => {
-            hologramOpacity = Math.random() * 1 + 0
-        }, 30)
-        staticAudio.offset = Math.floor(Math.random() * 3)
-        if(staticAudio.context.state === 'running') {
-            staticAudio.play()
-        }
-        setTimeout(() => {
-            clearInterval(flickeringInterval)
-            hologramOpacity = 1
-            staticAudio.stop()
-        }, Math.random() * 1500 + 100)
-    }
+    const everySevenSeconds = everyInterval(7)
 
     useFrame(
         (state, delta) => {
-            if (rotateTowardsPlayer) {
-                playerVector.set($gamePosition.x, 0, $gamePosition.z)
-                rotationMatrix.lookAt(playerVector, currentPosition, upVector)
-                endRotation.setFromRotationMatrix(rotationMatrix)
-            }
-            if (ref) {
-                ref.quaternion.rotateTowards(endRotation, delta * 10)
-            }
-            if ($gltf) {
-                if (inConversation && spinHeadWhenTalking && isPlayerInFrontOfCharacter) {
-                    $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
-                } else if (rotatingHead) {
-                    $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
-                    if (counter.count <= 0) {
-                        pause(false)
-                        rotatingHead = false
+            if (delta < 0.5) {
+                if (isHologram) {
+                    const seconds = everySevenSeconds(delta, () => {
+                        //if (staticAudio.context.state === 'running') {
+                        //staticAudio.play()
+                        //}
+                    })
+                    if (seconds < 1 || (5 < seconds && seconds < 5.5)) {
+                        hologramOpacity = randomNumber(0, 1)
+                    } else {
+                        hologramOpacity = 1
+                        // staticAudio.stop()
                     }
                 }
+                if (rotateTowardsPlayer) {
+                    playerVector.set($gamePosition.x, 0, $gamePosition.z)
+                    rotationMatrix.lookAt(playerVector, currentPosition, upVector)
+                    endRotation.setFromRotationMatrix(rotationMatrix)
+                }
+                if (ref) {
+                    ref.quaternion.rotateTowards(endRotation, delta * 10)
+                }
+                if ($gltf) {
+                    if (inConversation && spinHeadWhenTalking && isPlayerInFrontOfCharacter) {
+                        $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
+                    } else if (rotatingHead) {
+                        $gltf.nodes.mixamorigHead.quaternion.slerpQuaternions(defaultHeadRotation, headRotation, counter.count)
+                        if (counter.count <= 0) {
+                            pause(false)
+                            rotatingHead = false
+                        }
+                    }
+                }
+                TWEEN.update()
             }
-            TWEEN.update()
         },
         { order: 1 }
     )
 
     onMount(() => {
-        if (isHologram) {
-            flickerInterval = setInterval(flicker, 6000)
-        }
+        // if (isHologram) {
+        //    flickerInterval = setInterval(flicker, 6000)
+        // }
 
         if (animation.key.length > 0) {
             animationInterval = setInterval(() => {

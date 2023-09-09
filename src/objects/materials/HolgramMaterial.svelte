@@ -24,7 +24,7 @@
                 #include <skinning_vertex>
                 #include <project_vertex>
 				vUv = uv;
-				//gl_Position = projectionMatrix * mvPosition;
+				//gl_Position = projectionMatrix * mvPosition * 5.0;
 			}
         `,
         fragmentShader: `
@@ -33,6 +33,8 @@
             uniform float time;
             uniform float opacity;
             uniform float dotSize;
+
+
 
 			void main()	{
 

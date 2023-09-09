@@ -28,7 +28,6 @@
     $: changeZoom($size)
 
     function changeZoom(size: any) {
-        console.log(size.width)
         if (size.width > 1250) {
             $gameZoom = 80 + (size.width - 1250) / 15
         } else {

@@ -39,3 +39,19 @@ export function calculateDistanceBetweenPoints(pointA: Point, pointB: Point): nu
     const dz = pointA.z - pointB.z
     return Math.sqrt(dx * dx + dz * dz)
 }
+
+export function everyInterval(interval: number) {
+    let clock = 0
+    let intervalCounter = 0
+    let seconds = 0
+    return function (delta: number, fn: () => void) {
+        clock += delta
+        seconds += delta
+        if (clock > intervalCounter) {
+            seconds = 0
+            intervalCounter += interval
+            fn()
+        }
+        return seconds
+    }
+}

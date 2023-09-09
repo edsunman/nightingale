@@ -1,118 +1,84 @@
 <script lang="ts">
     import { gameCameraPosition } from '$lib/stores'
     import { T, useFrame } from '@threlte/core'
+    import { MeshLineMaterial, MeshLineGeometry } from '@threlte/extras'
     import { Vector3, CatmullRomCurve3 } from 'three'
     import { quadInOut } from 'svelte/easing'
-    import { randomNumber } from '$lib/util'
-    import MeshLineMaterial from '$lib/components/MeshLineMaterial.svelte'
-    import MeshLineGeometry from '$lib/components/MeshLineGeometry.svelte'
+    import { randomNumber, everyInterval } from '$lib/util'
 
-    let fullPoints: any = []
-    let points: any = []
+    let line: Vector3[] = []
+
+    for (let j = 0; j < 20; j++) {
+        line.push(new Vector3(0, 0, 0))
+    }
+
+    const p = []
+    p.push(new Vector3(0, 0, 6))
+    p.push(new Vector3(-0.3, 0.3, 3))
+    p.push(new Vector3(0, -0.3, 0))
+    p.push(new Vector3(-0.3, 0.3, -3))
+    p.push(new Vector3(0, 0, -6))
+    const curve = new CatmullRomCurve3(p)
+
+    let positionOnCurve = 0
+    let point: Vector3
     let groupPosition: [number, number, number] = [0, 1, 0]
-    let hide = false
-    let pointOffset = 0
-    let linearOpacity = 0
-    let opacity = 0
-    let fadingIn = true
+    let rotation = 0
+    const distance = 6
 
-     const lines = [
-        {
-            width: 0.06,
-            rotationZ: 0,
-            opacity: 0.4
-        },
-        {
-            width: 0.09,
-            rotationZ: 1.885,
-            opacity: 0.7
-        },
-        {
-            width: 0.12,
-            rotationZ: 3.7699,
-            opacity: 1
+    const resetLine = () => {
+        point = curve.getPoint(0)
+        line[0].x = point.x
+        line[0].y = point.y
+        line[0].z = point.z
+        for (let j = 0; j < line.length; j++) {
+            if (j !== 0) {
+                line[j].x = line[0].x
+                line[j].y = line[0].y
+                line[j].z = line[0].z
+            }
         }
-    ]
-
-    const genratePoints =() => {
-        const p = []
-        p.push(new Vector3(randomNumber(-0.5,0.5), 0, 10))
-        p.push(new Vector3(randomNumber(-0.8,0), 0, 5))
-        p.push(new Vector3(randomNumber(0,0.8),0, 0))
-        p.push(new Vector3(randomNumber(-0.8,0), 0, -5))
-        p.push(new Vector3(randomNumber(-0.5,0.5), 0, -10))
-        const curve = new CatmullRomCurve3(p)
-        fullPoints = curve.getPoints(240)
+        groupPosition[0] = randomNumber($gameCameraPosition.x - distance, $gameCameraPosition.x + distance)
+        groupPosition[2] = randomNumber($gameCameraPosition.z - distance, $gameCameraPosition.z + distance)
+        rotation = randomNumber(0, 6.28)
     }
 
-    const selectPoints = (offset:number, length:number) : any => {
-        let pointsCount = fullPoints.length
-        let extraPoints = []
-        let offsetPoint = Math.floor((pointsCount+length) * offset)
-
-        for (let i = 0; i < length; i++) {
-            extraPoints.push(fullPoints[0])
-        }
-        for (let i = 0; i < pointsCount; i++) {
-            extraPoints.push(fullPoints[i])
-        }
-
-        for (let i = 0; i < length; i++) {
-            extraPoints.push(fullPoints[pointsCount-1])
-        }
-
-        return extraPoints.slice(offsetPoint,offsetPoint+length)
-    }
-
-    const moveLines = () => {
-        const pX = $gameCameraPosition.x
-        const pZ = $gameCameraPosition.z
-        const distance = 6
-        groupPosition[0] = randomNumber(pX - distance, pX + distance) 
-        groupPosition[2] = randomNumber(pZ - distance, pZ + distance) 
-        groupPosition[1] = hide ? -1 : 1
-    }
-
-    genratePoints()
-
-    points = selectPoints(0,40)
+    const everyFiveSeconds = everyInterval(5)
 
     useFrame((context, delta) => {
-        pointOffset += 0.007
-        if (pointOffset>=1) pointOffset = 0
-        if (linearOpacity<0) linearOpacity = 0
-        if (0.2<pointOffset && pointOffset<0.5){
-            fadingIn = true
-        } else if (pointOffset>0.5) {
-            fadingIn = false
+        if (delta < 0.5) {
+            if (positionOnCurve >= 1) positionOnCurve = 0
+            const seconds = everyFiveSeconds(delta, () => {
+                resetLine()
+            })
+            if (seconds < 1) {
+                positionOnCurve = 0
+            } else if (seconds > 3) {
+                positionOnCurve = 1
+            } else {
+                positionOnCurve += delta / 2
+            }
+            point = curve.getPoint(quadInOut(positionOnCurve))
+            line[0].x = point.x
+            line[0].y = point.y
+            line[0].z = point.z
+            for (let j = 0; j < line.length; j++) {
+                if (j !== 0) {
+                    line[j].lerp(line[j - 1], 0.4)
+                }
+            }
+            line = line
         }
-        if(fadingIn){
-            linearOpacity += 0.02
-        } else {
-            linearOpacity -= 0.02
-        }
-        if (linearOpacity<0) linearOpacity = 0
-        if (linearOpacity>1) linearOpacity = 1
-
-        if (pointOffset===0) {
-           genratePoints()
-           moveLines()
-           hide = !hide
-        }
-
-        
-        opacity = quadInOut(linearOpacity)
-
-        points = selectPoints(pointOffset,40)
     })
-
 </script>
 
 <T.Group position={groupPosition}>
-    {#each lines as line, i}
-        <T.Mesh rotation.z={i} position.z={i*1.2} >
-            <MeshLineGeometry {points} shape='taper'  />
-            <MeshLineMaterial opacity={opacity * line.opacity} width={line.width} transparent depthWrite={false} />
-        </T.Mesh>
-    {/each}
+    <T.Mesh rotation.z={rotation}>
+        <MeshLineGeometry points={line} shape={'taper'} />
+        <MeshLineMaterial width={0.12} transparent color="#ffffff" scaleDown={0.3} />
+    </T.Mesh>
+    <T.Mesh position.z={1.5} position.y={0.2} rotation.z={rotation + 3.14}>
+        <MeshLineGeometry points={line} shape={'taper'} />
+        <MeshLineMaterial width={0.06} opacity={0.6} transparent color="#ffffff" scaleDown={0.3} />
+    </T.Mesh>
 </T.Group>
