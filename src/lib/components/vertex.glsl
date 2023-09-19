@@ -1,16 +1,18 @@
-attribute float size;
-attribute float angle;
-attribute vec4 particleColor;
+attribute float sizeRandom;
+attribute float rotation;
+attribute float colorRandom;
 attribute float life;
 attribute vec3 velocity;
 
 uniform float maxLifetime;
 uniform float dampen;
+uniform vec4 sizeStops;
+uniform vec4 sizes;
 
-varying vec4 vColor;
-varying vec2 vAngle;
-varying float nLife;
-varying float rLife;
+varying float vColorRandom;
+varying vec2 vRotation;
+varying float vNormalLife;
+varying float vReverseNormalLife;
 
 float PI = 3.1415926;
 
@@ -20,30 +22,30 @@ float EaseOutSine(float x) {
 
 void main() {
     // normlised lifetime; 0 = born, 1 - died
-    nLife = life / maxLifetime;
+    vNormalLife = life / maxLifetime;
 
-    // reverse lifetime; 1 = born, 0 = died
-    rLife = 1.0 - nLife;
+    // reverse lifetime; 1 = born, 0 = died // maybe not needed??
+    vReverseNormalLife = 1.0 - vNormalLife;
 
     // dampen
-    float dampenedLife = nLife;
+    float dampenedLife = vNormalLife;
     if(dampen > 0.0) {
-        dampenedLife = EaseOutSine(nLife);
+        dampenedLife = EaseOutSine(vNormalLife);
     }
 
     // velocity
     vec3 newPosition = position + (velocity * dampenedLife);
-
     vec4 mvPosition = modelViewMatrix * vec4(newPosition, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
-    // todo work out orthagraphic zoom
-    //no attenuate
-    //gl_PointSize = size ;
-    // attenuate
-    gl_PointSize = size * (100.0 / length(mvPosition.xyz));
+    // TODO: work out orthagraphic zoom
+    float size = mix(sizes[0], sizes[1], smoothstep(sizeStops.x, sizeStops.y, vNormalLife));
+    size = mix(size, sizes[2], smoothstep(sizeStops.y, sizeStops.z, vNormalLife));
+    size = mix(size, sizes[3], smoothstep(sizeStops.z, sizeStops.w, vNormalLife));
+
+    gl_PointSize = (size + sizeRandom) * (100.0 / length(mvPosition.xyz));
 
     // set varyings for fragment shader
-    vAngle = vec2(cos(life * angle), sin(life * angle));
-    vColor = particleColor;
+    vRotation = vec2(cos(life * rotation), sin(life * rotation));
+    vColorRandom = colorRandom;
 }

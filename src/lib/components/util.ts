@@ -4,36 +4,38 @@ const parseGradientString = (gradientString: string) => {
     // todo : correctly order array
     let object: any = {
         stops: [],
-        colors: []
+        values: []
     }
     const stops = gradientString.match(/(?<=\s)[^\s]*(?=%)/g)
     if (!stops) return
-    const rgbaValues = gradientString.match(/(?<=\()[^\s]*(?=\))/g)
-    if (!rgbaValues || stops.length !== rgbaValues.length) return
-    let lastStop, lastColor
+    const values = gradientString.match(/(?<=\()[^\s]*(?=\))/g)
+    if (!values || stops.length !== values.length) return
+    let rgba = gradientString.includes('rgba')
+    let lastStop, lastValue
     for (let i = 0; i < 4; i++) {
-        if (rgbaValues[i]) {
-            const rgbaSplit = rgbaValues[i].split(',')
-            if (rgbaSplit.length !== 4) return
+        if (values[i]) {
+            const split = values[i].split(',')
+            if (rgba) {
+                // color gradient
+                if (split.length !== 4) return
+                lastValue = [parseInt(split[0]) / 255, parseInt(split[1]) / 255, parseInt(split[2]) / 255, parseInt(split[3])]
+            } else {
+                // size gradient
+                if (split.length !== 1) return
+                lastValue = split[0]
+            }
+            object.values = object.values.concat(lastValue)
             lastStop = parseInt(stops[i]) / 100
             object.stops.push(lastStop)
-            lastColor = [
-                parseInt(rgbaSplit[0]) / 255,
-                parseInt(rgbaSplit[1]) / 255,
-                parseInt(rgbaSplit[2]) / 255,
-                parseInt(rgbaSplit[3])
-            ]
-            //object.colors.push(lastColor)
-            object.colors = object.colors.concat(lastColor)
         } else {
             object.stops.push(lastStop)
-            object.colors = object.colors.concat(lastColor)
+            object.values = object.values.concat(lastValue)
         }
     }
     return object
 }
 
-export const createGradientObject = (gradientString: string) => {
+export const createGradientObject = (gradientString: string, valueCount: number) => {
     const gradientObject = parseGradientString(gradientString)
     if (gradientObject) {
         return gradientObject
@@ -41,7 +43,7 @@ export const createGradientObject = (gradientString: string) => {
         // string incorrectly formatted so just show white
         return {
             stops: new Array(4).fill(1),
-            colors: new Array(16).fill(1)
+            values: new Array(valueCount).fill(1)
         }
     }
 }
@@ -60,7 +62,7 @@ export const randomDirectionSpread = (direction: Vector3, angleDegrees: number) 
     return new Vector3(x, y, z).applyQuaternion(q)
 }
 
-export const ramdomPointInsideCube = (position: { x: number; y: number; z: number }, scale: { x: number; y: number; z: number }) => {
+export const ramdomPointInsideCube = (position: Vector3, scale: { x: number; y: number; z: number }) => {
     return {
         x: position.x + scale.x * (Math.random() * 1 - 0.5),
         y: position.y + scale.y * (Math.random() * 1 - 0.5),

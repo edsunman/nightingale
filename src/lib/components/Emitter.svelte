@@ -1,32 +1,35 @@
 <script lang="ts">
     import { T, useFrame, useThrelte } from '@threlte/core'
-    import { useTexture, TransformControls } from '@threlte/extras'
-    import fragmentShader from './fragment.glsl?raw'
-    import vertexShader from './vertex.glsl?raw'
-    import { BufferGeometry, Float32BufferAttribute, Vector3, AdditiveBlending, TextureLoader, Color, MultiplyBlending } from 'three'
+    import { BufferGeometry, Float32BufferAttribute, Vector3, AdditiveBlending, TextureLoader, type Texture } from 'three'
     import { randomNumber } from '$lib/util'
     import { createEventDispatcher } from 'svelte'
     import { ramdomPointInsideCube, randomDirectionSpread, createGradientObject } from './util'
+    import fragmentShader from './fragment.glsl?raw'
+    import vertexShader from './vertex.glsl?raw'
 
-    const dispatch = createEventDispatcher()
-
-    const geometry = new BufferGeometry()
-
-    export let particleCount = 10
-    export let particleLife = 2
-    export let oneShot = false
-    export let position: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }
-    export let debug = false
+    export let position = new Vector3(0, 0, 0)
+    export let scale: number[] = [1, 1, 1]
+    export let count = 10
+    export let life = 2
     export let explosiveness = 0
     export let spread = 0
     export let direction = new Vector3(0, 1, 0)
     export let velocity = 1
     export let velocityRandom = 0
-    export let area = false
-    export let size = 1
+    export let size = ''
     export let sizeRandom = 0
+    export let color: string = ''
+    export let colorRandom = 0
+    export let rotation = 0
+    export let rotationRandom = 0
     export let dampen = false
-    export let colorGradient: string = ''
+    export let area = false
+    export let oneShot = false
+    export let debug = false
+    export let boundingSphereRadius = 5
+    export let map: Texture | undefined = undefined
+
+    console.log(map)
 
     let emitterScale = new Vector3(10, 1, 10)
 
@@ -35,11 +38,14 @@
     let newPosition
     let paused = false
     let pausedTime: number
+    let useMap = map ? 1 : 0
 
     const positionAttributeArray: number[] = []
     const lifeAttributeArray: number[] = []
-    const parsedGradient = createGradientObject(colorGradient)
-    //console.log(parsedGradient)
+    const parsedColorGradient = createGradientObject(color, 16)
+    const parsedSizeGradient = createGradientObject(size, 4)
+    const dispatch = createEventDispatcher()
+    const geometry = new BufferGeometry()
 
     export const start = () => {
         if (state !== 'finished') {
@@ -63,61 +69,57 @@
         pausedTime = emitterLife
     }
 
-    const updateBox = (ref: any) => {
-        //console.log(ref)
-        position = ref.position
-        geometry.computeBoundingSphere()
-    }
-
     const smokeTexture = new TextureLoader().load('/texture/smokeWhite.png')
 
     const particles: any = []
 
     const setupParticles = () => {
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < count; i++) {
             const pDirection = new Vector3().copy(direction.normalize())
             if (spread > 0) pDirection.copy(randomDirectionSpread(pDirection, spread))
             const pVelocity =
                 velocityRandom > 0 ? randomNumber(velocity - velocityRandom / 2, velocity + velocityRandom / 2) : velocity
-            const pSize = sizeRandom > 0 ? randomNumber(size - sizeRandom / 2, size + sizeRandom / 2) : size
-            console.log(pVelocity)
+            const pSize = sizeRandom > 0 ? randomNumber(-sizeRandom / 2, sizeRandom / 2) : 0
+            const pColor = colorRandom > 0 ? randomNumber(-colorRandom / 2, colorRandom / 2) : 0
+            const pRotation =
+                rotationRandom > 0 ? randomNumber(rotation - rotationRandom / 2, rotation + rotationRandom / 2) : rotation
             pDirection.multiplyScalar(pVelocity)
             particles.push({
-                position,
-                size: pSize,
-                color: new Color(randomNumber(), randomNumber(), randomNumber()),
+                position: { x: 0, y: 0, z: 0 },
+                sizeRandom: pSize,
+                colorRandom: pColor,
                 alpha: 1,
-                life: -(particleLife / particleCount) * i * (1 - explosiveness),
-                maxLife: particleLife,
-                rotation: randomNumber(-2, 2),
+                life: -(life / count) * i * (1 - explosiveness),
+                maxLife: life,
+                rotation: pRotation,
                 velocity: pDirection
             })
         }
 
         const sizes = []
         const colors: any = []
-        const angles: any = []
+        const rotations: any = []
         const velocities: any = []
         for (let particle of particles) {
             positionAttributeArray.push(particle.position.x, particle.position.y, particle.position.z)
-            sizes.push(particle.size)
-            colors.push(particle.color.r, particle.color.g, particle.color.b, particle.alpha)
-            angles.push(particle.rotation)
+            sizes.push(particle.sizeRandom)
+            colors.push(particle.colorRandom)
+            rotations.push(particle.rotation)
             lifeAttributeArray.push(particle.life)
             velocities.push(particle.velocity.x, particle.velocity.y, particle.velocity.z)
         }
 
         geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
-        geometry.setAttribute('size', new Float32BufferAttribute(sizes, 1))
-        geometry.setAttribute('particleColor', new Float32BufferAttribute(colors, 4))
-        geometry.setAttribute('angle', new Float32BufferAttribute(angles, 1))
+        geometry.setAttribute('sizeRandom', new Float32BufferAttribute(sizes, 1))
+        geometry.setAttribute('colorRandom', new Float32BufferAttribute(colors, 1))
+        geometry.setAttribute('rotation', new Float32BufferAttribute(rotations, 1))
         geometry.setAttribute('life', new Float32BufferAttribute(lifeAttributeArray, 1))
         geometry.setAttribute('velocity', new Float32BufferAttribute(velocities, 3))
 
-        geometry.attributes.size.needsUpdate = true
+        geometry.attributes.sizeRandom.needsUpdate = true
         geometry.attributes.velocity.needsUpdate = true
-        geometry.attributes.particleColor.needsUpdate = true
-        geometry.attributes.angle.needsUpdate = true
+        geometry.attributes.colorRandom.needsUpdate = true
+        geometry.attributes.rotation.needsUpdate = true
         geometry.attributes.life.needsUpdate = true
     }
 
@@ -125,7 +127,7 @@
 
     const distributePreBirthParticles = () => {
         particles.forEach((particle: any, i: number) => {
-            particle.life = -(particleLife / particleCount) * i * (1 - explosiveness)
+            particle.life = -(life / count) * i * (1 - explosiveness)
         })
     }
 
@@ -148,20 +150,31 @@
         })
     }
 
+    const positionUpdated = (p: any) => {
+        if (!geometry.boundingSphere) {
+            geometry.computeBoundingSphere()
+        }
+        if (!geometry.boundingSphere) return
+        geometry.boundingSphere.radius = boundingSphereRadius
+        geometry.boundingSphere.center = position
+    }
+
+    $: positionUpdated(position)
+
     useFrame((context, delta) => {
         if (delta < 0.5) {
             emitterLife += delta
             let newState = 'running'
-            if (emitterLife < particleLife) {
+            if (emitterLife < life) {
                 // emmitting new particles
                 newState = 'starting'
             }
             if (oneShot) {
-                if (emitterLife >= particleLife) {
+                if (emitterLife >= life) {
                     // emmitting no more particles
                     newState = 'stopping'
                 }
-                if (emitterLife >= particleLife + particleLife * (1 - explosiveness)) {
+                if (emitterLife >= life + life * (1 - explosiveness) + 0.1) {
                     // all particles have died
                     newState = 'finished'
                 }
@@ -170,7 +183,7 @@
                     // emmitting no more particles
                     newState = 'stopping'
                 }
-                if (emitterLife >= pausedTime + particleLife) {
+                if (emitterLife >= pausedTime + life + 0.1) {
                     // all particles have died
                     newState = 'finished'
                 }
@@ -213,7 +226,13 @@
     })
 </script>
 
-<T.Points {geometry}>
+<T.Points
+    {geometry}
+    {...$$restProps}
+    on:create={(r) => {
+        console.log(r)
+    }}
+>
     <T.ShaderMaterial
         {vertexShader}
         {fragmentShader}
@@ -222,20 +241,29 @@
         transparent
         vertexColors
         uniforms={{
-            diffuseTexture: {
-                value: smokeTexture
+            map: {
+                value: map
+            },
+            useMap: {
+                value: useMap
             },
             maxLifetime: {
-                value: particleLife
+                value: life
             },
             dampen: {
                 value: dampen ? 1.0 : 0.0
             },
-            stops: {
-                value: parsedGradient.stops
+            colorStops: {
+                value: parsedColorGradient.stops
             },
             colors: {
-                value: parsedGradient.colors
+                value: parsedColorGradient.values
+            },
+            sizeStops: {
+                value: parsedSizeGradient.stops
+            },
+            sizes: {
+                value: parsedSizeGradient.values
             }
         }}
     />
@@ -247,15 +275,9 @@
         <T.MeshBasicMaterial />
     </T.Mesh>
 {/each} -->
-{#if debug}
-    <T.Mesh let:ref scale={[1, 1, 1]} position={[position.x, position.y, position.z]}>
-        <T.BoxGeometry />
-        <T.MeshBasicMaterial wireframe visible={false} />
-        <TransformControls
-            object={ref}
-            on:mouseUp={() => {
-                updateBox(ref)
-            }}
-        />
-    </T.Mesh>
-{/if}
+
+<T.Mesh let:ref scale={[scale[0], scale[1], scale[2]]} position={[position.x, position.y, position.z]}>
+    <T.BoxGeometry />
+    <T.MeshBasicMaterial wireframe visible={debug} />
+    <slot {ref} />
+</T.Mesh>
