@@ -7,8 +7,6 @@
 
     export let scene: Scene
     export let cameraOffset = { x: 0, z: 0 }
-
-    console.log(scene)
 </script>
 
 <Floor

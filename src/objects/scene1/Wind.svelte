@@ -75,10 +75,10 @@
 <T.Group position={groupPosition}>
     <T.Mesh rotation.z={rotation}>
         <MeshLineGeometry points={line} shape={'taper'} />
-        <MeshLineMaterial width={0.12} transparent color="#ffffff" scaleDown={0.3} />
+        <MeshLineMaterial width={8} transparent color="#ffffff" scaleDown={0.3} attenuate={false} />
     </T.Mesh>
     <T.Mesh position.z={1.5} position.y={0.2} rotation.z={rotation + 3.14}>
         <MeshLineGeometry points={line} shape={'taper'} />
-        <MeshLineMaterial width={0.06} opacity={0.6} transparent color="#ffffff" scaleDown={0.3} />
+        <MeshLineMaterial width={5} opacity={0.7} transparent color="#ffffff" scaleDown={0.3} attenuate={false} />
     </T.Mesh>
 </T.Group>

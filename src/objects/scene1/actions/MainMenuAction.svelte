@@ -8,7 +8,7 @@
 
     let cameraMoving = false
     let cameraFinishedMoving = false
-    let tween : any
+    let tween: any
 
     $: cameraArrived(cameraFinishedMoving)
 
@@ -27,11 +27,11 @@
         }
     }
 
-    onMount(()=>{
-        if($gameState.mainMenu){
+    onMount(() => {
+        if ($gameState.mainMenu) {
             $gameState.showHud = false
             $gameState.moveLock = true
-            cameraOffset = {x: 14, z: 14}
+            cameraOffset = { x: 14, z: 14 }
             tween = new TWEEN.Tween(cameraOffset)
             tween.easing(TWEEN.Easing.Quadratic.InOut)
         }

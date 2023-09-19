@@ -1,7 +1,16 @@
+import type { Mesh } from 'three'
 type Point = { x: number; z: number }
 
-export function randomNumber(min: number, max: number) {
+export function randomNumber(min: number = 0, max: number = 1) {
     return Math.random() * (max - min) + min
+}
+
+export function ramdomPointInsideCube(position: { x: number; y: number; z: number }, scale: { x: number; y: number; z: number }) {
+    return {
+        x: position.x + scale.x * randomNumber(-0.5, 0.5),
+        y: position.y + scale.y * randomNumber(-0.5, 0.5),
+        z: position.z + scale.z * randomNumber(-0.5, 0.5)
+    }
 }
 
 export function isPointInside(point: Point, points: Point[]): boolean {

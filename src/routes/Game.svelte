@@ -3,17 +3,17 @@
     import Stats from 'three/examples/jsm/libs/stats.module'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { onMount } from 'svelte'
-    import { interactivity, OrbitControls, HTML, useProgress, AudioListener, Audio } from '@threlte/extras'
+    import { interactivity, OrbitControls, HTML } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
-    import type { Script, GameData } from '$lib/types'
-
+    import UIAudio from '../objects/audio/UIAudio.svelte'
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
-    import Scene99 from './Scene99.svelte'
-    import UIAudio from '../objects/audio/UIAudio.svelte'
+    import Scene0 from './Scene0.svelte'
 
-    const scenes = [Scene1, Scene2, Scene3, Scene99]
+    import type { GameData } from '$lib/types'
+
+    const scenes = [Scene0, Scene1, Scene2, Scene3]
 
     interactivity()
 
@@ -58,7 +58,7 @@
 </script>
 
 <UIAudio />
-<svelte:component this={scenes[selectedScene - 1]} {gameData} />
+<svelte:component this={scenes[selectedScene]} {gameData} />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>
