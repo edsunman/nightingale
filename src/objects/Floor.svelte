@@ -97,6 +97,7 @@
 
     useFrame((state, delta) => {
         selectedOpacity -= delta * 2
+        if (selectedOpacity < 0) selectedOpacity = 0
         if (selectedSize < 1) {
             selectedSize += delta * 0.8
         }

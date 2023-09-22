@@ -2,7 +2,7 @@
     import { SRGBColorSpace } from 'three'
     import { T, forwardEventHandlers } from '@threlte/core'
     import { useGltf, InstancedMesh, Instance, useTexture } from '@threlte/extras'
-    import HolgramMaterial from './materials/HolgramMaterial.svelte'
+    import { HolgramMaterial } from './materials'
 
     import type { InstanceObject } from '$lib/types'
 
@@ -13,19 +13,6 @@
     const texture = useTexture('/texture/objectAtlas.png')
 
     const items: number[] = []
-    const nodes: string[] = [
-        'Container',
-        'Building',
-        'Desk',
-        'Wall',
-        'Satalite',
-        'SpikeBuilding',
-        'SmallBuilding',
-        'LandingPad',
-        'Crate',
-        'Door',
-        'Server'
-    ]
 
     for (let i = 0; i < 50; i++) {
         const position = i * 5
@@ -35,7 +22,11 @@
 
 {#await gltf then gltf}
     {#each objects as object}
-        <InstancedMesh geometry={gltf.nodes[object.name].geometry} castShadow receiveShadow={object.receiveShadow}>
+        <InstancedMesh
+            geometry={gltf.nodes[object.name].geometry}
+            castShadow
+            receiveShadow={object.receiveShadow === 1 ? true : false}
+        >
             {#if object.material === 'hologram'}
                 <HolgramMaterial />
             {:else}

@@ -3,7 +3,7 @@
 
     import type { GameData, Scene } from '$lib/types'
     import Emitter from '$lib/components/Emitter.svelte'
-    import { Vector3 } from 'three'
+    import { BoxGeometry, MeshBasicMaterial, Vector3 } from 'three'
     import { T } from '@threlte/core'
     import { useTexture, TransformControls } from '@threlte/extras'
 
@@ -43,26 +43,28 @@
 {#await t then t}
     <Emitter
         position={emmitPosition}
+        scale={new Vector3(10, 10, 10)}
         count={100}
-        life={4}
-        spread={45}
-        velocity={5}
-        direction={new Vector3(0, 2, 0)}
-        sizeRandom={2.5}
+        life={5}
+        spread={15}
+        velocity={0}
+        wind={new Vector3(0, 0, 0)}
+        gravity={new Vector3(0, 0, 0)}
+        direction={new Vector3(0, 0, 0)}
+        sizeRandom={1}
         explosiveness={0}
-        color={'rgba(255,0,0,0) 0%, rgba(255,0,0,1) 20%, rgba(255,0,0,1) 80%, rgba(255,0,0,0) 100%'}
-        size={'size(5) 0%, size(5) 100%'}
+        color={'rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%'}
+        size={'size(2) 0%, size(2) 100%'}
         colorRandom={0.1}
         rotationRandom={3}
+        dampen={0}
         map={t}
         bind:start
         bind:stop
         on:stateChanged={stateChanged}
-        debug
-        dampen
     />
 {/await}
-
+<!--
 <T.Mesh let:ref bind:ref={box} scale={[1, 1, 1]} position={[1, 1, 1]}>
     <T.BoxGeometry />
     <T.MeshBasicMaterial wireframe visible={false} />
@@ -73,7 +75,7 @@
         }}
     />
 </T.Mesh>
-
+-->
 <!--
 {#each { length: 200 } as _, i}
     <Emitter

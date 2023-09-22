@@ -1,7 +1,7 @@
 <script lang="ts">
     import { gameState, gameConversation, gameSelectedCharacterPosition, gamePixelRatio, gameZoom } from '$lib/stores'
     import Stats from 'three/examples/jsm/libs/stats.module'
-    import { T, useFrame, useThrelte } from '@threlte/core'
+    import { T, useFrame, useThrelte, useRender } from '@threlte/core'
     import { onMount } from 'svelte'
     import { interactivity, OrbitControls, HTML } from '@threlte/extras'
     import Dialogue from '../components/Dialogue.svelte'
@@ -12,6 +12,7 @@
     import Scene0 from './Scene0.svelte'
 
     import type { GameData } from '$lib/types'
+    import PostProcessing from '../objects/PostProcessing.svelte'
 
     const scenes = [Scene0, Scene1, Scene2, Scene3]
 
@@ -59,6 +60,8 @@
 
 <UIAudio />
 <svelte:component this={scenes[selectedScene]} {gameData} />
+
+<PostProcessing />
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>

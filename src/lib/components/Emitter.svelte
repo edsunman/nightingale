@@ -1,19 +1,30 @@
 <script lang="ts">
     import { T, useFrame, useThrelte } from '@threlte/core'
-    import { BufferGeometry, Float32BufferAttribute, Vector3, AdditiveBlending, TextureLoader, type Texture } from 'three'
+    import {
+        BufferGeometry,
+        Float32BufferAttribute,
+        Vector3,
+        AdditiveBlending,
+        TextureLoader,
+        type Texture,
+        ShaderMaterial
+    } from 'three'
     import { randomNumber } from '$lib/util'
     import { createEventDispatcher } from 'svelte'
     import { ramdomPointInsideCube, randomDirectionSpread, createGradientObject } from './util'
     import fragmentShader from './fragment.glsl?raw'
     import vertexShader from './vertex.glsl?raw'
 
+    // Maybe rename to emmitterPosition and emmitterScale for clarity?
     export let position = new Vector3(0, 0, 0)
-    export let scale: number[] = [1, 1, 1]
+    export let scale = new Vector3(0, 0, 0)
     export let count = 10
     export let life = 2
     export let explosiveness = 0
     export let spread = 0
     export let direction = new Vector3(0, 1, 0)
+    export let gravity = new Vector3(0, 0, 0)
+    export let wind = new Vector3(0, 0, 0)
     export let velocity = 1
     export let velocityRandom = 0
     export let size = ''
@@ -22,16 +33,11 @@
     export let colorRandom = 0
     export let rotation = 0
     export let rotationRandom = 0
-    export let dampen = false
-    export let area = false
+    export let dampen = 0
     export let oneShot = false
     export let debug = false
     export let boundingSphereRadius = 5
     export let map: Texture | undefined = undefined
-
-    console.log(map)
-
-    let emitterScale = new Vector3(10, 1, 10)
 
     let emitterLife = 0
     let state = ''
@@ -39,6 +45,8 @@
     let paused = false
     let pausedTime: number
     let useMap = map ? 1 : 0
+    let area = scale.x > 0 || scale.y > 0 || scale.z > 0 ? true : false
+    let material: ShaderMaterial
 
     const positionAttributeArray: number[] = []
     const lifeAttributeArray: number[] = []
@@ -77,6 +85,7 @@
         for (let i = 0; i < count; i++) {
             const pDirection = new Vector3().copy(direction.normalize())
             if (spread > 0) pDirection.copy(randomDirectionSpread(pDirection, spread))
+            // console.log(pDirection)
             const pVelocity =
                 velocityRandom > 0 ? randomNumber(velocity - velocityRandom / 2, velocity + velocityRandom / 2) : velocity
             const pSize = sizeRandom > 0 ? randomNumber(-sizeRandom / 2, sizeRandom / 2) : 0
@@ -92,7 +101,8 @@
                 life: -(life / count) * i * (1 - explosiveness),
                 maxLife: life,
                 rotation: pRotation,
-                velocity: pDirection
+                velocity: pDirection,
+                randomValue: randomNumber(0, 1)
             })
         }
 
@@ -100,6 +110,7 @@
         const colors: any = []
         const rotations: any = []
         const velocities: any = []
+        const randomValues: any = []
         for (let particle of particles) {
             positionAttributeArray.push(particle.position.x, particle.position.y, particle.position.z)
             sizes.push(particle.sizeRandom)
@@ -107,6 +118,7 @@
             rotations.push(particle.rotation)
             lifeAttributeArray.push(particle.life)
             velocities.push(particle.velocity.x, particle.velocity.y, particle.velocity.z)
+            randomValues.push(particle.randomValue)
         }
 
         geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
@@ -114,6 +126,7 @@
         geometry.setAttribute('colorRandom', new Float32BufferAttribute(colors, 1))
         geometry.setAttribute('rotation', new Float32BufferAttribute(rotations, 1))
         geometry.setAttribute('life', new Float32BufferAttribute(lifeAttributeArray, 1))
+        geometry.setAttribute('randomValue', new Float32BufferAttribute(randomValues, 1))
         geometry.setAttribute('velocity', new Float32BufferAttribute(velocities, 3))
 
         geometry.attributes.sizeRandom.needsUpdate = true
@@ -121,6 +134,7 @@
         geometry.attributes.colorRandom.needsUpdate = true
         geometry.attributes.rotation.needsUpdate = true
         geometry.attributes.life.needsUpdate = true
+        geometry.attributes.randomValue.needsUpdate = true
     }
 
     setupParticles()
@@ -133,7 +147,7 @@
 
     const positionNewParticle = (index: number) => {
         if (area) {
-            newPosition = ramdomPointInsideCube(position, emitterScale)
+            newPosition = ramdomPointInsideCube(position, scale)
             positionAttributeArray[index * 3] = newPosition.x
             positionAttributeArray[index * 3 + 1] = newPosition.y
             positionAttributeArray[index * 3 + 2] = newPosition.z
@@ -157,6 +171,9 @@
         if (!geometry.boundingSphere) return
         geometry.boundingSphere.radius = boundingSphereRadius
         geometry.boundingSphere.center = position
+        if (material) {
+            //    console.log(material)
+        }
     }
 
     $: positionUpdated(position)
@@ -202,7 +219,6 @@
                     }
                 })
             }
-
             if (state !== 'finished') {
                 // update particles
                 lifeAttributeArray.length = 0
@@ -230,10 +246,11 @@
     {geometry}
     {...$$restProps}
     on:create={(r) => {
-        console.log(r)
+        //console.log(r)
     }}
 >
     <T.ShaderMaterial
+        bind:ref={material}
         {vertexShader}
         {fragmentShader}
         depthTest
@@ -251,7 +268,7 @@
                 value: life
             },
             dampen: {
-                value: dampen ? 1.0 : 0.0
+                value: dampen
             },
             colorStops: {
                 value: parsedColorGradient.stops
@@ -264,6 +281,15 @@
             },
             sizes: {
                 value: parsedSizeGradient.values
+            },
+            wind: {
+                value: [wind.x, wind.y, wind.z]
+            },
+            gravity: {
+                value: [gravity.x, gravity.y, gravity.z]
+            },
+            emitterPosition: {
+                value: position
             }
         }}
     />
@@ -276,7 +302,7 @@
     </T.Mesh>
 {/each} -->
 
-<T.Mesh let:ref scale={[scale[0], scale[1], scale[2]]} position={[position.x, position.y, position.z]}>
+<T.Mesh let:ref scale={[scale.x, scale.y, scale.z]} position={[position.x, position.y, position.z]}>
     <T.BoxGeometry />
     <T.MeshBasicMaterial wireframe visible={debug} />
     <slot {ref} />

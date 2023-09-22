@@ -1,5 +1,12 @@
 <script lang="ts">
-    import { gamePosition, gameMessage, gameConversation, gameSelectedCharacterPosition, gameState } from '$lib/stores'
+    import {
+        gamePosition,
+        gameMessage,
+        gameConversation,
+        gameSelectedCharacterPosition,
+        gameState,
+        gameOutlineObjects
+    } from '$lib/stores'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
     import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong, SRGBColorSpace } from 'three'
@@ -7,7 +14,7 @@
     import { useCursor } from '$lib/useCursor'
     import { onMount, onDestroy } from 'svelte'
     import { everyInterval, randomNumber } from '$lib/util'
-    import HolgramMaterial from './materials/HolgramMaterial.svelte'
+    import { HolgramMaterial } from './materials'
 
     export const ref = new Group()
     export let position = { x: 1, y: 0, z: 1 }
@@ -52,6 +59,7 @@
     let rotatingHead = false
     let tween: any
     let isPlayerInFrontOfCharacter = false
+    let bodyMesh: any
 
     $: {
         if (pingPongIdle) {
@@ -99,6 +107,7 @@
 
     function clicked(e: any) {
         if (!$gameState.moveLock) {
+            $gameOutlineObjects.length = 0
             const player = $gamePosition
             let extraSpace = false
             extraChatPositions.forEach((p) => {
@@ -197,10 +206,6 @@
     )
 
     onMount(() => {
-        // if (isHologram) {
-        //    flickerInterval = setInterval(flicker, 6000)
-        // }
-
         if (animation.key.length > 0) {
             animationInterval = setInterval(() => {
                 $actions[animation.key]?.setLoop(LoopOnce, 1)
@@ -223,13 +228,12 @@
 </script>
 
 <T is={ref} dispose={false} {...$$restProps} name={'character ' + characterId} position={[position.x, position.y, position.z]}>
-    {#await gltf}
-        <slot name="fallback" />
-    {:then gltf}
+    {#await gltf then gltf}
         <T.Group name="Scene">
             <T.Group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
                 <T is={gltf.nodes.mixamorigHips} />
                 <T.SkinnedMesh
+                    bind:ref={bodyMesh}
                     castShadow={!isHologram}
                     name="Body"
                     geometry={gltf.nodes.Body.geometry}
@@ -247,19 +251,22 @@
                 </T.SkinnedMesh>
             </T.Group>
         </T.Group>
-    {:catch error}
-        <slot name="error" {error} />
     {/await}
-
-    <slot {ref} />
 </T>
 
 <T.Mesh
     name="collision box"
     visible={false}
     position={[position.x, position.y + 0.75, position.z]}
-    on:pointerenter={onPointerEnter}
-    on:pointerleave={onPointerLeave}
+    on:pointerenter={(e) => {
+        onPointerEnter()
+        $gameOutlineObjects.push(bodyMesh)
+        $gameOutlineObjects = $gameOutlineObjects
+    }}
+    on:pointerleave={(e) => {
+        onPointerLeave()
+        $gameOutlineObjects.length = 0
+    }}
     on:click={(e) => {
         e.stopPropagation()
         clicked(e)
