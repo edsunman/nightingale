@@ -70,19 +70,3 @@
         composer.render(delta)
     })
 </script>
-
-<T.Mesh
-    bind:ref={selectedMesh}
-    on:pointerenter={(e) => {
-        onPointerEnter()
-        $gameOutlineObjects.push(e.object)
-        $gameOutlineObjects = $gameOutlineObjects
-    }}
-    on:pointerleave={(e) => {
-        onPointerLeave()
-        $gameOutlineObjects.length = 0
-    }}
->
-    <T.BoxGeometry />
-    <T.MeshStandardMaterial />
-</T.Mesh>

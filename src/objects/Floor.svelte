@@ -4,6 +4,7 @@
     import { Grid, Instance, InstancedMesh } from '@threlte/extras'
     import Player from './Player.svelte'
     import { Raycaster, Vector3 } from 'three'
+    import { checkColission } from '$lib/util'
 
     import type { PlayerState, Block } from '$lib/types'
 
@@ -28,13 +29,10 @@
         settingOff: true,
         floorType: floorType,
         running: false,
-        sunIntensity: sunIntensity
+        sunIntensity: sunIntensity,
+        movementType: 'none'
     }
 
-    const direction = new Vector3()
-    const raycaster = new Raycaster()
-    const gridVector = new Vector3()
-    const playerVector = new Vector3()
     let selectedGridSpace: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }
     let avoidObjects: any[] = []
     let selectedOpacity = 0
@@ -42,46 +40,16 @@
     let selectedSize = 0.5
 
     function floorClicked(e: any) {
+        if (playerState.movementType === 'keyboard') return
         const p = playerState.position
-
         const point = e.intersections[0].point
         const grid = { x: Math.round(point.x), z: Math.round(point.z) }
         if (e.intersections[0].eventObject.name === 'floor' && $gameState.moveLock == false) {
             playerState.path.length = 0
-            gridVector.set(grid.x, 0, grid.z)
-            playerVector.set(p.x, 0, p.z)
-
-            direction.subVectors(gridVector, playerVector).normalize()
-            raycaster.set(playerVector, direction)
-
-            const intersects = raycaster.intersectObjects(avoidObjects, false)
-            const distance = Math.sqrt((grid.x - playerVector.x) ** 2 + (grid.z - playerVector.z) ** 2)
-
-            if (intersects.length > 0 && intersects[0].distance < distance) {
-                // ^^^ pointing towards wall
-                // so move towards wall and stop
-                // TODO : proper pathfinding using navmesh https://github.com/donmccurdy/three-pathfinding
-                const ip = intersects[0].point
-                let gridIp = { x: 0, z: 0 }
-
-                if (p.x < ip.x) {
-                    gridIp.x = Math.round(ip.x - 0.5)
-                } else if (p.x > ip.x) {
-                    gridIp.x = Math.round(ip.x + 0.5)
-                } else {
-                    gridIp.x = Math.round(ip.x)
-                }
-
-                if (p.z < ip.z) {
-                    gridIp.z = Math.round(ip.z - 0.5)
-                } else if (p.z > ip.z) {
-                    gridIp.z = Math.round(ip.z + 0.5)
-                } else {
-                    gridIp.z = Math.round(ip.z)
-                }
-
-                $gameMovingTo = { x: gridIp.x, z: gridIp.z }
-                playerState.path.push({ x: gridIp.x, z: gridIp.z })
+            const { square, hit } = checkColission(p, grid, avoidObjects)
+            if (hit) {
+                $gameMovingTo = { x: square.x, z: square.z }
+                playerState.path.push({ x: square.x, z: square.z })
                 selectedColour = 'Red'
             } else {
                 $gameMovingTo = { x: grid.x, z: grid.z }
@@ -90,6 +58,7 @@
             }
             selectedGridSpace = { x: grid.x, y: 0, z: grid.z }
             playerState.settingOff = true
+            playerState.movementType = 'mouse'
             selectedOpacity = 1
             selectedSize = 0.4
         }
@@ -104,7 +73,7 @@
     })
 </script>
 
-<Player {playerState} {cameraOffset} />
+<Player {playerState} {cameraOffset} {levelSize} {avoidObjects} />
 
 <T.Mesh position={[0.5, -0.01, 0.5]} visible={false} name="floor" on:click={(e) => floorClicked(e)}>
     <T.BoxGeometry args={[levelSize.x, 0.01, levelSize.z]} />

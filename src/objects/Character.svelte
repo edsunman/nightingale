@@ -165,7 +165,7 @@
     const everySevenSeconds = everyInterval(7)
 
     useFrame(
-        (state, delta) => {
+        (_, delta) => {
             if (delta < 0.5) {
                 if (isHologram) {
                     const seconds = everySevenSeconds(delta, () => {
@@ -259,13 +259,17 @@
     visible={false}
     position={[position.x, position.y + 0.75, position.z]}
     on:pointerenter={(e) => {
-        onPointerEnter()
-        $gameOutlineObjects.push(bodyMesh)
-        $gameOutlineObjects = $gameOutlineObjects
+        if (characterId > 0) {
+            onPointerEnter()
+            $gameOutlineObjects.push(bodyMesh)
+            $gameOutlineObjects = $gameOutlineObjects
+        }
     }}
     on:pointerleave={(e) => {
-        onPointerLeave()
-        $gameOutlineObjects.length = 0
+        if (characterId > 0) {
+            onPointerLeave()
+            $gameOutlineObjects.length = 0
+        }
     }}
     on:click={(e) => {
         e.stopPropagation()

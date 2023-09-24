@@ -40,7 +40,7 @@
             //$gameState.itemDescription.open = true
             //$gameState.moveLock = true
         } else {
-            $gameMessage = { message: 'You picked up a ' + item?.message, type: 0 }
+            $gameMessage = { message: '' + item?.message, type: 0 }
         }
     }
 </script>

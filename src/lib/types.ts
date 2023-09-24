@@ -8,6 +8,8 @@ export type PlayerState = {
     floorType: string
     running: boolean
     sunIntensity: number
+    movementType: 'mouse' | 'keyboard' | 'none'
+    comingToAStop: boolean
 }
 
 export type Script = Array<Character>

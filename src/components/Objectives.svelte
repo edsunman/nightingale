@@ -24,13 +24,31 @@
     // {objective.itemsStrike && objective.itemsStrike.some(r => $gameState.inventory.owned.includes(r))
 </script>
 
+<div
+    role="list"
+    in:fade={{ duration: 500 }}
+    on:mouseenter={() => {
+        showObjective = true
+    }}
+    on:mouseleave={() => {
+        showObjective = false
+    }}
+    class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-50 opacity-70 hover:opacity-100 select-none"
+>
+    <p><small class="uppercase">Objective:</small></p>
+    <p>Find a fuel cell</p>
+</div>
+
 {#if showObjective}
-    <div out:fade={{ duration: 300 }} >
-        <ul class="list-disc absolute mt-16 pt-2 mx-6 text-neutral-100 select-none">
+    <div
+        out:fade={{ duration: 300 }}
+        class="rounded-md px-3 py-2 bg-white/10 backdrop-blur-md absolute mt-20 mx-6 text-neutral-100 select-none"
+    >
+        <ul class="list-disc">
             {#each objectives as objective}
                 {#if objective.id && $gameState.objectivesShown.includes(objective.id)}
                     <li
-                        class="text-sm ml-5 pt-2 {objective.itemsStrike &&
+                        class="text-sm ml-5 mr-3 py-1 {objective.itemsStrike &&
                         objective.itemsStrike.some((r) => $gameState.inventory.owned.includes(r))
                             ? 'line-through opacity-70'
                             : ''}"
@@ -42,16 +60,3 @@
         </ul>
     </div>
 {/if}
-<div
-    in:fade={{ duration: 500 }}
-    on:mouseenter={() => {
-        showObjective = true
-    }}
-    on:mouseleave={() => {
-        showObjective = false
-    }}
-    class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-100 opacity-50 hover:opacity-100 select-none"
->
-    <p><small class="uppercase">Objective:</small></p>
-    <p>Find a fuel cell</p>
-</div>

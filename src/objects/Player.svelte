@@ -2,13 +2,16 @@
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition, gameZoom } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
-    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
+    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, Path } from 'three'
     import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
+    import KeyboardControls from './KeyboardControls.svelte'
 
     export let playerState: PlayerState
     export let cameraOffset = { x: 0, z: 0 }
+    export let levelSize: any
+    export let avoidObjects: any
     export const ref = new Group()
 
     const gltf = useGltf('/objects/player-transformed.glb', { useDraco: true })
@@ -57,7 +60,6 @@
     $: offsetCamera(cameraOffset)
 
     function offsetCamera(cameraOffset: { x: number; z: number }) {
-        //console.log('offsetting camera')
         if (loaded) {
             cameraPosition = {
                 x: playerState.position.x + cameraOffset.x,
@@ -130,7 +132,9 @@
             }
         } else {
             if (!playerState.arrived) {
+                playerState.comingToAStop = false
                 playerState.running = false
+                playerState.movementType = 'none'
                 transitionTo('idle')
                 runningSound(false)
             }
@@ -225,5 +229,14 @@
     <T.BoxGeometry args={[1, 0.1, 1]} />
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
+<!--
+{#each playerState.path as p}
+    <T.Mesh name="debug square" receiveShadow visible={true} scale={[1, 1, 1]} position={[p.x, 0, p.z]}>
+        <T.BoxGeometry args={[1, 0.1, 1]} />
+        <T.MeshStandardMaterial color="#9932CC" />
+    </T.Mesh>
+{/each} -->
 
 <RunningAudio floorType={playerState.floorType} bind:runningSound />
+
+<KeyboardControls bind:playerState {levelSize} {avoidObjects} />
