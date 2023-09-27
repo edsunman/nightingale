@@ -1,83 +1,104 @@
 <script lang="ts">
     import type { PlayerState } from '$lib/types'
-    import { getFurthestWalkableGridSquare } from '$lib/util'
+    import { getFurthestWalkableGridSquare, checkColission, isSquareOutsideLevel } from '$lib/util'
+    import { useGamePad } from '$lib/hooks/useGamePad'
+    import { useFrame } from '@threlte/core'
     export let playerState: PlayerState
 
     export let levelSize: any
     export let avoidObjects: any
 
-    let currentlyPressedKeys: any = []
-    let keyMovementDirection = ''
-    let previousKeyMovementDirection = ''
+    let currentlyPressedKeys: string[] = []
+    let stickDirection = ''
+    let movingDirection = ''
 
-    function setKeyDirection() {
-        if (playerState.path.length > 1) return
-        playerState.path.length = 0
-        previousKeyMovementDirection = keyMovementDirection
-        let direction = { x: 0, z: 0 }
-        let redirectSquare = { x: Math.floor(playerState.position.x), z: Math.floor(playerState.position.z) }
-        if (playerState.running) {
-            redirectSquare = changeDirection()
+    const { lx, ly } = useGamePad()
+
+    const stickMoved = (lx: number, ly: number) => {
+        if (lx > 0.5 || lx < -0.5 || ly > 0.5 || ly < -0.5) {
+            const r = Math.atan2(lx, -ly)
+            if (r > -0.39 && r < 0.39) {
+                stickDirection = 'up'
+            } else if (r > 0.39 && r < 1.17) {
+                stickDirection = 'upRight'
+            } else if (r > 1.17 && r < 1.96) {
+                stickDirection = 'right'
+            } else if (r > 1.96 && r < 2.74) {
+                stickDirection = 'downRight'
+            } else if (r > 2.74 || r < -2.74) {
+                stickDirection = 'down'
+            } else if (r > -2.74 && r < -1.96) {
+                stickDirection = 'downLeft'
+            } else if (r > -1.96 && r < -1.17) {
+                stickDirection = 'left'
+            } else if (r > -1.17 && r < -0.39) {
+                stickDirection = 'upLeft'
+            }
+        } else {
+            stickDirection = ''
         }
-        // ignore conflicting keypresses
-        if (
-            (currentlyPressedKeys.includes('w') && currentlyPressedKeys.includes('s')) ||
-            (currentlyPressedKeys.includes('a') && currentlyPressedKeys.includes('d'))
-        ) {
-            return
-        }
-        if (currentlyPressedKeys.includes('w') && currentlyPressedKeys.includes('d')) {
-            direction = { x: redirectSquare.x, z: redirectSquare.z - 1 }
-            keyMovementDirection = 'upRight'
-        } else if (currentlyPressedKeys.includes('d') && currentlyPressedKeys.includes('s')) {
-            direction = { x: redirectSquare.x + 1, z: redirectSquare.z }
-            keyMovementDirection = 'downRight'
-        } else if (currentlyPressedKeys.includes('s') && currentlyPressedKeys.includes('a')) {
-            direction = { x: redirectSquare.x, z: redirectSquare.z + 1 }
-            keyMovementDirection = 'downLeft'
-        } else if (currentlyPressedKeys.includes('a') && currentlyPressedKeys.includes('w')) {
-            direction = { x: redirectSquare.x - 1, z: redirectSquare.z }
-            keyMovementDirection = 'upLeft'
-        } else if (currentlyPressedKeys.includes('w')) {
-            direction = { x: redirectSquare.x - 1, z: redirectSquare.z - 1 }
-            keyMovementDirection = 'up'
-        } else if (currentlyPressedKeys.includes('d')) {
-            direction = { x: redirectSquare.x + 1, z: redirectSquare.z - 1 }
-            keyMovementDirection = 'right'
-        } else if (currentlyPressedKeys.includes('s')) {
-            direction = { x: redirectSquare.x + 1, z: redirectSquare.z + 1 }
-            keyMovementDirection = 'down'
-        } else if (currentlyPressedKeys.includes('a')) {
-            direction = { x: redirectSquare.x - 1, z: redirectSquare.z + 1 }
-            keyMovementDirection = 'left'
-        }
-        let destiantionSquare = getFurthestWalkableGridSquare(redirectSquare, direction, levelSize, avoidObjects)
-        if (!destiantionSquare) return
-        if (previousKeyMovementDirection.length < 1) previousKeyMovementDirection = keyMovementDirection
-        playerState.path.push(destiantionSquare)
     }
 
-    function changeDirection(usePrevKey: boolean = true) {
-        let redirectSquare = { x: 0, z: 0 }
-        let k = usePrevKey ? previousKeyMovementDirection : keyMovementDirection
-        let floor = { x: Math.floor(playerState.position.x), z: Math.floor(playerState.position.z) }
-        let ceil = { x: Math.ceil(playerState.position.x), z: Math.ceil(playerState.position.z) }
-        if (k === 'up' || k === 'upRight' || k === 'upLeft') {
-            redirectSquare = { x: floor.x, z: floor.z }
+    $: stickMoved($lx, $ly)
+
+    const keyPressed = (k: string[]) => {
+        // ignore conflicting keypresses
+        if ((k.includes('w') && k.includes('s')) || (k.includes('a') && k.includes('d'))) {
+            return
         }
-        if (k === 'down' || k === 'downRight' || k === 'downLeft') {
-            redirectSquare = { x: ceil.x, z: ceil.z }
+        if (k.includes('w') && k.includes('d')) {
+            stickDirection = 'upRight'
+        } else if (k.includes('d') && k.includes('s')) {
+            stickDirection = 'downRight'
+        } else if (k.includes('s') && k.includes('a')) {
+            stickDirection = 'downLeft'
+        } else if (k.includes('a') && k.includes('w')) {
+            stickDirection = 'upLeft'
+        } else if (k.includes('w')) {
+            stickDirection = 'up'
+        } else if (k.includes('d')) {
+            stickDirection = 'right'
+        } else if (k.includes('s')) {
+            stickDirection = 'down'
+        } else if (k.includes('a')) {
+            stickDirection = 'left'
+        } else {
+            stickDirection = ''
         }
-        if (k === 'left') {
-            redirectSquare = { x: floor.x, z: ceil.z }
+    }
+
+    $: keyPressed(currentlyPressedKeys)
+
+    function getDirectionSquare(direction: string) {
+        let directionSquare = { x: 0, z: 0 }
+        let playerSquare = { x: Math.round(playerState.position.x), z: Math.round(playerState.position.z) }
+        switch (direction) {
+            case 'up':
+                directionSquare = { x: playerSquare.x - 1, z: playerSquare.z - 1 }
+                break
+            case 'down':
+                directionSquare = { x: playerSquare.x + 1, z: playerSquare.z + 1 }
+                break
+            case 'left':
+                directionSquare = { x: playerSquare.x - 1, z: playerSquare.z + 1 }
+                break
+            case 'right':
+                directionSquare = { x: playerSquare.x + 1, z: playerSquare.z - 1 }
+                break
+            case 'upLeft':
+                directionSquare = { x: playerSquare.x - 1, z: playerSquare.z }
+                break
+            case 'upRight':
+                directionSquare = { x: playerSquare.x, z: playerSquare.z - 1 }
+                break
+            case 'downLeft':
+                directionSquare = { x: playerSquare.x, z: playerSquare.z + 1 }
+                break
+            case 'downRight':
+                directionSquare = { x: playerSquare.x + 1, z: playerSquare.z }
+                break
         }
-        if (k === 'right') {
-            redirectSquare = { x: ceil.x, z: floor.z }
-        }
-        if (redirectSquare) {
-            playerState.path.push(redirectSquare)
-        }
-        return redirectSquare
+        return { playerSquare, directionSquare }
     }
 
     function onKeyDown(e: KeyboardEvent) {
@@ -85,9 +106,7 @@
             if (playerState.movementType === 'mouse') return
             if (!currentlyPressedKeys.includes(e.key)) {
                 currentlyPressedKeys.push(e.key)
-                if (playerState.comingToAStop) return
-                playerState.movementType = 'keyboard'
-                setKeyDirection()
+                currentlyPressedKeys = currentlyPressedKeys
             }
         }
     }
@@ -96,17 +115,45 @@
         if (e.key === 'w' || e.key === 'd' || e.key === 's' || e.key === 'a') {
             if (playerState.movementType === 'mouse') return
             currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== e.key)
-            if (playerState.comingToAStop) return
-            playerState.path.length = 0
-            if (currentlyPressedKeys.length > 0) {
-                setKeyDirection()
-            } else {
+        }
+    }
+
+    useFrame((_, delta) => {
+        if (playerState.movementType === 'mouse') return
+        if (stickDirection !== '') {
+            if (!playerState.running) {
+                // need to start moving
+                const { directionSquare, playerSquare } = getDirectionSquare(stickDirection)
+                playerState.path.length = 0
+                playerState.path.push(getFurthestWalkableGridSquare(playerSquare, directionSquare, levelSize, avoidObjects))
+                movingDirection = stickDirection
+                playerState.comingToAStop = false
+                playerState.movementType = 'keyboard'
+            } else if (playerState.running && movingDirection !== stickDirection) {
+                // need to change direction
+                const { directionSquare, playerSquare } = getDirectionSquare(stickDirection)
+                playerState.path.length = 0
+                const squareToMoveTo = getFurthestWalkableGridSquare(playerSquare, directionSquare, levelSize, avoidObjects)
+                playerState.path.push(squareToMoveTo)
+                movingDirection = stickDirection
+                playerState.comingToAStop = false
+            }
+        } else {
+            if (playerState.running && !playerState.comingToAStop && playerState.movementType === 'keyboard') {
                 // need to come to a stop
-                changeDirection(false)
+                const { directionSquare, playerSquare } = getDirectionSquare(movingDirection)
+                playerState.path.length = 0
+                const { hit } = checkColission(playerSquare, directionSquare, avoidObjects)
+                if (isSquareOutsideLevel(directionSquare, levelSize) || hit) {
+                    // ouside level or againt block so let's push nearest square
+                    playerState.path.push(playerSquare)
+                } else {
+                    playerState.path.push(directionSquare)
+                }
                 playerState.comingToAStop = true
             }
         }
-    }
+    })
 </script>
 
 <svelte:window on:keydown={onKeyDown} on:keyup={onKeyUp} />

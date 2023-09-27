@@ -113,10 +113,6 @@
             } else {
                 // get moving
                 if (playerState.settingOff) {
-                    destinationVector.set(path[0].x, 0, path[0].z)
-                    playerVector.set(p.x, 0, p.z)
-                    rotationMatrix.lookAt(destinationVector, playerVector, upVector)
-                    endRotation.setFromRotationMatrix(rotationMatrix)
                     transitionTo('run')
                     !playerState.running && runningSound()
                     playerState.running = true
@@ -124,6 +120,10 @@
                 playerState.settingOff = false
                 if (delta < 0.5) {
                     // ^^^^^^ don't move if there are one off frame time spikes caused by switching tabs etc
+                    destinationVector.set(path[0].x, 0, path[0].z)
+                    playerVector.set(p.x, 0, p.z)
+                    rotationMatrix.lookAt(destinationVector, playerVector, upVector)
+                    endRotation.setFromRotationMatrix(rotationMatrix)
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
                     cameraPosition.x = playerState.position.x + cameraOffset.x
@@ -235,7 +235,7 @@
         <T.BoxGeometry args={[1, 0.1, 1]} />
         <T.MeshStandardMaterial color="#9932CC" />
     </T.Mesh>
-{/each} -->
+{/each}-->
 
 <RunningAudio floorType={playerState.floorType} bind:runningSound />
 

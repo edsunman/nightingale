@@ -66,6 +66,7 @@ export function everyInterval(interval: number) {
     }
 }
 
+// TODO: sometinges we get a square outside level
 export function getFurthestWalkableGridSquare(startPoint: Point, directionPoint: Point, levelSize: Point, avoidObjects: any[]) {
     const diff = { x: directionPoint.x - startPoint.x, z: directionPoint.z - startPoint.z }
     let destinationPoint = startPoint
@@ -131,7 +132,7 @@ export function checkColission(playerSquare: Point, destinationSquare: Point, av
     }
 }
 
-function isSquareOutsideLevel(square: Point, levelSize: Point) {
+export function isSquareOutsideLevel(square: Point, levelSize: Point) {
     if (
         square.x > levelSize.x / 2 + 0.5 ||
         square.x < levelSize.x / 2 - levelSize.x + 0.5 ||

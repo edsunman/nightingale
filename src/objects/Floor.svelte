@@ -30,7 +30,8 @@
         floorType: floorType,
         running: false,
         sunIntensity: sunIntensity,
-        movementType: 'none'
+        movementType: 'none',
+        comingToAStop: false
     }
 
     let selectedGridSpace: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }
