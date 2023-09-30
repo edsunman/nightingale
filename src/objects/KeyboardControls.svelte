@@ -9,6 +9,9 @@
     export let avoidObjects: any
 
     let currentlyPressedKeys: string[] = []
+    let keysToRemove: string[] = []
+    let keyDownTimer = 0
+    let keysPushed = false
     let stickDirection = ''
     let movingDirection = ''
 
@@ -114,11 +117,26 @@
     function onKeyUp(e: KeyboardEvent) {
         if (e.key === 'w' || e.key === 'd' || e.key === 's' || e.key === 'a') {
             if (playerState.movementType === 'mouse') return
-            currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== e.key)
+            //currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== e.key)
+            keysToRemove.push(e.key)
+            keysToRemove = keysToRemove
+            keyDownTimer = 0
+            keysPushed = false
         }
     }
 
     useFrame((_, delta) => {
+        if (!keysPushed) {
+            // slight delay when releasing keys to allow batching
+            keyDownTimer += delta
+            if (keyDownTimer > 0.1) {
+                keysToRemove.forEach((key) => {
+                    currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== key)
+                })
+                keysToRemove.length = 0
+                keysPushed = true
+            }
+        }
         if (playerState.movementType === 'mouse') return
         if (stickDirection !== '') {
             if (!playerState.running) {

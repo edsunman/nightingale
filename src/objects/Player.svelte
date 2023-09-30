@@ -2,7 +2,7 @@
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition, gameZoom } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
-    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, Path } from 'three'
+    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, Path, MeshBasicMaterial } from 'three'
     import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
