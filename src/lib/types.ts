@@ -73,6 +73,7 @@ export type GameState = {
     settings: {
         open: boolean
         fullScreen: boolean
+        postProcessing: boolean
     }
     itemDescription: {
         open: boolean

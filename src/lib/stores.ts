@@ -23,7 +23,8 @@ export const gameState: Writable<GameState> = writable({
     },
     settings: {
         open: false,
-        fullScreen: false
+        fullScreen: false,
+        postProcessing: false
     },
     itemDescription: {
         open: false

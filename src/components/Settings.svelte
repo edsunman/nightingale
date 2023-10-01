@@ -64,7 +64,7 @@
 
     function setPixelAspectRatio() {
         $gamePixelRatio = selected
-        $gameState.settings.open = false
+        //$gameState.settings.open = false
     }
 </script>
 
@@ -75,44 +75,58 @@
         <h3 class="text-xl text-center mb-4 uppercase">Settings</h3>
         <div class="painted px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
             {#if !$gameState.mainMenu}
-                <div class="flex my-7">
+                <div class="flex mt-7 mb-10">
                     <button
-                        class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
+                        class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-slate-300"
                         on:click={() => saveGame()}>Save game</button
                     >
                     <button
-                        class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1]"
+                        class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-slate-300"
                         on:click={() => loadGame()}>Load game</button
                     >
                 </div>
             {/if}
-            <div class=" my-7">
-                <div class="text-sm text-neutral-300">Graphics resolution</div>
+            <div class="lg:flex hidden my-4">
+                <div class="text-sm text-neutral-300 flex-1 items-center flex">Graphics resolution</div>
                 <select
                     bind:value={selected}
                     on:change={() => setPixelAspectRatio()}
-                    class="tracking-wider my-3 h-10 px-3 rounded-md text-neutral-200 bg-white/[0.05] hover:bg-white/[0.1] focus:bg-neutral-800 w-full outline-none"
+                    class="flex-initial text-sm tracking-wider h-10 px-3 rounded-md text-neutral-200 bg-white/[0.05] hover:bg-white/[0.1] focus:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
                 >
                     <option value="1">Low</option>
                     <option value="2">High</option>
                 </select>
             </div>
-            <div class=" my-7">
-                <div class="text-sm text-neutral-300">Full screen</div>
-                <input type="checkbox" bind:checked={$gameState.settings.fullScreen} class="" />
+            <div class="lg:flex hidden my-4">
+                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Full screen</div>
+                <div class="flex flex-initial items-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" bind:checked={$gameState.settings.fullScreen} />
+                        <div
+                            class="w-11 h-6 bg-neutral-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-slate-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"
+                        />
+                    </label>
+                </div>
+                <!--<input class="flex-initial h-10" type="checkbox" bind:checked={$gameState.settings.fullScreen} />-->
             </div>
-            <div class="my-7">
-                <div class="text-sm text-neutral-300">Volume</div>
-                <input
-                    class="my-3 w-full accent-slate-500 outline-none"
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    bind:value={$gameVolume}
-                />
+            <div class="lg:flex hidden my-4">
+                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Post processing</div>
+                <div class="flex flex-initial items-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" bind:checked={$gameState.settings.postProcessing} />
+                        <div
+                            class="w-11 h-6 bg-neutral-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-slate-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"
+                        />
+                    </label>
+                </div>
+                <!--  <input class="flex-initial h-10" type="checkbox"  />-->
             </div>
-            <div class="mt-7 text-center">
+
+            <div class="flex my-4">
+                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Volume</div>
+                <input class="flex-1 accent-slate-500" type="range" min="0" max="1" step="0.01" bind:value={$gameVolume} />
+            </div>
+            <div class="mt-7 mb-3 text-center">
                 <p class="text-xs text-neutral-600">
                     Built with <a href="http://www.threlte.xyz" target="_blank" class="text-neutral-500 hover:text-neutral-400"
                         >threlte</a

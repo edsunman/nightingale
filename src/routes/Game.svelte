@@ -4,6 +4,7 @@
     import { T, useFrame, useThrelte, useRender } from '@threlte/core'
     import { onMount } from 'svelte'
     import { interactivity, OrbitControls, HTML } from '@threlte/extras'
+    import PostProcessing from '../objects/PostProcessing.svelte'
     import Dialogue from '../components/Dialogue.svelte'
     import UIAudio from '../objects/audio/UIAudio.svelte'
     import Scene1 from './Scene1.svelte'
@@ -12,7 +13,6 @@
     import Scene0 from './Scene0.svelte'
 
     import type { GameData } from '$lib/types'
-    import PostProcessing from '../objects/PostProcessing.svelte'
 
     const scenes = [Scene0, Scene1, Scene2, Scene3]
 
@@ -25,6 +25,7 @@
     const stats = new Stats()
     const { renderer, scene, size } = useThrelte()
     const defaultPixelRatio = renderer?.getPixelRatio()
+    let initialLoad = true
 
     $: changeZoom($size)
 
@@ -46,6 +47,16 @@
         }
     }
 
+    $: setSizeOptions($size)
+
+    function setSizeOptions(size: any) {
+        if (size.width >= 1024 && initialLoad) {
+            // assume we are not on mobile
+            $gameState.settings.postProcessing = true
+            initialLoad = false
+        }
+    }
+
     if (dev) {
         useFrame(() => {
             stats.update()
@@ -59,9 +70,12 @@
 </script>
 
 <UIAudio />
+
 <svelte:component this={scenes[selectedScene]} {gameData} />
 
-<PostProcessing />
+{#if $gameState.settings.postProcessing}
+    <PostProcessing />
+{/if}
 
 {#if $gameConversation[0] !== 0}
     <HTML position={[$gameSelectedCharacterPosition.x, $gameSelectedCharacterPosition.y, $gameSelectedCharacterPosition.z]} center>

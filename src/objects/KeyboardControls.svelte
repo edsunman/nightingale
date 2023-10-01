@@ -19,7 +19,7 @@
     const { lx, ly, cross, square } = useGamePad()
 
     const stickMoved = (lx: number, ly: number) => {
-        if ($gameState.moveLock) return
+        if ($gameState.moveLock || $gameState.settings.open) return
         if (lx > 0.5 || lx < -0.5 || ly > 0.5 || ly < -0.5) {
             const r = Math.atan2(lx, -ly)
             if (r > -0.39 && r < 0.39) {
@@ -47,7 +47,7 @@
     $: stickMoved($lx, $ly)
 
     const keyPressed = (k: string[]) => {
-        if ($gameState.moveLock) return
+        if ($gameState.moveLock || $gameState.settings.open) return
         // ignore conflicting keypresses
         if ((k.includes('w') && k.includes('s')) || (k.includes('a') && k.includes('d'))) {
             return

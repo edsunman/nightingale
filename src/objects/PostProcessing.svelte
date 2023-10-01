@@ -5,14 +5,8 @@
     import { EffectComposer, EffectPass, RenderPass, BloomEffect, OutlineEffect, BlendFunction, Selection } from 'postprocessing'
     import { HalfFloatType } from 'three'
 
-    let selectedMesh: any
-
     const { renderer, scene, size, camera } = useThrelte()
-
-    const { onPointerEnter, onPointerLeave } = useCursor(...[, ,], renderer?.domElement, 'cursorHover')
-
     const composer = new EffectComposer(renderer, { multisampling: 4, frameBufferType: HalfFloatType })
-
     const outlineSelection = new Selection()
 
     let bloomEffect: any

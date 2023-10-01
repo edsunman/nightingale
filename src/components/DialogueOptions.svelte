@@ -133,6 +133,7 @@
         }
     }
 
+    // TODO : overide spacebar is not a good idea - can't select checkboxes
     function onKeyDown(e: any) {
         if (e.keyCode == 49) {
             selectSpeech(0)
