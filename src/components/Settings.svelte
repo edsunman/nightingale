@@ -64,69 +64,68 @@
 
     function setPixelAspectRatio() {
         $gamePixelRatio = selected
-        //$gameState.settings.open = false
     }
 </script>
 
 {#if $gameState.settings.open}
     <div
-        class="backdrop-blur-sm bg-white/10 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl pt-6 select-none z-20"
+        class="absolute left-[50%] top-[50%] z-20 w-96 translate-x-[-50%] translate-y-[-50%] select-none rounded-xl bg-white/10 pt-6 text-neutral-100 backdrop-blur-sm"
     >
-        <h3 class="text-xl text-center mb-4 uppercase">Settings</h3>
-        <div class="painted px-8 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+        <h3 class="mb-4 text-center text-xl uppercase">Settings</h3>
+        <div class="painted rounded-xl bg-gradient-to-b from-neutral-950 to-neutral-900 px-8 py-4">
             {#if !$gameState.mainMenu}
-                <div class="flex mt-7 mb-10">
+                <div class="mb-10 mt-7 flex">
                     <button
-                        class="tracking-wider flex-1 mr-4 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-slate-300"
+                        class="mr-4 h-10 flex-1 rounded-md bg-white/[0.05] px-6 tracking-wider text-neutral-200 hover:bg-white/[0.1] hover:text-neutral-50 focus:outline-none focus:ring-2 focus:ring-slate-300"
                         on:click={() => saveGame()}>Save game</button
                     >
                     <button
-                        class="tracking-wider flex-1 h-10 px-6 rounded-md bg-white/[0.05] text-neutral-200 hover:text-neutral-50 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-slate-300"
+                        class="h-10 flex-1 rounded-md bg-white/[0.05] px-6 tracking-wider text-neutral-200 hover:bg-white/[0.1] hover:text-neutral-50 focus:outline-none focus:ring-2 focus:ring-slate-300"
                         on:click={() => loadGame()}>Load game</button
                     >
                 </div>
             {/if}
-            <div class="lg:flex hidden my-4">
-                <div class="text-sm text-neutral-300 flex-1 items-center flex">Graphics resolution</div>
+            <div class="my-4 hidden lg:flex">
+                <div class="flex flex-1 items-center text-sm text-neutral-300">Graphics resolution</div>
                 <select
                     bind:value={selected}
                     on:change={() => setPixelAspectRatio()}
-                    class="flex-initial text-sm tracking-wider h-10 px-3 rounded-md text-neutral-200 bg-white/[0.05] hover:bg-white/[0.1] focus:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                    class="h-10 flex-initial rounded-md bg-white/[0.05] px-3 text-sm tracking-wider text-neutral-200 hover:bg-white/[0.1] focus:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
                 >
                     <option value="1">Low</option>
                     <option value="2">High</option>
                 </select>
             </div>
-            <div class="lg:flex hidden my-4">
-                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Full screen</div>
+            <div class="my-4 hidden lg:flex">
+                <div class="flex h-10 flex-1 items-center text-sm text-neutral-300">Full screen</div>
                 <div class="flex flex-initial items-center">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" class="sr-only peer" bind:checked={$gameState.settings.fullScreen} />
+                    <label class="relative inline-flex cursor-pointer items-center">
+                        <input type="checkbox" value="" class="peer sr-only" bind:checked={$gameState.settings.fullScreen} />
                         <div
-                            class="w-11 h-6 bg-neutral-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-slate-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"
+                            class="peer h-6 w-11 rounded-full bg-neutral-800 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-slate-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-2 peer-focus:ring-slate-300 dark:border-gray-600"
                         />
                     </label>
                 </div>
                 <!--<input class="flex-initial h-10" type="checkbox" bind:checked={$gameState.settings.fullScreen} />-->
             </div>
-            <div class="lg:flex hidden my-4">
-                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Post processing</div>
+            <div class="my-4 hidden lg:flex">
+                <div class="flex h-10 flex-1 items-center text-sm text-neutral-300">Post processing</div>
                 <div class="flex flex-initial items-center">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" class="sr-only peer" bind:checked={$gameState.settings.postProcessing} />
+                    <label class="relative inline-flex cursor-pointer items-center">
+                        <input type="checkbox" value="" class="peer sr-only" bind:checked={$gameState.settings.postProcessing} />
                         <div
-                            class="w-11 h-6 bg-neutral-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-slate-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"
+                            class="peer h-6 w-11 rounded-full bg-neutral-800 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-slate-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-2 peer-focus:ring-slate-300 dark:border-gray-600"
                         />
                     </label>
                 </div>
                 <!--  <input class="flex-initial h-10" type="checkbox"  />-->
             </div>
 
-            <div class="flex my-4">
-                <div class="h-10 flex-1 text-sm text-neutral-300 items-center flex">Volume</div>
+            <div class="my-4 flex">
+                <div class="flex h-10 flex-1 items-center text-sm text-neutral-300">Volume</div>
                 <input class="flex-1 accent-slate-500" type="range" min="0" max="1" step="0.01" bind:value={$gameVolume} />
             </div>
-            <div class="mt-7 mb-3 text-center">
+            <div class="mb-3 mt-7 text-center">
                 <p class="text-xs text-neutral-600">
                     Built with <a href="http://www.threlte.xyz" target="_blank" class="text-neutral-500 hover:text-neutral-400"
                         >threlte</a
@@ -140,7 +139,7 @@
         </div>
     </div>
     <div
-        class="w-full h-full bg-black opacity-0 z-10 absolute"
+        class="absolute z-10 h-full w-full bg-black opacity-0"
         on:click={() => toggleSettings()}
         on:keydown={() => toggleSettings()}
         role="none"
@@ -151,11 +150,11 @@
         <button
             on:click={() => toggleSettings()}
             class="
-            {$gameState.settings.open ? 'bg-white/20 text-neutral-50' : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
+            {$gameState.settings.open ? 'bg-white/20 text-neutral-50' : 'bg-white/20 text-neutral-50 opacity-70 hover:opacity-100'}
             {$gameState.moveLock ? 'pointer-events-none opacity-50 ' : ''} 
-            text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10 m-5 rounded-md px-3 py-2 select-none m-e outline-none"
+            m-e m-5 select-none rounded-md bg-white/10 px-3 py-2 text-neutral-300 outline-none backdrop-blur-md hover:bg-white/20"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="cursorHover h-6 w-6">
                 <path
                     class="cursorHover"
                     d="m197.91,123.88l3.02-8.03,30.18-21.72-4.72-17.69-22.64-30.76-44.33,14.42-10.38-47.1-52.82,2.88-6.6,49.02-45.28-19.22-15.09,16.34-12.26,30.18,33.01,29.41.94,5.77-33.96,26.72,4.72,18.46,24.52,29.8,38.67-13.46,5.66,3.84,5.66,41.33,33.01,1.92,23.58-4.81,3.77-42.29,5.66-3.84,43.39,18.26,27.35-48.06-35.09-31.38Zm-50.75,23.69l-19.81,10-22.64-6.15-13.21-23.07,8.49-26.91,24.05-11.92,14.62,5.19,12.26,12.5,5.66,21.15-9.43,19.22Z"
@@ -171,10 +170,10 @@
                     $gameVolume = 0.6
                 }}
                 class="
-            {!$gameState.settings.open && !$gameState.moveLock ? '' : 'opacity-50 pointer-events-none '}
-            text-neutral-50 bg-white/20 opacity-70 hover:opacity-100 backdrop-blur-md rounded-md px-3 py-2 select-none m-5 ml-0 outline-none"
+            {!$gameState.settings.open && !$gameState.moveLock ? '' : 'pointer-events-none opacity-50 '}
+            m-5 ml-0 select-none rounded-md bg-white/20 px-3 py-2 text-neutral-50 opacity-70 outline-none backdrop-blur-md hover:opacity-100"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="cursorHover h-6 w-6">
                     <polygon class="cursorHover" points="1 102 46 96 109 39 122 47 122 207 107 222 47 166 4 160 1 102" /><path
                         d="m149.41,78.62l5.79-8.11s5.79-1.16,8.11,0,32.42,40.53,32.42,40.53l39.84-41.05,11.12,2.83,2.32,8.11-36.13,45.16,36.13,45.16-3.47,12.74-10.42-2.32-35.9-36.82-31.27,35.67-9.73,3.47-8.8-11.58,35.9-42.85-35.9-50.95Z"
                     />

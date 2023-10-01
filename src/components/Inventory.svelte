@@ -52,22 +52,22 @@
 
 {#if $gameState.inventory.open}
     <div
-        class="z-20 absolute w-[16.5rem] right-0 bottom-0 mb-20 text-neutral-100 backdrop-blur-md bg-white/10 rounded-xl select-none m-5 pt-6"
+        class="absolute bottom-0 right-0 z-20 m-5 mb-20 w-[16.5rem] select-none rounded-xl bg-white/10 pt-6 text-neutral-100 backdrop-blur-md"
     >
-        <h3 class="text-xl text-center mb-4 uppercase">inventory</h3>
-        <div class="painted px-6 rounded-xl py-4 bg-gradient-to-b from-neutral-950 to-neutral-900">
+        <h3 class="mb-4 text-center text-xl uppercase">inventory</h3>
+        <div class="painted rounded-xl bg-gradient-to-b from-neutral-950 to-neutral-900 px-6 py-4">
             {#if selectedItem}
                 <div
-                    class="bg-no-repeat bg-center bg-contain w-full h-24 mb-5 mt-2"
+                    class="mb-5 mt-2 h-24 w-full bg-contain bg-center bg-no-repeat"
                     style="background-image:url('/icons/{selectedItem.image}"
                 />
-                <h3 class="text-xl text-center">{selectedItem.name}</h3>
-                <div class="flex content-center h-14 flex-wrapmb-3">
-                    <p class=" text-center text-sm m-auto px-4">{selectedItem.description}</p>
+                <h3 class="text-center text-xl">{selectedItem.name}</h3>
+                <div class="flex-wrapmb-3 flex h-14 content-center">
+                    <p class=" m-auto px-4 text-center text-sm">{selectedItem.description}</p>
                 </div>
             {/if}
             {#if inventory.length < 1}
-                <h3 class="text-xl text-center mb-4">empty</h3>
+                <h3 class="mb-4 text-center text-xl">empty</h3>
             {/if}
             <div class="flex flex-wrap">
                 {#each inventory as item}
@@ -75,29 +75,29 @@
                         on:click={() => {
                             selectItem(item)
                         }}
-                        class="m-2 w-14 h-14 rounded-md p-1 bg-no-repeat bg-center bg-[size:75%]
-                        {item === selectedItem ? 'border-neutral-300 bg-white/[0.2] border-2' : ' bg-white/[0.1]'}
+                        class="m-2 h-14 w-14 rounded-md bg-[size:75%] bg-center bg-no-repeat p-1
+                        {item === selectedItem ? 'border-2 border-neutral-300 bg-white/[0.2]' : ' bg-white/[0.1]'}
                             "
                         style="background-image:url('/icons/{item.image}')"
                     />
                 {/each}
                 {#each { length: 3 - inventory.length } as _, i}
-                    <div class="m-2 w-14 h-14 bg-neutral-900 rounded-md" />
+                    <div class="m-2 h-14 w-14 rounded-md bg-neutral-900" />
                 {/each}
             </div>
         </div>
     </div>
 {/if}
 
-<div class="absolute right-0 bottom-0" in:fade={{ duration: 500 }}>
+<div class="absolute bottom-0 right-0" in:fade={{ duration: 500 }}>
     <button
         on:click={() => toggleInventory()}
         class="
-        {$gameState.inventory.open ? 'bg-white/20 text-neutral-50' : 'text-neutral-50 bg-white/20 opacity-70 hover:opacity-100'}
+        {$gameState.inventory.open ? 'bg-white/20 text-neutral-50' : 'bg-white/20 text-neutral-50 opacity-70 hover:opacity-100'}
         {$gameState.settings.open || $gameState.moveLock ? 'pointer-events-none opacity-50' : ' '}
-          rounded-md px-3 py-2 select-none m-5 outline-none text-neutral-300 backdrop-blur-md hover:bg-white/20 bg-white/10"
+          m-5 select-none rounded-md bg-white/10 px-3 py-2 text-neutral-300 outline-none backdrop-blur-md hover:bg-white/20"
     >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="w-6 h-6 cursorHover">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" class="cursorHover h-6 w-6">
             <polygon
                 class="cursorHover"
                 points="9.35 31.81 32 18.7 90.37 7 177.94 15.12 188.91 23.47 215.62 23.47 240.65 67.58 249 143.89 235.51 183.09 215.24 197.39 211.36 168.04 220.38 129.58 215.62 75.93 204.88 53.27 194.15 64.01 191.77 92.62 172.69 105.74 117.85 104.54 86.85 102.16 86.85 80.7 66.58 77.12 53.46 83.08 52.98 99.18 41.54 102.16 4.82 102.16 1 50.89 9.35 31.81"

@@ -45,11 +45,11 @@
 </script>
 
 {#if $gameState.mainMenu && !$gameState.settings.open}
-    <div class="absolute w-96 top-32 left-52 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
-        <h1 class="font-serif text-7xl mb-24">Nightingale</h1>
+    <div class="absolute left-52 top-32 w-96 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
+        <h1 class="mb-24 font-serif text-7xl">Nightingale</h1>
         {#if showContinue}
             <button
-                class="tracking-wider text-neutral-100 opacity-90 hover:opacity-100 text-2xl block mb-4"
+                class="mb-4 block text-2xl tracking-wider text-neutral-100 opacity-90 hover:opacity-100"
                 on:click={() => {
                     loadGame()
                 }}
@@ -58,7 +58,7 @@
             </button>
         {/if}
         <button
-            class="tracking-wider text-neutral-100 opacity-90 hover:opacity-100 text-2xl block mb-4"
+            class="mb-4 block text-2xl tracking-wider text-neutral-100 opacity-90 hover:opacity-100"
             on:click={() => {
                 $gameState.mainMenu = false
             }}
@@ -66,7 +66,7 @@
             New Game
         </button>
         <button
-            class="tracking-wider text-neutral-100 opacity-90 hover:opacity-100 text-2xl block mb-4"
+            class="mb-4 block text-2xl tracking-wider text-neutral-100 opacity-90 hover:opacity-100"
             on:click={() => {
                 $gameState.settings.open = true
             }}
@@ -74,9 +74,9 @@
             Settings
         </button>
     </div>
-    <div class="absolute w-96 bottom-20 left-52 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
+    <div class="absolute bottom-20 left-52 w-96 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
         <button
-            class="tracking-wider text-neutral-100 opacity-90 hover:opacity-100 text-xl block mb-4"
+            class="mb-4 block text-xl tracking-wider text-neutral-100 opacity-90 hover:opacity-100"
             on:click={() => {
                 toggleAudio()
             }}

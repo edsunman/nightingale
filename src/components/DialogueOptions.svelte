@@ -151,21 +151,21 @@
 </script>
 
 {#if showDialogueOptions}
-    <div in:fade={{ duration: 100 }} class="absolute text-center w-full pt-1 bottom-20 md:bottom-6 xl:bottom-16 select-none">
+    <div in:fade={{ duration: 100 }} class="absolute bottom-20 w-full select-none pt-1 text-center md:bottom-6 xl:bottom-16">
         <div class="inline-block">
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
-                    class="font-serif tracking-wide flex-1 mr-4 max-w-sm px-6 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 block w-full
+                    class="mr-4 block w-full max-w-sm flex-1 rounded-md bg-neutral-900 px-6 py-2 font-serif tracking-wide hover:bg-neutral-800
     {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-50'}
     {optionsArray.length === i + 1 ? '' : 'mb-2 md:mb-3'} "
                 >
-                    <small class="text-neutral-500 font-sans">{i + 1}.</small>
+                    <small class="font-sans text-neutral-500">{i + 1}.</small>
                     {#if option.item && option.item < 100}<small class="font-sans text-cyan-500">&nbsp[{option.itemName}]&nbsp</small>
                     {/if}
                     {option.text}
                     {#if !option.linkId}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 250 250" class="inline w-5 h-5 ml-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 250 250" class="ml-1 inline h-5 w-5">
                             <polygon
                                 points="89.56 110.32 197.8 110.2 174.47 85.91 181.22 70.48 195.68 67.59 231.54 103.45 242.14 114.05 246 120.8 246 126.2 238.29 137.19 196.51 178.97 183.01 181.86 175.3 172.22 178.19 156.8 198.76 136.22 183.34 136.22 142.85 137.19 92.89 136.22 85.18 131.4 82.29 120.8 89.56 110.32"
                             /><polygon

@@ -32,7 +32,6 @@
     let welcomeMessage = false
 
     let selectedScene: number = $gameScene
-    let sceneFinishedLoading = false
     let finishedMessage = false
     let seenFinishedMessage = false
 
@@ -57,7 +56,6 @@
                 $gameLoaded = true
                 setTimeout(() => {
                     loadingScreen = false
-                    sceneFinishedLoading = true
                 }, 1000)
             }, 500)
         }
@@ -69,7 +67,6 @@
         // show black screen
         $gameLoaded = false
         loadingScreen = true
-        sceneFinishedLoading = false
         $gameSelectedCharacterPosition = { x: 0, y: 0, z: 0 }
         // then load scene so any slight lag is hidden
         setTimeout(() => (selectedScene = id), 50)
@@ -79,16 +76,16 @@
 </script>
 
 <div
-    class="h-screen m-auto top-0 bottom-0 left-0 right-0 absolute overflow-hidden
-        {$gameState.settings.fullScreen ? '' : 'min-[1408px]:h-[792px] xl:h-[720px] lg:aspect-[16/9] lg:h-[576px]'}"
+    class="absolute bottom-0 left-0 right-0 top-0 m-auto h-screen overflow-hidden
+        {$gameState.settings.fullScreen ? '' : 'lg:aspect-[16/9] lg:h-[576px] xl:h-[720px] min-[1408px]:h-[792px]'}"
     bind:clientWidth
     bind:clientHeight
 >
     {#if loadingScreen}
-        <div out:fade={{ duration: 300 }} class="w-full h-full opacity-40 bg-neutral-950 z-40 absolute text-white">
+        <div out:fade={{ duration: 300 }} class="absolute z-40 h-full w-full bg-neutral-950 text-white opacity-40">
             {#if $progress < 1}
-                <div class="h-2 w-64 mr-auto ml-auto bottom-32 left-0 right-0 absolute bg-neutral-700" out:fade={{ duration: 1000 }}>
-                    <div class="bg-white h-full" style="width: {$progress * 100}%" />
+                <div class="absolute bottom-32 left-0 right-0 ml-auto mr-auto h-2 w-64 bg-neutral-700" out:fade={{ duration: 1000 }}>
+                    <div class="h-full bg-white" style="width: {$progress * 100}%" />
                 </div>
             {/if}
         </div>
@@ -102,8 +99,8 @@
     <ItemDescription />
     <DialogueOptions {gameData} />
     {#if $gameConversation[0] !== 0}
-        <div class="z-20 absolute text-center w-full" style="bottom:{clientHeight / 2 + 120}px ">
-            <h3 class="text-neutral-100 rounded-md bg-neutral-900 md:hidden inline-block px-3 py-2 select-none">
+        <div class="absolute z-20 w-full text-center" style="bottom:{clientHeight / 2 + 120}px ">
+            <h3 class="inline-block select-none rounded-md bg-neutral-900 px-3 py-2 text-neutral-100 md:hidden">
                 <Dialogue {gameData} />
             </h3>
         </div>
@@ -113,7 +110,7 @@
     {#if welcomeMessage}
         <div>
             <div
-                class="painted z-30 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
+                class="painted absolute left-[50%] top-[50%] z-30 w-96 translate-x-[-50%] translate-y-[-50%] rounded-xl bg-gradient-to-b from-neutral-950 to-neutral-900 px-8 py-2 text-neutral-100"
             >
                 <p class="py-6">Hello! This is an early attempt at a point and click adventure game.</p>
                 <p class="pb-6">
@@ -122,9 +119,9 @@
                 </p>
                 <p class="pb-6">Your objective is to find a fuel cell to power your ship.</p>
                 <p>Hint: stand next to people and items to interact.</p>
-                <div class="text-center py-6">
+                <div class="py-6 text-center">
                     <button
-                        class="tracking-wider flex-1 mr-6 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
+                        class="mr-6 h-10 flex-1 rounded-md bg-neutral-800 px-8 tracking-wider text-neutral-200 hover:bg-neutral-700 hover:text-neutral-50"
                         on:click={() => {
                             $gameState.inventory.owned.push(105)
                             $gameState = $gameState
@@ -134,18 +131,18 @@
                 </div>
             </div>
         </div>
-        <div class="w-full h-full bg-black opacity-0 z-20 absolute" />
+        <div class="absolute z-20 h-full w-full bg-black opacity-0" />
     {/if}
     {#if finishedMessage}
         <div>
             <div
-                class="painted z-30 absolute w-96 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-neutral-100 rounded-xl px-8 py-2 bg-gradient-to-b from-neutral-950 to-neutral-900"
+                class="painted absolute left-[50%] top-[50%] z-30 w-96 translate-x-[-50%] translate-y-[-50%] rounded-xl bg-gradient-to-b from-neutral-950 to-neutral-900 px-8 py-2 text-neutral-100"
             >
-                <h3 class="text-xl text-center py-6">Well done!</h3>
+                <h3 class="py-6 text-center text-xl">Well done!</h3>
                 <p class="pb-6 text-center">You sucessfuly refueled your ship.</p>
-                <div class="text-center py-6">
+                <div class="py-6 text-center">
                     <button
-                        class="tracking-wider flex-1 h-10 px-8 rounded-md bg-neutral-800 text-neutral-200 hover:text-neutral-50 hover:bg-neutral-700"
+                        class="h-10 flex-1 rounded-md bg-neutral-800 px-8 tracking-wider text-neutral-200 hover:bg-neutral-700 hover:text-neutral-50"
                         on:click={() => {
                             finishedMessage = false
                         }}>Ok</button
@@ -153,7 +150,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-full h-full bg-black opacity-0 z-20 absolute" />
+        <div class="absolute z-20 h-full w-full bg-black opacity-0" />
     {/if}
 
     <Canvas>
@@ -162,7 +159,7 @@
 </div>
 {#if dev}
     <div
-        class="mt-12 invisible md:visible"
+        class="invisible mt-12 md:visible"
         style="position:absolute; top:20px; width:150px; white-space: nowrap;left:20px; background-color:#202020; color:azure; font-family: monospace"
     >
         <button

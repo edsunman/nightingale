@@ -33,7 +33,7 @@
     on:mouseleave={() => {
         showObjective = false
     }}
-    class="absolute my-5 mx-6 transition-opacity duration-300 hover:duration-0 text-neutral-50 opacity-70 hover:opacity-100 select-none"
+    class="absolute mx-6 my-5 select-none text-neutral-50 opacity-70 transition-opacity duration-300 hover:opacity-100 hover:duration-0"
 >
     <p><small class="uppercase">Objective:</small></p>
     <p>Find a fuel cell</p>
@@ -42,13 +42,13 @@
 {#if showObjective}
     <div
         out:fade={{ duration: 300 }}
-        class="rounded-md px-3 py-2 bg-white/10 backdrop-blur-md absolute mt-20 mx-6 text-neutral-100 select-none"
+        class="absolute mx-6 mt-20 select-none rounded-md bg-white/10 px-3 py-2 text-neutral-100 backdrop-blur-md"
     >
         <ul class="list-disc">
             {#each objectives as objective}
                 {#if objective.id && $gameState.objectivesShown.includes(objective.id)}
                     <li
-                        class="text-sm ml-5 mr-3 py-1 {objective.itemsStrike &&
+                        class="ml-5 mr-3 py-1 text-sm {objective.itemsStrike &&
                         objective.itemsStrike.some((r) => $gameState.inventory.owned.includes(r))
                             ? 'line-through opacity-70'
                             : ''}"
