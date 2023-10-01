@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PlayerState } from '$lib/types'
+    import { gameState, gameOutlineObjects, gameInteractSquare } from '$lib/stores'
     import { getFurthestWalkableGridSquare, checkColission, isSquareOutsideLevel } from '$lib/util'
     import { useGamePad } from '$lib/hooks/useGamePad'
     import { useFrame } from '@threlte/core'
@@ -15,9 +16,10 @@
     let stickDirection = ''
     let movingDirection = ''
 
-    const { lx, ly } = useGamePad()
+    const { lx, ly, cross, square } = useGamePad()
 
     const stickMoved = (lx: number, ly: number) => {
+        if ($gameState.moveLock) return
         if (lx > 0.5 || lx < -0.5 || ly > 0.5 || ly < -0.5) {
             const r = Math.atan2(lx, -ly)
             if (r > -0.39 && r < 0.39) {
@@ -45,6 +47,7 @@
     $: stickMoved($lx, $ly)
 
     const keyPressed = (k: string[]) => {
+        if ($gameState.moveLock) return
         // ignore conflicting keypresses
         if ((k.includes('w') && k.includes('s')) || (k.includes('a') && k.includes('d'))) {
             return
@@ -71,6 +74,20 @@
     }
 
     $: keyPressed(currentlyPressedKeys)
+
+    $: {
+        if ($square === 1) {
+            toggleOutlines()
+        } else if ($square === 0) {
+            toggleOutlines(false)
+        }
+    }
+
+    $: {
+        if ($cross === 1) {
+            interact()
+        }
+    }
 
     function getDirectionSquare(direction: string) {
         let directionSquare = { x: 0, z: 0 }
@@ -104,7 +121,22 @@
         return { playerSquare, directionSquare }
     }
 
+    function toggleOutlines(show: boolean = true) {
+        if (show) {
+            gameOutlineObjects.showAll()
+        } else {
+            $gameOutlineObjects.length = 0
+        }
+    }
+
+    function interact() {
+        if (!$gameState.moveLock) {
+            $gameInteractSquare = playerState.position
+        }
+    }
+
     function onKeyDown(e: KeyboardEvent) {
+        if ($gameState.moveLock) return
         if (e.key === 'w' || e.key === 'd' || e.key === 's' || e.key === 'a') {
             if (playerState.movementType === 'mouse') return
             if (!currentlyPressedKeys.includes(e.key)) {
@@ -112,16 +144,28 @@
                 currentlyPressedKeys = currentlyPressedKeys
             }
         }
+        if (e.key === 'q') {
+            toggleOutlines()
+        }
     }
 
     function onKeyUp(e: KeyboardEvent) {
-        if (e.key === 'w' || e.key === 'd' || e.key === 's' || e.key === 'a') {
-            if (playerState.movementType === 'mouse') return
-            //currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== e.key)
-            keysToRemove.push(e.key)
-            keysToRemove = keysToRemove
-            keyDownTimer = 0
-            keysPushed = false
+        if ($gameState.moveLock) return
+        if (!e.repeat) {
+            if (e.key === 'w' || e.key === 'd' || e.key === 's' || e.key === 'a') {
+                if (playerState.movementType === 'mouse') return
+                //currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== e.key)
+                keysToRemove.push(e.key)
+                keysToRemove = keysToRemove
+                keyDownTimer = 0
+                keysPushed = false
+            }
+            if (e.key === 'q') {
+                toggleOutlines(false)
+            }
+            if (e.key === 'e') {
+                interact()
+            }
         }
     }
 
@@ -129,7 +173,7 @@
         if (!keysPushed) {
             // slight delay when releasing keys to allow batching
             keyDownTimer += delta
-            if (keyDownTimer > 0.1) {
+            if (keyDownTimer > 0.05) {
                 keysToRemove.forEach((key) => {
                     currentlyPressedKeys = currentlyPressedKeys.filter((i: string) => i !== key)
                 })

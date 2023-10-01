@@ -28,7 +28,7 @@
     }
 
     function onKeyDown(e: any) {
-        if (e.keyCode == 69 || e.keyCode == 73) {
+        if (e.key === 'i') {
             toggleInventory()
         }
     }

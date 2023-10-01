@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { gamePosition, gameMessage, gameState, gameOutlineObjects } from '$lib/stores'
+    import { gamePosition, gameMessage, gameState, gameOutlineObjects, gameInteractSquare } from '$lib/stores'
     import { items } from '$lib/items'
     import { T, useThrelte } from '@threlte/core'
     import { useCursor } from '$lib/useCursor'
     import { useGltf, useTexture } from '@threlte/extras'
     import { SRGBColorSpace, Group } from 'three'
+    import { calculateDistanceBetweenPoints } from '$lib/util'
 
     export let id: number
     export let position: { x: number; y: number; z: number }
@@ -25,10 +26,21 @@
     $: isOwned($gameState)
 
     function isOwned(gs: any) {
-        gs.inventory.owned.includes(item?.id) ? (owned = false) : (owned = true)
+        gs.inventory.owned.includes(item?.id) ? (owned = true) : (owned = false)
     }
 
-    function itemClicked(e: any) {
+    $: checkInteractSquare($gameInteractSquare)
+
+    function checkInteractSquare(interactSquare: any) {
+        if (!owned) {
+            console.log(calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }))
+            if (calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }) < 2) {
+                itemClicked()
+            }
+        }
+    }
+
+    function itemClicked() {
         const player = $gamePosition
         if (player.x >= position.x - 1 && player.x <= position.x + 1 && player.z >= position.z - 1 && player.z <= position.z + 1) {
             let itemId = 0
@@ -36,16 +48,14 @@
             $gameState.inventory.owned.push(itemId)
             $gameState = $gameState
             $gameMessage = { message: 'You picked up a ' + item?.name, type: 0 }
-            // $gameState.selectedItemId = itemId
-            //$gameState.itemDescription.open = true
-            //$gameState.moveLock = true
+            owned = true
         } else {
             $gameMessage = { message: '' + item?.message, type: 0 }
         }
     }
 </script>
 
-{#if owned === true}
+{#if owned === false}
     <T is={ref} position={[position.x, position.y, position.z]} dispose={false} {...$$restProps}>
         {#await gltf}
             <slot name="fallback" />
@@ -63,7 +73,13 @@
                 }}
                 on:click={(e) => {
                     e.stopPropagation()
-                    itemClicked(e)
+                    itemClicked()
+                }}
+                on:create={({ ref, cleanup }) => {
+                    gameOutlineObjects.setup(ref)
+                    cleanup(() => {
+                        gameOutlineObjects.remove(ref.uuid)
+                    })
                 }}
                 geometry={gltf.nodes.Mesh.geometry}
             >

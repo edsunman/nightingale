@@ -5,7 +5,8 @@
         gameConversation,
         gameSelectedCharacterPosition,
         gameState,
-        gameOutlineObjects
+        gameOutlineObjects,
+        gameInteractSquare
     } from '$lib/stores'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
@@ -13,7 +14,7 @@
     import * as TWEEN from '@tweenjs/tween.js'
     import { useCursor } from '$lib/useCursor'
     import { onMount, onDestroy } from 'svelte'
-    import { everyInterval, randomNumber } from '$lib/util'
+    import { calculateDistanceBetweenPoints, everyInterval, randomNumber } from '$lib/util'
     import { HolgramMaterial } from './materials'
 
     export const ref = new Group()
@@ -84,6 +85,14 @@
         }
     }
 
+    $: checkInteractSquare($gameInteractSquare)
+
+    function checkInteractSquare(interactSquare: any) {
+        if (calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }) < 2.5) {
+            clicked()
+        }
+    }
+
     function transitionTo(nextActionKey: string, duration = 0.5) {
         const currentAction = $actions[currentActionKey]
         const nextAction = $actions[nextActionKey]
@@ -105,7 +114,7 @@
         }
     }
 
-    function clicked(e: any) {
+    function clicked() {
         if (!$gameState.moveLock) {
             $gameOutlineObjects.length = 0
             const player = $gamePosition
@@ -238,6 +247,14 @@
                     name="Body"
                     geometry={gltf.nodes.Body.geometry}
                     skeleton={gltf.nodes.Body.skeleton}
+                    on:create={({ ref, cleanup }) => {
+                        if (characterId > 0) {
+                            gameOutlineObjects.setup(ref)
+                            cleanup(() => {
+                                gameOutlineObjects.remove(ref.uuid)
+                            })
+                        }
+                    }}
                 >
                     {#if isHologram}
                         <HolgramMaterial opacity={hologramOpacity} dotSize={60} />
@@ -273,7 +290,7 @@
     }}
     on:click={(e) => {
         e.stopPropagation()
-        clicked(e)
+        clicked()
     }}
 >
     <T.BoxGeometry args={[0.5, 1.5, 0.5]} />

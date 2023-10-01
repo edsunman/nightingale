@@ -43,7 +43,7 @@
         composer.addPass(new EffectPass(camera, bloomEffect))
 
         if (meshToOutline !== undefined) {
-            outlineSelection.add(meshToOutline)
+            outlineSelection.set(meshToOutline)
         } else {
             outlineSelection.clear()
         }
@@ -60,7 +60,7 @@
 
     const outlineObjectsChanged = (gol: any) => {
         if (!$gameState.moveLock) {
-            setupEffectComposer($camera, gol[0])
+            setupEffectComposer($camera, gol)
         }
     }
 

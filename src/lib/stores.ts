@@ -39,7 +39,7 @@ export const gameState: Writable<GameState> = writable({
     gameOver: false
 })
 
-export const gameScene = writable(0)
+export const gameScene = writable(1)
 export const gamePosition = writable({ x: 0, z: 0 })
 export const gameCameraPosition = writable({ x: 0, z: 0 })
 export const gameMovingTo = writable({ x: 0, z: 0 })
@@ -50,4 +50,25 @@ export const gameVolume = writable(0)
 export const gamePixelRatio = writable(1)
 export const gameLoaded = writable(false)
 export const gameZoom = writable(80)
-export const gameOutlineObjects: Writable<any[]> = writable([])
+export const gameInteractSquare = writable({ x: 0, z: 0 })
+
+function createOutlineObjects() {
+    const { subscribe, set, update }: Writable<any[]> = writable([])
+    let objects: any[] = []
+
+    return {
+        subscribe,
+        set: (n: any) => set(n),
+        update: (n: any) => update(n),
+        setup: (n: any) => objects.push(n),
+        showAll: () => {
+            objects.slice()
+            set(objects.slice())
+        },
+        remove: (uuid: string) => {
+            objects = objects.filter((object) => object.uuid !== uuid)
+        }
+    }
+}
+
+export const gameOutlineObjects = createOutlineObjects()
