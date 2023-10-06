@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState, gameConversation, gameMessage } from '$lib/stores'
+    import { gameState, gameConversation, gameMessage, gamePadState } from '$lib/stores'
     import { items } from '$lib/items'
 
     import { fade } from 'svelte/transition'
@@ -15,6 +15,32 @@
     let characterPosition
     let showDialogueOptions = false
     let timeOut: number
+    let highlightedOption = 0
+
+    $: highlightDown($gamePadState.down)
+
+    function highlightDown(d: number) {
+        if (d !== 1 || !showDialogueOptions) return
+        if (highlightedOption < optionsArray.length - 1) {
+            highlightedOption++
+        }
+    }
+
+    $: highlightUp($gamePadState.up)
+
+    function highlightUp(u: number) {
+        if (u !== 1 || !showDialogueOptions) return
+        if (highlightedOption > 0) {
+            highlightedOption--
+        }
+    }
+
+    $: gamepadSelect($gamePadState.clusterBottom)
+
+    function gamepadSelect(cb: number) {
+        if (cb !== 1 || !showDialogueOptions) return
+        selectSpeech(highlightedOption)
+    }
 
     $: updateDialogue($gameConversation)
 
@@ -38,6 +64,7 @@
                 return
             }
             speech = speechLookup
+
             if (speech.incidental) {
             } else {
                 $gameState.inventory.open = false
@@ -95,6 +122,7 @@
     }
 
     function selectSpeech(n: number) {
+        highlightedOption = 0
         if (n + 1 > optionsArray.length || !showDialogueOptions) {
             return false
         }
@@ -133,7 +161,7 @@
         }
     }
 
-    // TODO : overide spacebar is not a good idea - can't select checkboxes
+    // TODO : overide spacebar is not a good idea - can't select checkboxes ... maybe don't use preventDefault?
     function onKeyDown(e: any) {
         if (e.keyCode == 49) {
             selectSpeech(0)
@@ -156,9 +184,10 @@
             {#each optionsArray as option, i}
                 <button
                     on:click={() => selectSpeech(i)}
-                    class="mr-4 block w-full max-w-sm flex-1 rounded-md bg-neutral-900 px-6 py-2 font-serif tracking-wide hover:bg-neutral-800
+                    class="block w-full max-w-sm flex-1 rounded-md px-6 py-2 font-serif tracking-wide hover:bg-neutral-800
     {option.alreadyChosen ? 'text-neutral-500 hover:text-neutral-400' : 'text-neutral-50'}
-    {optionsArray.length === i + 1 ? '' : 'mb-2 md:mb-3'} "
+    {optionsArray.length === i + 1 ? '' : 'mb-2 md:mb-3'}
+    {$gameState.padConnected && highlightedOption === i ? 'bg-neutral-800' : 'bg-neutral-900'}"
                 >
                     <small class="font-sans text-neutral-500">{i + 1}.</small>
                     {#if option.item && option.item < 100}<small class="font-sans text-cyan-500">&nbsp[{option.itemName}]&nbsp</small>

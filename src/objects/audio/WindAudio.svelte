@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { gameState, gameVolume, gamePosition, gameMessage } from '$lib/stores'
-    import { AudioListener, Audio } from '@threlte/extras'
-    import { onDestroy, onMount } from 'svelte'
+    import { gameVolume } from '$lib/stores'
+    import { Audio } from '@threlte/extras'
+    import { onDestroy } from 'svelte'
 
     let windVolume = 0.4
     let audio: any
@@ -17,10 +17,9 @@
     $: changeVolume($gameVolume)
 
     function changeVolume(gv: number) {
-        
         if (globalGainNode) {
             audio.context.resume()
-           // console.log(audio.context)
+            // console.log(audio.context)
             globalGainNode.gain.value = gv
             !playing && playWind()
         }
@@ -41,13 +40,12 @@
     }
 
     function playWind() {
-         
         if (!audio.context) return
         audio.context.resume()
         //console.log(audio.context.state)
         //if (audio.context.state !== 'running') return
         playing = true
-       
+
         // create sources and link to local gain nodes
         source = audio.context.createBufferSource()
         source.buffer = audio.buffer

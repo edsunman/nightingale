@@ -87,6 +87,7 @@ export type GameState = {
     objectivesShown: Array<number>
     objectivesComplete: Array<number>
     gameOver: boolean
+    padConnected: boolean
 }
 
 export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }

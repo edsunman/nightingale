@@ -41,7 +41,7 @@
 	"dependencies": {
 		"@dimforge/rapier3d-compat": "^0.11.2",
 		"@threlte/core": "^6.0.0",
-		"@threlte/extras": "^5.0.1",
+		"@threlte/extras": "^7.0.0",
 		"@threlte/rapier": "^1.1.0",
 		"@tweenjs/tween.js": "^19.0.0",
 		"@types/tweenjs": "^1.0.4",

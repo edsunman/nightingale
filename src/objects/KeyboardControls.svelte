@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { PlayerState } from '$lib/types'
-    import { gameState, gameOutlineObjects, gameInteractSquare } from '$lib/stores'
+    import { gameState, gameOutlineObjects, gameInteractSquare, gamePadState } from '$lib/stores'
     import { getFurthestWalkableGridSquare, checkColission, isSquareOutsideLevel } from '$lib/util'
-    import { useGamePad } from '$lib/hooks/useGamePad'
+    import { useGamepad } from '@threlte/extras'
     import { useFrame } from '@threlte/core'
     export let playerState: PlayerState
 
@@ -16,7 +16,18 @@
     let stickDirection = ''
     let movingDirection = ''
 
-    const { lx, ly, cross, square } = useGamePad()
+    const gamepad = useGamepad()
+    const { connected } = gamepad
+
+    const gamePadConnected = (connected: boolean) => {
+        if (connected === true) {
+            $gameState.padConnected = true
+        } else {
+            $gameState.padConnected = false
+        }
+    }
+
+    $: gamePadConnected($connected)
 
     const stickMoved = (lx: number, ly: number) => {
         if ($gameState.moveLock || $gameState.settings.open) return
@@ -44,7 +55,50 @@
         }
     }
 
-    $: stickMoved($lx, $ly)
+    gamepad.leftStick.on('change', (event) => {
+        if (typeof event.value === 'object') stickMoved(event.value.x, event.value.y)
+    })
+
+    gamepad.clusterLeft.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        if (event.value === 1) {
+            toggleOutlines()
+        } else {
+            toggleOutlines(false)
+        }
+    })
+
+    gamepad.clusterBottom.on('down', () => interact())
+
+    gamepad.clusterBottom.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.clusterBottom = event.value
+    })
+
+    gamepad.clusterRight.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.clusterRight = event.value
+    })
+
+    gamepad.directionalBottom.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.down = event.value
+    })
+
+    gamepad.directionalTop.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.up = event.value
+    })
+
+    gamepad.directionalLeft.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.left = event.value
+    })
+
+    gamepad.directionalRight.on('change', (event) => {
+        if (typeof event.value !== 'number') return
+        $gamePadState.right = event.value
+    })
 
     const keyPressed = (k: string[]) => {
         if ($gameState.moveLock || $gameState.settings.open) return
@@ -74,20 +128,6 @@
     }
 
     $: keyPressed(currentlyPressedKeys)
-
-    $: {
-        if ($square === 1) {
-            toggleOutlines()
-        } else if ($square === 0) {
-            toggleOutlines(false)
-        }
-    }
-
-    $: {
-        if ($cross === 1) {
-            interact()
-        }
-    }
 
     function getDirectionSquare(direction: string) {
         let directionSquare = { x: 0, z: 0 }
@@ -170,6 +210,10 @@
     }
 
     useFrame((_, delta) => {
+        if (connected.current) {
+            //console.log(gamepad.leftStick.x, gamepad.leftStick.y)
+            //     stickMoved(gamepad.leftStick.x, gamepad.leftStick.y)
+        }
         if (!keysPushed) {
             // slight delay when releasing keys to allow batching
             keyDownTimer += delta

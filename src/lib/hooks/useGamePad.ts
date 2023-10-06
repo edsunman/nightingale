@@ -9,6 +9,7 @@ export const useGamePad = () => {
     const circleStore = writable(0)
     const squareStore = writable(0)
     const triangleStore = writable(0)
+    const startStore = writable(0)
 
     const gamePadConnected = (gamepad: Gamepad) => {
         console.log(
@@ -29,7 +30,8 @@ export const useGamePad = () => {
             cross: { subscribe: crossStore.subscribe },
             circle: { subscribe: circleStore.subscribe },
             square: { subscribe: squareStore.subscribe },
-            triangle: { subscribe: triangleStore.subscribe }
+            triangle: { subscribe: triangleStore.subscribe },
+            start: { subscribe: startStore.subscribe }
         }
     }
 
@@ -57,6 +59,7 @@ export const useGamePad = () => {
                 circleStore.set(gamepads[0].buttons[1].value)
                 squareStore.set(gamepads[0].buttons[2].value)
                 triangleStore.set(gamepads[0].buttons[3].value)
+                startStore.set(gamepads[0].buttons[9].value)
             }
         },
         { autostart: false }
@@ -68,6 +71,7 @@ export const useGamePad = () => {
         cross: { subscribe: crossStore.subscribe },
         circle: { subscribe: circleStore.subscribe },
         square: { subscribe: squareStore.subscribe },
-        triangle: { subscribe: triangleStore.subscribe }
+        triangle: { subscribe: triangleStore.subscribe },
+        start: { subscribe: startStore.subscribe }
     }
 }

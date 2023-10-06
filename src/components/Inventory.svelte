@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState } from '$lib/stores'
+    import { gameState, gamePadState } from '$lib/stores'
     import { items } from '$lib/items'
     import { fade } from 'svelte/transition'
 
@@ -8,6 +8,7 @@
     const i: Items = items
     let inventory: Item[] = []
     let selectedItem: Item | undefined
+    let highlightedSlot = 0
 
     $: setInventory($gameState)
 
@@ -48,6 +49,40 @@
             $gameState.inventory.equipped = item.id
         }
     }
+
+    $: gamepadToggle($gamePadState.clusterRight)
+
+    function gamepadToggle(cr: number) {
+        if (cr === 1) {
+            toggleInventory()
+        }
+    }
+
+    $: highlightRight($gamePadState.right)
+
+    function highlightRight(d: number) {
+        if (d !== 1 || !$gameState.inventory.open) return
+        if (highlightedSlot < inventory.length - 1) {
+            highlightedSlot++
+        }
+    }
+
+    $: highlightLeft($gamePadState.left)
+
+    function highlightLeft(d: number) {
+        if (d !== 1 || !$gameState.inventory.open) return
+        if (highlightedSlot > 0) {
+            highlightedSlot--
+        }
+    }
+
+    $: gamepadSelect($gamePadState.clusterBottom)
+
+    function gamepadSelect(cb: number) {
+        if (cb !== 1 || !$gameState.inventory.open) return
+        const item = i[highlightedSlot]
+        selectItem(item)
+    }
 </script>
 
 {#if $gameState.inventory.open}
@@ -70,13 +105,14 @@
                 <h3 class="mb-4 text-center text-xl">empty</h3>
             {/if}
             <div class="flex flex-wrap">
-                {#each inventory as item}
+                {#each inventory as item, j}
                     <button
                         on:click={() => {
                             selectItem(item)
                         }}
                         class="m-2 h-14 w-14 rounded-md bg-[size:75%] bg-center bg-no-repeat p-1
-                        {item === selectedItem ? 'border-2 border-neutral-300 bg-white/[0.2]' : ' bg-white/[0.1]'}
+                        {item === selectedItem ? 'border-2 border-neutral-300' : ''}
+                        {j === highlightedSlot ? 'bg-white/[0.2]' : ' bg-white/[0.1]'}
                             "
                         style="background-image:url('/icons/{item.image}')"
                     />

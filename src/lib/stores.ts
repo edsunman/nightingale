@@ -37,7 +37,8 @@ export const gameState: Writable<GameState> = writable({
     areasEntered: [],
     objectivesShown: [],
     objectivesComplete: [],
-    gameOver: false
+    gameOver: false,
+    padConnected: false
 })
 
 export const gameScene = writable(1)
@@ -52,6 +53,7 @@ export const gamePixelRatio = writable(1)
 export const gameLoaded = writable(false)
 export const gameZoom = writable(80)
 export const gameInteractSquare = writable({ x: 0, z: 0 })
+export const gamePadState = writable({ up: 0, down: 0, left: 0, right: 0, clusterBottom: 0, clusterRight: 0 })
 
 function createOutlineObjects() {
     const { subscribe, set, update }: Writable<any[]> = writable([])

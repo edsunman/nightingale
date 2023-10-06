@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { SRGBColorSpace } from 'three'
-    import { T, forwardEventHandlers } from '@threlte/core'
+    import { T } from '@threlte/core'
     import { useGltf, InstancedMesh, Instance, useTexture } from '@threlte/extras'
     import { HolgramMaterial } from './materials'
 
@@ -32,7 +31,7 @@
             {:else}
                 {#await texture then t}
                     <T.MeshToonMaterial color="#ffffff">
-                        <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+                        <T is={t} attach="map" flipY={false} />
                     </T.MeshToonMaterial>
                 {/await}
             {/if}

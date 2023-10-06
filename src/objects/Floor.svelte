@@ -3,7 +3,6 @@
     import { T, useFrame } from '@threlte/core'
     import { Grid, Instance, InstancedMesh } from '@threlte/extras'
     import Player from './Player.svelte'
-    import { Raycaster, Vector3 } from 'three'
     import { checkColission } from '$lib/util'
 
     import type { PlayerState, Block } from '$lib/types'

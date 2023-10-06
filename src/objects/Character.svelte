@@ -10,7 +10,7 @@
     } from '$lib/stores'
     import { T, useFrame, useThrelte } from '@threlte/core'
     import { useGltf, useGltfAnimations, useTexture, PositionalAudio } from '@threlte/extras'
-    import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong, SRGBColorSpace } from 'three'
+    import { Vector3, Matrix4, Euler, Quaternion, Group, LoopOnce, LoopPingPong } from 'three'
     import * as TWEEN from '@tweenjs/tween.js'
     import { useCursor } from '$lib/useCursor'
     import { onMount, onDestroy } from 'svelte'
@@ -88,7 +88,12 @@
     $: checkInteractSquare($gameInteractSquare)
 
     function checkInteractSquare(interactSquare: any) {
-        if (calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }) < 2.5) {
+        const player = $gamePosition
+        let extraSpace = false
+        extraChatPositions.forEach((p) => {
+            if (player.x === p.x && player.z === p.z) extraSpace = true
+        })
+        if (calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }) < chatRadius + 0.5 || extraSpace) {
             clicked()
         }
     }
@@ -150,9 +155,9 @@
                     rotationMatrix.lookAt(playerVector, currentPosition, upVector)
                     endRotation.setFromRotationMatrix(rotationMatrix)
                 }
-                if (!endRotation.equals(ref.quaternion)) {
-                    spinning = true
-                }
+                //  if (!endRotation.equals(ref.quaternion)) {
+                //      spinning = true
+                //  }
                 let nudgeDialogueAmount = 0
                 if (player.x <= position.x && player.z <= position.z) {
                     nudgeDialogueAmount = 0.5
@@ -261,7 +266,7 @@
                     {:else}
                         {#await characterTexture then t}
                             <T.MeshToonMaterial color="#ffffff">
-                                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+                                <T is={t} attach="map" flipY={false} />
                             </T.MeshToonMaterial>
                         {/await}
                     {/if}

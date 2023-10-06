@@ -5,7 +5,7 @@
 
     export let floorType: string
 
-    let audioSrc : string
+    let audioSrc: string
     let runAudio: any
     let footstepVolume = 0.4
     let footstepInterval: number
@@ -16,9 +16,9 @@
         audioSrc = '/audio/footstep-sand.mp3'
     }
 
-    export function runningSound(r = true){
+    export function runningSound(r = true) {
         clearInterval(footstepInterval)
-        if (r){
+        if (r) {
             playFootstep()
             footstepInterval = window.setInterval(function () {
                 playFootstep()
@@ -44,7 +44,6 @@
     onDestroy(() => {
         clearInterval(footstepInterval)
     })
-
 </script>
 
 <Audio src={audioSrc} bind:ref={runAudio} autoplay={false} loop={true} volume={0} />
