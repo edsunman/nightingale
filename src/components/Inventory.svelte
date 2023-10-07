@@ -68,7 +68,7 @@
         } else if (gps.clusterBottom === 1) {
             if (!$gameState.inventory.open) return
             if (inventory.length < 1) return
-            const item = i[highlightedSlot]
+            const item = inventory[highlightedSlot]
             selectItem(item)
         }
     }

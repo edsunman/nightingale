@@ -73,11 +73,15 @@
 </script>
 
 {#if $gameState.mainMenu && !$gameState.settings.open}
-    <div class="absolute left-52 top-32 w-96 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
-        <h1 class="mb-24 font-serif text-7xl">Nightingale</h1>
+    <div
+        class="absolute w-full text-center text-neutral-100 lg:left-36 lg:top-16 lg:w-auto xl:left-52 xl:top-32"
+        in:fade={{ duration: 500 }}
+        out:fade={{ duration: 500 }}
+    >
+        <h1 class="my-20 font-serif text-6xl lg:my-0 lg:mb-12 lg:text-7xl xl:mb-24">Nightingale</h1>
         {#if showContinue}
             <button
-                class="mb-4 block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36]
+                class="mb-4 ml-auto mr-auto block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36] lg:ml-0 lg:mr-0
                 {highlightedOption === 0 ? 'bg-neutral-100 text-[#b76b36]' : 'text-neutral-100'}"
                 on:click={() => {
                     loadGame()
@@ -87,7 +91,7 @@
             </button>
         {/if}
         <button
-            class="mb-4 block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36]
+            class="mb-4 ml-auto mr-auto block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36] lg:ml-0 lg:mr-0
             {highlightedOption === 1 ? 'bg-neutral-100 text-[#b76b36]' : 'text-neutral-100'}"
             on:click={() => {
                 $gameState.mainMenu = false
@@ -96,7 +100,7 @@
             New Game
         </button>
         <button
-            class="mb-4 block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36]
+            class="mb-4 ml-auto mr-auto block px-2 py-1 text-2xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36] lg:ml-0 lg:mr-0
             {highlightedOption === 2 ? 'bg-neutral-100 text-[#b76b36]' : 'text-neutral-100'}"
             on:click={() => {
                 $gameState.settings.open = true
@@ -105,9 +109,13 @@
             Settings
         </button>
     </div>
-    <div class="absolute bottom-20 left-52 w-96 text-neutral-100" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
+    <div
+        class="xl:top-bottom absolute bottom-16 w-full text-neutral-100 lg:bottom-16 lg:left-36 lg:w-auto xl:bottom-32 xl:left-52"
+        in:fade={{ duration: 500 }}
+        out:fade={{ duration: 500 }}
+    >
         <button
-            class="mb-4 block px-2 py-1 text-xl tracking-wider hover:bg-neutral-100 hover:text-[#b76b36]
+            class="text-1xl ml-auto mr-auto block px-2 py-1 tracking-wider hover:bg-neutral-100 hover:text-[#b76b36] lg:ml-0 lg:mr-0
             {highlightedOption === 3 ? 'bg-neutral-100 text-[#b76b36]' : 'text-neutral-100'}"
             on:click={() => {
                 toggleAudio()
