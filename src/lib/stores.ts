@@ -13,7 +13,7 @@ export const gameState: Writable<GameState> = writable({
     },
     nextScenePosition: { x: 0, z: 0 },
     moveLock: false,
-    mainMenu: false,
+    mainMenu: true,
     showHud: true,
     inventory: {
         open: false,
@@ -58,7 +58,6 @@ export const gamePadState = writable({ up: 0, down: 0, left: 0, right: 0, cluste
 function createOutlineObjects() {
     const { subscribe, set, update }: Writable<any[]> = writable([])
     let objects: any[] = []
-
     return {
         subscribe,
         set: (n: any) => set(n),

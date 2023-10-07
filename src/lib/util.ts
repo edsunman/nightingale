@@ -1,11 +1,18 @@
-import { Grid } from '@threlte/extras'
-import { Vector3, type Mesh, Raycaster } from 'three'
+import { Vector3, Raycaster } from 'three'
 type Point = { x: number; z: number }
 
+/**
+ * Convenience wrapper around Math.random().
+ * @param {number} min - The minimum amount.
+ * @param {number} max - The maximum amount.
+ */
 export function randomNumber(min: number = 0, max: number = 1) {
     return Math.random() * (max - min) + min
 }
 
+/**
+ * Returns a 3D position inside a cube of given position and scale.
+ */
 export function ramdomPointInsideCube(position: { x: number; y: number; z: number }, scale: { x: number; y: number; z: number }) {
     return {
         x: position.x + scale.x * randomNumber(-0.5, 0.5),
@@ -14,6 +21,9 @@ export function ramdomPointInsideCube(position: { x: number; y: number; z: numbe
     }
 }
 
+/**
+ * Returns true if 2D point is insde an array of 2D points.
+ */
 export function isPointInside(point: Point, points: Point[]): boolean {
     const x = point.x
     const y = point.z
@@ -29,6 +39,9 @@ export function isPointInside(point: Point, points: Point[]): boolean {
     return inside
 }
 
+/**
+ * Returns the closet 2D position for a given 2D point from an array of 2D positions.
+ */
 export function findClosestPoint(point: Point, positions: Point[]): Point {
     let closestPoint = { x: 0, z: 0 }
     let minDistance = Infinity
@@ -50,6 +63,17 @@ export function calculateDistanceBetweenPoints(pointA: Point, pointB: Point): nu
     return Math.sqrt(dx * dx + dz * dz)
 }
 
+/**
+ * Returns a function that can be used to execute a child function every given number of seconds.
+ * @param {number} interval - The interval in seconds.
+ * @example
+ * const everyFiveSeconds = everyInterval(5)
+ * useFrame((_, delta) => {
+ *      const seconds = everyFiveSeconds(delta, () => {
+            // called every five seconds
+        })
+ * }
+ */
 export function everyInterval(interval: number) {
     let clock = 0
     let intervalCounter = 0
@@ -66,7 +90,9 @@ export function everyInterval(interval: number) {
     }
 }
 
-// TODO: sometinges we get a square outside level
+/**
+ * Returns the furthest grid square in a given direction before hitting a block or going outside the level.
+ */
 export function getFurthestWalkableGridSquare(startPoint: Point, directionPoint: Point, levelSize: Point, avoidObjects: any[]) {
     const diff = { x: directionPoint.x - startPoint.x, z: directionPoint.z - startPoint.z }
     let destinationPoint = startPoint
@@ -94,6 +120,10 @@ export function getFurthestWalkableGridSquare(startPoint: Point, directionPoint:
     return destinationPoint
 }
 
+/**
+ * If the path between the player square and destination square is blocked, returns the square before,
+ * else returns the destination square.
+ */
 export function checkColission(playerSquare: Point, destinationSquare: Point, avoidObjects: any[]) {
     const playerVector = new Vector3(playerSquare.x, 0, playerSquare.z)
     const destinationVector = new Vector3(destinationSquare.x, 0, destinationSquare.z)

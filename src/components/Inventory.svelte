@@ -3,9 +3,9 @@
     import { items } from '$lib/items'
     import { fade } from 'svelte/transition'
 
-    import type { Item, Items } from '$lib/types'
+    import type { Item } from '$lib/types'
 
-    const i: Items = items
+    const i: Item[] = items
     let inventory: Item[] = []
     let selectedItem: Item | undefined
     let highlightedSlot = 0
@@ -50,38 +50,27 @@
         }
     }
 
-    $: gamepadToggle($gamePadState.clusterRight)
+    $: gamePadUsed($gamePadState)
 
-    function gamepadToggle(cr: number) {
-        if (cr === 1) {
+    function gamePadUsed(gps: typeof $gamePadState) {
+        if (gps.clusterRight === 1) {
             toggleInventory()
+        } else if (gps.right === 1) {
+            if (!$gameState.inventory.open) return
+            if (highlightedSlot < inventory.length - 1) {
+                highlightedSlot++
+            }
+        } else if (gps.left === 1) {
+            if (!$gameState.inventory.open) return
+            if (highlightedSlot > 0) {
+                highlightedSlot--
+            }
+        } else if (gps.clusterBottom === 1) {
+            if (!$gameState.inventory.open) return
+            if (inventory.length < 1) return
+            const item = i[highlightedSlot]
+            selectItem(item)
         }
-    }
-
-    $: highlightRight($gamePadState.right)
-
-    function highlightRight(d: number) {
-        if (d !== 1 || !$gameState.inventory.open) return
-        if (highlightedSlot < inventory.length - 1) {
-            highlightedSlot++
-        }
-    }
-
-    $: highlightLeft($gamePadState.left)
-
-    function highlightLeft(d: number) {
-        if (d !== 1 || !$gameState.inventory.open) return
-        if (highlightedSlot > 0) {
-            highlightedSlot--
-        }
-    }
-
-    $: gamepadSelect($gamePadState.clusterBottom)
-
-    function gamepadSelect(cb: number) {
-        if (cb !== 1 || !$gameState.inventory.open) return
-        const item = i[highlightedSlot]
-        selectItem(item)
     }
 </script>
 

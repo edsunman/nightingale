@@ -4,11 +4,11 @@
 
     import { fade } from 'svelte/transition'
 
-    import type { Script, Items, Character, Speech, Option, GameData } from '$lib/types'
+    import type { Item, Character, Speech, Option, GameData } from '$lib/types'
 
     export let gameData: GameData
     const script = gameData.characters
-    const itemsArray: Items = items
+    const itemsArray: Item[] = items
     const optionsArray: Option[] = []
     let character: Character
     let speech: Speech
@@ -17,29 +17,21 @@
     let timeOut: number
     let highlightedOption = 0
 
-    $: highlightDown($gamePadState.down)
+    $: gamePadUsed($gamePadState)
 
-    function highlightDown(d: number) {
-        if (d !== 1 || !showDialogueOptions) return
-        if (highlightedOption < optionsArray.length - 1) {
-            highlightedOption++
+    function gamePadUsed(gps: typeof $gamePadState) {
+        if (!showDialogueOptions) return
+        if (gps.down === 1) {
+            if (highlightedOption < optionsArray.length - 1) {
+                highlightedOption++
+            }
+        } else if (gps.up === 1) {
+            if (highlightedOption > 0) {
+                highlightedOption--
+            }
+        } else if (gps.clusterBottom === 1) {
+            selectSpeech(highlightedOption)
         }
-    }
-
-    $: highlightUp($gamePadState.up)
-
-    function highlightUp(u: number) {
-        if (u !== 1 || !showDialogueOptions) return
-        if (highlightedOption > 0) {
-            highlightedOption--
-        }
-    }
-
-    $: gamepadSelect($gamePadState.clusterBottom)
-
-    function gamepadSelect(cb: number) {
-        if (cb !== 1 || !showDialogueOptions) return
-        selectSpeech(highlightedOption)
     }
 
     $: updateDialogue($gameConversation)

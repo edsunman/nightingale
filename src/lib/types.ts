@@ -12,8 +12,6 @@ export type PlayerState = {
     comingToAStop: boolean
 }
 
-export type Script = Array<Character>
-
 export type Character = {
     name: string
     id: number
@@ -50,8 +48,6 @@ export type Item = {
     description: string
     isSecretKey: boolean
 }
-
-export type Items = Item[]
 
 export type GameState = {
     dev: {
