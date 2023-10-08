@@ -33,7 +33,6 @@
 
     function checkInteractSquare(interactSquare: any) {
         if (!owned) {
-            console.log(calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }))
             if (calculateDistanceBetweenPoints(interactSquare, { x: position.x, z: position.z }) < 2) {
                 itemClicked()
             }
