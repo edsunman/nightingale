@@ -8,9 +8,9 @@ export type PlayerState = {
     floorType: string
     running: boolean
     sunIntensity: number
+    movementType: 'mouse' | 'keyboard' | 'none'
+    comingToAStop: boolean
 }
-
-export type Script = Array<Character>
 
 export type Character = {
     name: string
@@ -34,8 +34,8 @@ export type Option = {
     linkId?: number
     item?: number
     receiveItem?: number
-    giveItem?: number
-    hideItem?: number
+    giveItem?: number | null
+    hideItem?: number | null
     alreadyChosen?: boolean
     itemName?: string
 }
@@ -49,8 +49,6 @@ export type Item = {
     isSecretKey: boolean
 }
 
-export type Items = Item[]
-
 export type GameState = {
     dev: {
         status: boolean
@@ -61,6 +59,8 @@ export type GameState = {
     }
     nextScenePosition: { x: number; z: number }
     moveLock: boolean
+    mainMenu: boolean
+    showHud: boolean
     inventory: {
         open: boolean
         equipped: number
@@ -68,6 +68,8 @@ export type GameState = {
     }
     settings: {
         open: boolean
+        fullScreen: boolean
+        postProcessing: boolean
     }
     itemDescription: {
         open: boolean
@@ -81,33 +83,64 @@ export type GameState = {
     objectivesShown: Array<number>
     objectivesComplete: Array<number>
     gameOver: boolean
+    padConnected: boolean
 }
 
 export type AvoidObject = { x: number; z: number; scaleX?: number; scaleZ?: number }
 
 export type InstanceObject = {
     name: string
-    scale: [number, number, number]
+    scale_x: number
+    scale_y: number
+    scale_z: number
     instances: {
-        position: [number, number, number]
-        rotation: [number, number, number]
+        position_x: number
+        position_y: number
+        position_z: number
+        rotation_x: number
+        rotation_y: number
+        rotation_z: number
     }[]
-    receiveShadow?: boolean
+    receiveShadow: number
+    noClickThrough: number
     material?: string
 }
 
-export type SceneObject = {
-    name : string
-    url : string
+export type Category = {
+    name: string
+    url: string
     objects: InstanceObject[]
 }
 
-
 export type GameData = {
     name: string
-    scenes: {
-        id: number,
-        name: string,
-        objects: SceneObject[]
-    }[]
+    scenes: Scene[]
+    characters: Character[]
+}
+
+export type Block = {
+    id: number
+    position_x: number
+    position_z: number
+    scale_x: number
+    scale_z: number
+    scene_id: number
+}
+export type Scene = {
+    id: number
+    name: string
+    levelSize_x: number
+    levelSize_z: number
+    floorSize_x: number
+    floorSize_z: number
+    floorColor: string
+    startingPosition_x: number
+    startingPosition_z: number
+    startingRotation_x: number
+    startingRotation_z: number
+    sunIntensity: number
+    floorType: string
+    categories: Category[]
+    objects: InstanceObject[]
+    blocks: Block[]
 }

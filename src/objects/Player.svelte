@@ -1,13 +1,17 @@
 <script lang="ts">
-    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded } from '$lib/stores'
+    import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition, gameZoom } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
-    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace } from 'three'
+    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, Path, MeshBasicMaterial } from 'three'
     import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
+    import KeyboardControls from './KeyboardControls.svelte'
 
     export let playerState: PlayerState
+    export let cameraOffset = { x: 0, z: 0 }
+    export let levelSize: any
+    export let avoidObjects: any
     export const ref = new Group()
 
     const gltf = useGltf('/objects/player-transformed.glb', { useDraco: true })
@@ -19,17 +23,49 @@
     const upVector = new Vector3(0, 1, 0)
     const rotationMatrix = new Matrix4().lookAt(destinationVector, playerVector, upVector)
     const endRotation = new Quaternion().setFromRotationMatrix(rotationMatrix)
+    const cameraHeight = 20
 
     let mesh: any
     let currentActionKey = playerState.annimation
     let lightTarget: any
     let runningSound: any
     let zoom = 8
+    let loaded = false
+    let cameraPosition = {
+        x: playerState.position.x,
+        z: playerState.position.z
+    }
 
     $: $actions[playerState.annimation]?.play()
 
+    $: checkLoaded($gameLoaded)
+
+    function checkLoaded(gl: boolean) {
+        if (gl) {
+            zoom = $gameZoom
+            setTimeout(() => {
+                loaded = true
+                cameraPosition = {
+                    x: playerState.position.x + cameraOffset.x,
+                    z: playerState.position.z + cameraOffset.z
+                }
+            }, 500)
+        }
+    }
+
     $: {
-        zoom = $gameLoaded ? 80 : 8
+        if (zoom > 8) zoom = $gameZoom
+    }
+
+    $: offsetCamera(cameraOffset)
+
+    function offsetCamera(cameraOffset: { x: number; z: number }) {
+        if (loaded) {
+            cameraPosition = {
+                x: playerState.position.x + cameraOffset.x,
+                z: playerState.position.z + cameraOffset.z
+            }
+        }
     }
 
     function transitionTo(nextActionKey: string, duration = 0.2) {
@@ -77,10 +113,6 @@
             } else {
                 // get moving
                 if (playerState.settingOff) {
-                    destinationVector.set(path[0].x, 0, path[0].z)
-                    playerVector.set(p.x, 0, p.z)
-                    rotationMatrix.lookAt(destinationVector, playerVector, upVector)
-                    endRotation.setFromRotationMatrix(rotationMatrix)
                     transitionTo('run')
                     !playerState.running && runningSound()
                     playerState.running = true
@@ -88,13 +120,21 @@
                 playerState.settingOff = false
                 if (delta < 0.5) {
                     // ^^^^^^ don't move if there are one off frame time spikes caused by switching tabs etc
+                    destinationVector.set(path[0].x, 0, path[0].z)
+                    playerVector.set(p.x, 0, p.z)
+                    rotationMatrix.lookAt(destinationVector, playerVector, upVector)
+                    endRotation.setFromRotationMatrix(rotationMatrix)
                     playerState.position.x = p.x + modifier.x * delta * 4
                     playerState.position.z = p.z + modifier.z * delta * 4
+                    cameraPosition.x = playerState.position.x + cameraOffset.x
+                    cameraPosition.z = playerState.position.z + cameraOffset.z
                 }
             }
         } else {
             if (!playerState.arrived) {
+                playerState.comingToAStop = false
                 playerState.running = false
+                playerState.movementType = 'none'
                 transitionTo('idle')
                 runningSound(false)
             }
@@ -102,6 +142,7 @@
         }
         ref && ref.quaternion.rotateTowards(endRotation, delta * 10)
         $gamePosition = playerState.position
+        $gameCameraPosition = cameraPosition
     })
 </script>
 
@@ -154,9 +195,9 @@
     <T.OrthographicCamera
         name="main camera"
         makeDefault
-        position={[playerState.position.x + 19, 20, playerState.position.z + 19]}
+        position={[cameraPosition.x + 19, cameraHeight, cameraPosition.z + 19]}
         on:create={({ ref }) => {
-            ref.lookAt(playerState.position.x + 18, 19, playerState.position.z + 18)
+            ref.lookAt(cameraPosition.x + 18, cameraHeight - 1, cameraPosition.z + 18)
         }}
         {zoom}
     />
@@ -172,16 +213,11 @@
     shadow.camera.right={6.5}
     shadow.camera.left={-16.5}
     shadow.camera.bottom={-6}
-    position={[playerState.position.x + 12, 20, playerState.position.z + 20]}
+    position={[cameraPosition.x + 12, 20, cameraPosition.z + 20]}
     target={lightTarget}
 />
 
-<T.Mesh
-    bind:ref={lightTarget}
-    visible={false}
-    scale={[1, 1, 1]}
-    position={[playerState.position.x + 8, 8, playerState.position.z + 8]}
-/>
+<T.Mesh bind:ref={lightTarget} visible={false} scale={[1, 1, 1]} position={[cameraPosition.x + 8, 8, cameraPosition.z + 8]} />
 
 <T.Mesh
     name="player grid square"
@@ -193,5 +229,14 @@
     <T.BoxGeometry args={[1, 0.1, 1]} />
     <T.MeshStandardMaterial color="#9932CC" />
 </T.Mesh>
+<!--
+{#each playerState.path as p}
+    <T.Mesh name="debug square" receiveShadow visible={true} scale={[1, 1, 1]} position={[p.x, 0, p.z]}>
+        <T.BoxGeometry args={[1, 0.1, 1]} />
+        <T.MeshStandardMaterial color="#9932CC" />
+    </T.Mesh>
+{/each}-->
 
 <RunningAudio floorType={playerState.floorType} bind:runningSound />
+
+<KeyboardControls bind:playerState {levelSize} {avoidObjects} />

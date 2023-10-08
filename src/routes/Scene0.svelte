@@ -1,47 +1,89 @@
 <script lang="ts">
+    import SceneData from '../objects/SceneData.svelte'
+
+    import type { GameData, Scene } from '$lib/types'
+    import Emitter from '$lib/components/Emitter.svelte'
+    import { BoxGeometry, MeshBasicMaterial, Vector3 } from 'three'
     import { T } from '@threlte/core'
-    import Floor from '../objects/Floor.svelte'
-    import type { AvoidObject, InstanceObject } from '$lib/types'
-    import NodeObject from '../objects/NodeObject.svelte'
+    import { useTexture, TransformControls } from '@threlte/extras'
 
-    import type { GameData } from '$lib/types'
+    export let gameData: GameData
+    const scene = gameData.scenes.find((s) => s.id === 0) as Scene
 
-    export let gameData : GameData
+    const t = useTexture('/texture/smokeWhite.png')
 
-    const avoidArray: AvoidObject[] = []
+    let start: any
+    let stop: any
+    let box: any
+    let emmitPosition = new Vector3(0, 0, 0)
 
-    const objects: InstanceObject[] = [
-        {
-            name: 'LandingPad',
-            scale: [4.9, 5.2, 5.4],
-            instances: [
-                { position: [24, -0.05, -25.5], rotation: [0, 1.57, 0] },
-                { position: [-23, -0.05, -20], rotation:[0, 0, 0] },
-                { position: [-11, -0.05, 24], rotation:[0, 1.57, 0] }
-            ]
-        },
-         {
-            name: 'HologramPad',
-            scale: [0.4,0.4, 0.4],
-            instances: [
-                { position: [21, 0, -18], rotation: [0, -1.57, 0] }
-            ]
-        }
-    ]
+    const updatePos = (box: any) => {
+        console.log(box)
+        emmitPosition.x = box.position.x
+        emmitPosition.y = box.position.y
+        emmitPosition.z = box.position.z
+    }
 
-     for (let i = 0; i < 50; i++) {
-        //objects[0].instances.push({ position: { x: i + 50, y: 0, z: 45 }, rotation: { x: 1, y: 2, z: 3 } })
-     }
+    //@ts-ignore
+    window.start = () => {
+        start()
+    }
+    //@ts-ignore
+    window.stop = () => {
+        stop()
+    }
 
+    const stateChanged = (event: CustomEvent) => {
+        console.log(event.detail.state)
+    }
 </script>
 
+<SceneData {scene} />
 
-<Floor {avoidArray} startingPosition={{ x:0, z: 0 }} startingRotation={{ x: 0, z: -1 }} levelSize={{ x: 20, z: 20 }} />
-
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
-    <T.BoxGeometry args={[20, 0.01, 20]} />
-    <T.MeshToonMaterial color="#555555"  />
+{#await t then t}
+    <Emitter
+        position={emmitPosition}
+        scale={new Vector3(10, 10, 10)}
+        count={100}
+        life={5}
+        spread={15}
+        velocity={0}
+        wind={new Vector3(0, 0, 0)}
+        gravity={new Vector3(0, 0, 0)}
+        direction={new Vector3(0, 0, 0)}
+        sizeRandom={1}
+        explosiveness={0}
+        color={'rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%'}
+        size={'size(2) 0%, size(2) 100%'}
+        colorRandom={0.1}
+        rotationRandom={3}
+        dampen={0}
+        map={t}
+        bind:start
+        bind:stop
+        on:stateChanged={stateChanged}
+    />
+{/await}
+<!--
+<T.Mesh let:ref bind:ref={box} scale={[1, 1, 1]} position={[1, 1, 1]}>
+    <T.BoxGeometry />
+    <T.MeshBasicMaterial wireframe visible={false} />
+    <TransformControls
+        object={ref}
+        on:mouseUp={() => {
+            updatePos(box)
+        }}
+    />
 </T.Mesh>
-
-<NodeObject {objects} url={'/objects/tech_assets-transformed.glb'} />
-
+-->
+<!--
+{#each { length: 200 } as _, i}
+    <Emitter
+        particleCount={100}
+        particleLife={3}
+        bind:start
+        bind:stop
+        on:stateChanged={stateChanged}
+        position={{ x: 0, y: 0, z: 3 * i }}
+    />
+{/each}-->

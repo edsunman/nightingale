@@ -10,7 +10,7 @@
 </script>
 
 {#await gltf then gltf}
-    <T.Mesh {...$$restProps} geometry={gltf.nodes.Mesh.geometry} castShadow>
+    <T.Mesh {...$$restProps} geometry={gltf.nodes.Mesh.geometry} castShadow >
         {#await texture then t}
             <T.MeshToonMaterial color="#ffffff">
                 <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />

@@ -1,6 +1,5 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import Floor from '../objects/Floor.svelte'
     import Door from '../objects/Door.svelte'
     import { useTexture } from '@threlte/extras'
     import Character from '../objects/Character.svelte'
@@ -8,48 +7,17 @@
     import Pillar from '../objects/scene2/Pillar.svelte'
     import DustParticles from '../objects/scene2/DustParticles.svelte'
     import Item from '../objects/Item.svelte'
-    import Smoke from '../objects/scene2/Smoke.svelte'
     import SceneData from '../objects/SceneData.svelte'
 
-    import type { AvoidObject, GameData } from '$lib/types'
+    import type { GameData, Scene } from '$lib/types'
 
-    export let gameData : GameData
-
-    const avoidArray: AvoidObject[] = [
-        { x: 5.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -0.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -6.5, z: -2.5, scaleX: 2, scaleZ: 2 },
-        { x: -6.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: 5.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: -0.5, z: 3.5, scaleX: 2, scaleZ: 2 },
-        { x: 2, z: -2, scaleX: 3 },
-        { x: 9, z: -3, scaleZ: 3 },
-        { x: -3, z: 4, scaleZ: 3 },
-        { x: -2, z: 4 },
-        { x: 8, z: -2 },
-        { x: 3, z: -3 },
-        { x: -7, z: 0.5, scaleZ: 4 },
-        { x: -8, z: 0 },
-        { x: -9, z: 0 },
-        { x: -9, z: 4 },
-        { x: -9, z: -3.5, scaleZ: 2 }
-    ]
+    export let gameData: GameData
+    const scene = gameData.scenes.find((s) => s.id === 2) as Scene
 
     const windowTexture = useTexture('/texture/window.png')
 </script>
 
-<Floor
-    levelSize={{ x: 20, z: 10 }}
-    {avoidArray}
-    startingPosition={{ x: 9, z: 1 }}
-    startingRotation={{ x: 0, z: 0 }}
-    floorType="stone"
-    sunIntensity={0}
-/>
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
-    <T.BoxGeometry args={[20, 0.01, 10]} />
-    <T.MeshStandardMaterial color="#555555" />
-</T.Mesh>
+<SceneData {scene} />
 <Door
     url={'/objects/stone_assets-transformed.glb'}
     nodeName={'Door'}
@@ -59,8 +27,6 @@
     nextScenePosition={{ x: -30, z: 17 }}
     message={'Back to the outpost'}
 />
-
-<!-- CHARACTERS   -->
 
 <Character
     message="A hologram dances"
@@ -74,7 +40,7 @@
 
 <Character
     message="Bartender"
-    position={{ x:-8.4, y: 0, z: 0 }}
+    position={{ x: -8.4, y: 0, z: 0 }}
     url={'/objects/character_bartender-transformed.glb'}
     characterId={22}
     rotation={1.57}
@@ -103,10 +69,6 @@
     animation={{ key: 'drink', repeatTime: 16000 }}
 />
 
-<!-- OBJECTS -->
-
-<SceneData {gameData} sceneId={2} />
-
 <Pillar
     position={[5.5, 0, 3.5]}
     hidePoints={[
@@ -129,7 +91,7 @@
 
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
-<Smoke />
+
 <FloorStones />
 <Item
     id={1}
@@ -138,7 +100,6 @@
     scale={0.2}
     url="/objects/item_cardboardBox-transformed.glb"
 />
-<!-- LIGHTS + AUDIO-->
 
 <T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
 <T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
