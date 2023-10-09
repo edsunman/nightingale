@@ -82,7 +82,7 @@
     bind:clientHeight
 >
     {#if loadingScreen}
-        <div out:fade={{ duration: 300 }} class="absolute z-40 h-full w-full bg-neutral-950 text-white opacity-40">
+        <div out:fade={{ duration: 300 }} class="absolute z-40 h-full w-full bg-neutral-950 text-white opacity-100">
             {#if $progress < 1}
                 <div class="absolute bottom-32 left-0 right-0 ml-auto mr-auto h-2 w-64 bg-neutral-700" out:fade={{ duration: 1000 }}>
                     <div class="h-full bg-white" style="width: {$progress * 100}%" />
