@@ -140,6 +140,7 @@ export type Scene = {
     startingRotation_z: number
     sunIntensity: number
     floorType: string
+    floorVisible: number
     categories: Category[]
     objects: InstanceObject[]
     blocks: Block[]

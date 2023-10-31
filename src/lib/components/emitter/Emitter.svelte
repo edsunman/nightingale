@@ -1,14 +1,6 @@
 <script lang="ts">
-    import { T, useFrame, useThrelte } from '@threlte/core'
-    import {
-        BufferGeometry,
-        Float32BufferAttribute,
-        Vector3,
-        AdditiveBlending,
-        TextureLoader,
-        type Texture,
-        ShaderMaterial
-    } from 'three'
+    import { T, useFrame } from '@threlte/core'
+    import { BufferGeometry, Float32BufferAttribute, Vector3, type Texture, ShaderMaterial } from 'three'
     import { randomNumber } from '$lib/util'
     import { createEventDispatcher } from 'svelte'
     import { ramdomPointInsideCube, randomDirectionSpread, createGradientObject } from './util'
@@ -22,9 +14,11 @@
     export let life = 2
     export let explosiveness = 0
     export let spread = 0
-    export let direction = new Vector3(0, 1, 0)
+    export let direction = new Vector3(0, 0, 0)
     export let gravity = new Vector3(0, 0, 0)
     export let wind = new Vector3(0, 0, 0)
+    export let driftSpeed = 0
+    export let driftAmount = 0
     export let velocity = 1
     export let velocityRandom = 0
     export let size = ''
@@ -76,8 +70,6 @@
         paused = true
         pausedTime = emitterLife
     }
-
-    const smokeTexture = new TextureLoader().load('/texture/smokeWhite.png')
 
     const particles: any = []
 
@@ -270,6 +262,12 @@
             dampen: {
                 value: dampen
             },
+            driftSpeed: {
+                value: driftSpeed
+            },
+            driftAmount: {
+                value: driftAmount
+            },
             colorStops: {
                 value: parsedColorGradient.stops
             },
@@ -290,17 +288,13 @@
             },
             emitterPosition: {
                 value: position
+            },
+            u_time: {
+                value: 0
             }
         }}
     />
 </T.Points>
-<!--
-{#each particles as particle}
-    <T.Mesh position={[particle.velocity.x, particle.velocity.y, particle.velocity.z]}>
-        <T.BoxGeometry args={[0.05, 0.05, 0.05]} />
-        <T.MeshBasicMaterial />
-    </T.Mesh>
-{/each} -->
 
 <T.Mesh let:ref scale={[scale.x, scale.y, scale.z]} position={[position.x, position.y, position.z]}>
     <T.BoxGeometry />

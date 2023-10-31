@@ -7,14 +7,21 @@
     import PostProcessing from '../objects/PostProcessing.svelte'
     import Dialogue from '../components/Dialogue.svelte'
     import UIAudio from '../objects/audio/UIAudio.svelte'
+    import Scene0 from './Scene0.svelte'
     import Scene1 from './Scene1.svelte'
     import Scene2 from './Scene2.svelte'
     import Scene3 from './Scene3.svelte'
-    import Scene0 from './Scene0.svelte'
+    import Scene4 from './Scene4.svelte'
+    import Scene5 from './Scene5.svelte'
+    import Scene6 from './Scene6.svelte'
+    import Scene7 from './Scene7.svelte'
+    import Scene8 from './Scene8.svelte'
+    import Scene9 from './Scene9.svelte'
+    import Scene10 from './Scene10.svelte'
 
     import type { GameData } from '$lib/types'
 
-    const scenes = [Scene0, Scene1, Scene2, Scene3]
+    const scenes = [Scene0, Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10]
 
     interactivity()
 
@@ -40,6 +47,8 @@
     $: changePixelRatio($gamePixelRatio)
 
     function changePixelRatio(p: number) {
+        // TODO : why does this not work with postprocessing?
+        // https://github.com/pmndrs/postprocessing/issues/232
         if (p > 0) {
             renderer?.setPixelRatio(p)
         } else {

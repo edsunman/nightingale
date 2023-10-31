@@ -19,7 +19,7 @@
     floorType={scene.floorType}
 />
 
-<T.Mesh position={[0.5, -0.01, 0.5]} visible={true} name="ground" receiveShadow>
+<T.Mesh position={[0.5, -0.01, 0.5]} visible={scene.floorVisible === 1 ? true : false} name="ground" receiveShadow>
     <T.BoxGeometry args={[scene.floorSize_x, 0.01, scene.floorSize_z]} />
     <T.MeshToonMaterial color={scene.floorColor} />
 </T.Mesh>

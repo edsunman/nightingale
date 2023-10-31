@@ -1,7 +1,6 @@
 <script lang="ts">
     import { gameOutlineObjects, gameState } from '$lib/stores'
-    import { useCursor } from '$lib/useCursor'
-    import { T, useFrame, useThrelte, useRender } from '@threlte/core'
+    import { useThrelte, useRender } from '@threlte/core'
     import { EffectComposer, EffectPass, RenderPass, BloomEffect, OutlineEffect, BlendFunction, Selection } from 'postprocessing'
     import { HalfFloatType } from 'three'
 

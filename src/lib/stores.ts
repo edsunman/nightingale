@@ -13,7 +13,7 @@ export const gameState: Writable<GameState> = writable({
     },
     nextScenePosition: { x: 0, z: 0 },
     moveLock: false,
-    mainMenu: true,
+    mainMenu: false,
     showHud: true,
     inventory: {
         open: false,
@@ -41,7 +41,7 @@ export const gameState: Writable<GameState> = writable({
     padConnected: false
 })
 
-export const gameScene = writable(1)
+export const gameScene = writable(0)
 export const gamePosition = writable({ x: 0, z: 0 })
 export const gameCameraPosition = writable({ x: 0, z: 0 })
 export const gameMovingTo = writable({ x: 0, z: 0 })
