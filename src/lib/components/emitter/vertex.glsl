@@ -1,6 +1,7 @@
 attribute float sizeRandom;
 attribute float rotation;
 attribute float colorRandom;
+attribute float lightnessRandom;
 attribute float life;
 attribute float randomValue;
 attribute vec3 velocity;
@@ -16,6 +17,7 @@ uniform float driftSpeed;
 uniform vec3 emitterPosition;
 
 varying float vColorRandom;
+varying float vLightnessRandom;
 varying vec2 vRotation;
 varying float vNormalLife;
 varying float vReverseNormalLife;
@@ -151,4 +153,5 @@ void main() {
     // set varyings for fragment shader
     vRotation = vec2(cos(life * rotation), sin(life * rotation));
     vColorRandom = colorRandom;
+    vLightnessRandom = lightnessRandom;
 }

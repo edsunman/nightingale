@@ -43,7 +43,7 @@
         rotation = randomNumber(0, 6.28)
     }
 
-    const everyFiveSeconds = everyInterval(5)
+    const everyFiveSeconds = everyInterval(10)
 
     useFrame((context, delta) => {
         if (delta < 0.5) {

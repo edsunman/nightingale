@@ -6,9 +6,13 @@ const parseGradientString = (gradientString: string) => {
         stops: [],
         values: []
     }
-    const stops = gradientString.match(/(?<=\s)[^\s]*(?=%)/g)
+    // strip whitespace
+    gradientString = gradientString.replaceAll(' ', '')
+    // we identify stops as being between a ) and %
+    const stops = gradientString.match(/(?<=\))(.*?)(?=%)/g)
     if (!stops) return
-    const values = gradientString.match(/(?<=\()[^\s]*(?=\))/g)
+    // we identify values as being between a ( and ) eg '0,255,0,1'
+    const values = gradientString.match(/(?<=\()(.*?)(?=\))/g)
     if (!values || stops.length !== values.length) return
     let rgba = gradientString.includes('rgba')
     let lastStop, lastValue

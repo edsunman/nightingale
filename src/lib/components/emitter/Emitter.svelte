@@ -25,20 +25,21 @@
     export let sizeRandom = 0
     export let color: string = ''
     export let colorRandom = 0
+    export let lightnessRandom = 0
     export let rotation = 0
     export let rotationRandom = 0
     export let dampen = 0
     export let oneShot = false
     export let debug = false
     export let boundingSphereRadius = 5
-    export let map: Texture | undefined = undefined
+    export let alphaMap: Texture | undefined = undefined
 
     let emitterLife = 0
     let state = ''
     let newPosition
     let paused = false
     let pausedTime: number
-    let useMap = map ? 1 : 0
+    let useAlphaMap = alphaMap ? 1 : 0
     let area = scale.x > 0 || scale.y > 0 || scale.z > 0 ? true : false
     let material: ShaderMaterial
 
@@ -82,6 +83,9 @@
                 velocityRandom > 0 ? randomNumber(velocity - velocityRandom / 2, velocity + velocityRandom / 2) : velocity
             const pSize = sizeRandom > 0 ? randomNumber(-sizeRandom / 2, sizeRandom / 2) : 0
             const pColor = colorRandom > 0 ? randomNumber(-colorRandom / 2, colorRandom / 2) : 0
+
+            const pLightness = lightnessRandom > 0 ? randomNumber(-lightnessRandom / 2, lightnessRandom / 2) : 0
+
             const pRotation =
                 rotationRandom > 0 ? randomNumber(rotation - rotationRandom / 2, rotation + rotationRandom / 2) : rotation
             pDirection.multiplyScalar(pVelocity)
@@ -89,6 +93,7 @@
                 position: { x: 0, y: 0, z: 0 },
                 sizeRandom: pSize,
                 colorRandom: pColor,
+                lightnessRandom: pLightness,
                 alpha: 1,
                 life: -(life / count) * i * (1 - explosiveness),
                 maxLife: life,
@@ -100,6 +105,7 @@
 
         const sizes = []
         const colors: any = []
+        const lightness: any = []
         const rotations: any = []
         const velocities: any = []
         const randomValues: any = []
@@ -107,15 +113,16 @@
             positionAttributeArray.push(particle.position.x, particle.position.y, particle.position.z)
             sizes.push(particle.sizeRandom)
             colors.push(particle.colorRandom)
+            lightness.push(particle.lightnessRandom)
             rotations.push(particle.rotation)
             lifeAttributeArray.push(particle.life)
             velocities.push(particle.velocity.x, particle.velocity.y, particle.velocity.z)
             randomValues.push(particle.randomValue)
         }
-
         geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
         geometry.setAttribute('sizeRandom', new Float32BufferAttribute(sizes, 1))
         geometry.setAttribute('colorRandom', new Float32BufferAttribute(colors, 1))
+        geometry.setAttribute('lightnessRandom', new Float32BufferAttribute(lightness, 1))
         geometry.setAttribute('rotation', new Float32BufferAttribute(rotations, 1))
         geometry.setAttribute('life', new Float32BufferAttribute(lifeAttributeArray, 1))
         geometry.setAttribute('randomValue', new Float32BufferAttribute(randomValues, 1))
@@ -124,6 +131,7 @@
         geometry.attributes.sizeRandom.needsUpdate = true
         geometry.attributes.velocity.needsUpdate = true
         geometry.attributes.colorRandom.needsUpdate = true
+        geometry.attributes.lightnessRandom.needsUpdate = true
         geometry.attributes.rotation.needsUpdate = true
         geometry.attributes.life.needsUpdate = true
         geometry.attributes.randomValue.needsUpdate = true
@@ -250,11 +258,11 @@
         transparent
         vertexColors
         uniforms={{
-            map: {
-                value: map
+            alphaMap: {
+                value: alphaMap
             },
-            useMap: {
-                value: useMap
+            useAlphaMap: {
+                value: useAlphaMap
             },
             maxLifetime: {
                 value: life

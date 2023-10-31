@@ -76,7 +76,7 @@
         explosiveness={0}
         color={'rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%'}
         size={'size(3) 0%, size(3) 100%'}
-        colorRandom={0.1}
+        lightnessRandom={1}
         rotationRandom={3}
         dampen={0}
         driftAmount={2}

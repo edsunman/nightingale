@@ -1,6 +1,9 @@
 <script lang="ts">
     import { T, useThrelte } from '@threlte/core'
+    import { useTexture } from '@threlte/extras'
     import { onDestroy } from 'svelte'
+    import { Vector3 } from 'three'
+    import { gamePosition } from '$lib/stores'
     import Character from '../objects/Character.svelte'
     import Rocks from '../objects/scene1/Rocks.svelte'
     import Door from '../objects/Door.svelte'
@@ -14,6 +17,9 @@
 
     import type { GameData, Scene } from '$lib/types'
     import SceneData from '../objects/SceneData.svelte'
+    import Emitter from '$lib/components/emitter/Emitter.svelte'
+
+    const t = useTexture('/texture/circle.png')
 
     export let gameData: GameData
     const sceneData = gameData.scenes.find((s) => s.id === 1) as Scene
@@ -22,10 +28,37 @@
 
     const { scene } = useThrelte()
 
+    let emmitPosition = new Vector3(0, 4, 0)
+
+    const updateP = (gp: any) => {
+        emmitPosition.x = gp.x
+        emmitPosition.z = gp.z + 15
+    }
+
+    $: updateP($gamePosition)
+
     onDestroy(() => {
         scene.fog = null
     })
 </script>
+
+{#await t then t}
+    <Emitter
+        debug
+        position={emmitPosition}
+        scale={new Vector3(20, 2, 1)}
+        count={40}
+        life={3}
+        wind={new Vector3(0, 0, -30)}
+        color={'rgba(188, 115, 63, 1) 0%'}
+        size={'size(3) 0%'}
+        sizeRandom={3}
+        lightnessRandom={0.1}
+        driftAmount={2}
+        driftSpeed={1}
+        alphaMap={t}
+    />
+{/await}
 
 <T.Fog
     near={35}
