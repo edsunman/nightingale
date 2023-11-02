@@ -13,7 +13,7 @@
     export let gameData: GameData
     const scene = gameData.scenes.find((s) => s.id === 0) as Scene
 
-    const t = useTexture('/texture/smokeWhite.png')
+    const t = useTexture('/texture/bang.png')
 
     let start: any
     let stop: any
@@ -29,14 +29,6 @@
         emmitPosition.y = box.position.y
         emmitPosition.z = box.position.z
     }
-
-    const updateP = (gp: any) => {
-        emmitPosition.x = gp.x
-        emmitPosition.z = gp.z + 15
-    }
-
-    $: updateP($gamePosition)
-
     //@ts-ignore
     window.start = () => {
         start()
@@ -64,24 +56,25 @@
     <Emitter
         debug
         position={emmitPosition}
-        scale={new Vector3(15, 3, 1)}
-        count={50}
-        life={3}
-        spread={0}
-        velocity={0}
-        wind={new Vector3(0, 0, -30)}
-        gravity={new Vector3(0, 0, 0)}
-        direction={new Vector3(0, 0, 0)}
+        rotation={0}
+        scale={new Vector3(0.1, 0.1, 0.1)}
+        spriteSheet={3}
+        count={1000}
+        life={1}
+        spread={180}
+        velocity={3}
+        dampen={10}
+        wind={new Vector3(0, 0, 0)}
+        gravity={new Vector3(0, -1, 0)}
+        direction={new Vector3(0, 1, 0)}
         sizeRandom={1}
-        explosiveness={0}
+        explosiveness={0.6}
         color={'rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%'}
         size={'size(3) 0%, size(3) 100%'}
-        lightnessRandom={1}
-        rotationRandom={3}
-        dampen={0}
-        driftAmount={2}
-        driftSpeed={1}
-        map={t}
+        rotationRandom={5}
+        driftAmount={0}
+        driftSpeed={0}
+        alphaMap={t}
         bind:start
         bind:stop
         on:stateChanged={stateChanged}

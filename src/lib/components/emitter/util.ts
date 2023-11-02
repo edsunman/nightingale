@@ -8,10 +8,10 @@ const parseGradientString = (gradientString: string) => {
     }
     // strip whitespace
     gradientString = gradientString.replaceAll(' ', '')
-    // we identify stops as being between a ) and %
+    // identify stops as being between a ) and %
     const stops = gradientString.match(/(?<=\))(.*?)(?=%)/g)
     if (!stops) return
-    // we identify values as being between a ( and ) eg '0,255,0,1'
+    // identify values as being between a ( and ) eg '0,255,0,1'
     const values = gradientString.match(/(?<=\()(.*?)(?=\))/g)
     if (!values || stops.length !== values.length) return
     let rgba = gradientString.includes('rgba')

@@ -202,64 +202,64 @@
         <p>Load scene:</p>
         <button
             on:click={() => {
-                $gameScene = 1
-            }}>test</button
+                $gameScene = 0
+            }}>0 : test</button
         ><br />
         <button
             on:click={() => {
                 $gameScene = 1
-            }}>outpost</button
+            }}>1 : outpost</button
         ><br />
         <button
             on:click={() => {
                 $gameScene = 2
-            }}>church</button
+            }}>2 : church</button
         ><br />
         <button
             on:click={() => {
                 $gameScene = 3
-            }}>store</button
+            }}>3 : store</button
         ><br />
         <button
             on:click={() => {
                 $gameScene = 4
-            }}>highrise</button
+            }}>4 : highrise</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 5
-            }}>command</button
+            }}>5 : command</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 6
-            }}>palace</button
+            }}>6 : palace</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 7
-            }}>street</button
+            }}>7 : street</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 8
-            }}>pub</button
+            }}>8 : pub</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 9
-            }}>theatre</button
+            }}>9 : theatre</button
         >
         <br />
         <button
             on:click={() => {
                 $gameScene = 10
-            }}>credits</button
+            }}>10 : credits</button
         >
         <br /><br />
         <p>Equipped Item: {$gameState.inventory.equipped}</p>

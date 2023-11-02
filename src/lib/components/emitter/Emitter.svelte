@@ -4,14 +4,18 @@
     import { randomNumber } from '$lib/util'
     import { createEventDispatcher } from 'svelte'
     import { ramdomPointInsideCube, randomDirectionSpread, createGradientObject } from './util'
-    import fragmentShader from './fragment.glsl?raw'
-    import vertexShader from './vertex.glsl?raw'
+    import fragmentShader from './emitter-fragment.glsl?raw'
+    import vertexShader from './emitter-vertex.glsl?raw'
 
-    // Maybe rename to emmitterPosition and emmitterScale for clarity?
+    /** Position of the emitter */
     export let position = new Vector3(0, 0, 0)
+    /** Scale of the emitter. */
     export let scale = new Vector3(0, 0, 0)
+    /** The number of particles. */
     export let count = 10
+    /** The life of each particle in seconds. */
     export let life = 2
+    /** Value between 0 and 1. Emit particles one after another or all at once. */
     export let explosiveness = 0
     export let spread = 0
     export let direction = new Vector3(0, 0, 0)
@@ -32,7 +36,9 @@
     export let oneShot = false
     export let debug = false
     export let boundingSphereRadius = 5
+    export let spriteSheet = 1
     export let alphaMap: Texture | undefined = undefined
+    export let map: Texture | undefined = undefined
 
     let emitterLife = 0
     let state = ''
@@ -40,6 +46,7 @@
     let paused = false
     let pausedTime: number
     let useAlphaMap = alphaMap ? 1 : 0
+    let useMap = map ? 1 : 0
     let area = scale.x > 0 || scale.y > 0 || scale.z > 0 ? true : false
     let material: ShaderMaterial
 
@@ -78,14 +85,11 @@
         for (let i = 0; i < count; i++) {
             const pDirection = new Vector3().copy(direction.normalize())
             if (spread > 0) pDirection.copy(randomDirectionSpread(pDirection, spread))
-            // console.log(pDirection)
             const pVelocity =
                 velocityRandom > 0 ? randomNumber(velocity - velocityRandom / 2, velocity + velocityRandom / 2) : velocity
             const pSize = sizeRandom > 0 ? randomNumber(-sizeRandom / 2, sizeRandom / 2) : 0
             const pColor = colorRandom > 0 ? randomNumber(-colorRandom / 2, colorRandom / 2) : 0
-
             const pLightness = lightnessRandom > 0 ? randomNumber(-lightnessRandom / 2, lightnessRandom / 2) : 0
-
             const pRotation =
                 rotationRandom > 0 ? randomNumber(rotation - rotationRandom / 2, rotation + rotationRandom / 2) : rotation
             pDirection.multiplyScalar(pVelocity)
@@ -94,12 +98,10 @@
                 sizeRandom: pSize,
                 colorRandom: pColor,
                 lightnessRandom: pLightness,
-                alpha: 1,
                 life: -(life / count) * i * (1 - explosiveness),
                 maxLife: life,
                 rotation: pRotation,
-                velocity: pDirection,
-                randomValue: randomNumber(0, 1)
+                velocity: pDirection
             })
         }
 
@@ -108,7 +110,6 @@
         const lightness: any = []
         const rotations: any = []
         const velocities: any = []
-        const randomValues: any = []
         for (let particle of particles) {
             positionAttributeArray.push(particle.position.x, particle.position.y, particle.position.z)
             sizes.push(particle.sizeRandom)
@@ -117,7 +118,6 @@
             rotations.push(particle.rotation)
             lifeAttributeArray.push(particle.life)
             velocities.push(particle.velocity.x, particle.velocity.y, particle.velocity.z)
-            randomValues.push(particle.randomValue)
         }
         geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
         geometry.setAttribute('sizeRandom', new Float32BufferAttribute(sizes, 1))
@@ -125,7 +125,6 @@
         geometry.setAttribute('lightnessRandom', new Float32BufferAttribute(lightness, 1))
         geometry.setAttribute('rotation', new Float32BufferAttribute(rotations, 1))
         geometry.setAttribute('life', new Float32BufferAttribute(lifeAttributeArray, 1))
-        geometry.setAttribute('randomValue', new Float32BufferAttribute(randomValues, 1))
         geometry.setAttribute('velocity', new Float32BufferAttribute(velocities, 3))
 
         geometry.attributes.sizeRandom.needsUpdate = true
@@ -134,7 +133,6 @@
         geometry.attributes.lightnessRandom.needsUpdate = true
         geometry.attributes.rotation.needsUpdate = true
         geometry.attributes.life.needsUpdate = true
-        geometry.attributes.randomValue.needsUpdate = true
     }
 
     setupParticles()
@@ -171,73 +169,68 @@
         if (!geometry.boundingSphere) return
         geometry.boundingSphere.radius = boundingSphereRadius
         geometry.boundingSphere.center = position
-        if (material) {
-            //    console.log(material)
-        }
     }
 
     $: positionUpdated(position)
 
-    useFrame((context, delta) => {
-        if (delta < 0.5) {
-            emitterLife += delta
-            let newState = 'running'
-            if (emitterLife < life) {
-                // emmitting new particles
-                newState = 'starting'
+    useFrame((_, delta) => {
+        if (delta > 0.5) return
+        emitterLife += delta
+        let newState = 'running'
+        if (emitterLife < life) {
+            // emmitting new particles
+            newState = 'starting'
+        }
+        if (oneShot) {
+            if (emitterLife >= life) {
+                // emmitting no more particles
+                newState = 'stopping'
             }
-            if (oneShot) {
-                if (emitterLife >= life) {
-                    // emmitting no more particles
-                    newState = 'stopping'
-                }
-                if (emitterLife >= life + life * (1 - explosiveness) + 0.1) {
-                    // all particles have died
-                    newState = 'finished'
-                }
-            } else if (paused) {
-                if (emitterLife >= pausedTime) {
-                    // emmitting no more particles
-                    newState = 'stopping'
-                }
-                if (emitterLife >= pausedTime + life + 0.1) {
-                    // all particles have died
-                    newState = 'finished'
-                }
+            if (emitterLife >= life + life * (1 - explosiveness) + 0.1) {
+                // all particles have died
+                newState = 'finished'
             }
-            if (state !== newState) {
-                state = newState
-                stateChanged()
-                if (state === 'finished') distributePreBirthParticles()
+        } else if (paused) {
+            if (emitterLife >= pausedTime) {
+                // emmitting no more particles
+                newState = 'stopping'
             }
+            if (emitterLife >= pausedTime + life + 0.1) {
+                // all particles have died
+                newState = 'finished'
+            }
+        }
+        if (state !== newState) {
+            state = newState
+            stateChanged()
+            if (state === 'finished') distributePreBirthParticles()
+        }
 
-            if (state === 'starting') {
-                // move unborn particles to emitter position
-                particles.forEach((particle: any, index: number) => {
-                    if (particle.life <= 0) {
+        if (state === 'starting') {
+            // move unborn particles to emitter position
+            particles.forEach((particle: any, index: number) => {
+                if (particle.life <= 0) {
+                    positionNewParticle(index)
+                }
+            })
+        }
+        if (state !== 'finished') {
+            // update particles
+            lifeAttributeArray.length = 0
+            particles.forEach((particle: any, index: number) => {
+                particle.life += delta
+                if (particle.life > particle.maxLife) {
+                    // particle died
+                    if (state === 'running' && !paused) {
+                        particle.life = 0
                         positionNewParticle(index)
                     }
-                })
-            }
-            if (state !== 'finished') {
-                // update particles
-                lifeAttributeArray.length = 0
-                particles.forEach((particle: any, index: number) => {
-                    particle.life += delta
-                    //console.log(1 - particle.life / particleLife)
-                    if (particle.life > particle.maxLife) {
-                        // particle died
-                        if (state === 'running' && !paused) {
-                            particle.life = 0
-                            positionNewParticle(index)
-                        }
-                    }
-                    lifeAttributeArray.push(particle.life)
-                })
-                const lifeAttribute = (geometry.getAttribute('life') as any).set(lifeAttributeArray)
-                lifeAttribute.needsUpdate = true
-                geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
-            }
+                }
+                lifeAttributeArray.push(particle.life)
+            })
+            const lifeAttribute = (geometry.getAttribute('life') as any).set(lifeAttributeArray)
+            lifeAttribute.needsUpdate = true
+            geometry.setAttribute('position', new Float32BufferAttribute(positionAttributeArray, 3))
         }
     })
 </script>
@@ -264,8 +257,17 @@
             useAlphaMap: {
                 value: useAlphaMap
             },
+            map: {
+                value: map
+            },
+            useMap: {
+                value: useMap
+            },
             maxLifetime: {
                 value: life
+            },
+            spriteSheet: {
+                value: spriteSheet
             },
             dampen: {
                 value: dampen
@@ -296,9 +298,6 @@
             },
             emitterPosition: {
                 value: position
-            },
-            u_time: {
-                value: 0
             }
         }}
     />

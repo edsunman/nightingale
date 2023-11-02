@@ -1,5 +1,8 @@
 uniform sampler2D alphaMap;
 uniform float useAlphaMap;
+uniform sampler2D map;
+uniform float useMap;
+uniform float spriteSheet;
 uniform vec4 colorStops;
 uniform mat4 colors;
 
@@ -7,22 +10,6 @@ varying vec2 vRotation;
 varying float vNormalLife;
 varying float vColorRandom;
 varying float vLightnessRandom;
-
-vec3 rgb2hsv(vec3 c) {
-    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
-
-    float d = q.x - min(q.w, q.y);
-    float e = 1.0e-10;
-    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-}
-
-vec3 hsv2rgb(vec3 c) {
-    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
 
 vec3 hue2rgb(float hue) {
     hue = fract(hue);
@@ -64,11 +51,6 @@ vec3 hsl2rgb(vec3 hsl) {
         }
         float a = 2. * hsl.z - b;
         return a + hue2rgb(hsl.x) * (b - a);
-		/*vec3(
-			hueRamp(a,b,hsl.x+(1./3.)),
-			hueRamp(a,b,hsl.x),
-			hueRamp(a,b,hsl.x-(1./3.))
-		);*/
     }
 }
 
@@ -80,9 +62,9 @@ vec4 toLinear(vec4 sRGB) {
     return vec4(mix(higher, lower, cutoff), sRGB.a);
 }
 
+vec2 grid[9] = vec2[9](vec2(0.1666, 0.8333), vec2(0.5, 0.8333), vec2(0.8333, 0.8333), vec2(0.1666, 0.5), vec2(0.5, 0.5), vec2(0.8333, 0.5), vec2(0.1666, 0.1666), vec2(0.5, 0.1666), vec2(0.8333, 0.1666));
+
 void main() {
-    // rotate
-    vec2 coords = (gl_PointCoord - 0.5) * mat2(vRotation.x, vRotation.y, -vRotation.y, vRotation.x) + 0.5;
 
     // build up color and alpha gradient
     vec4 gradient = mix(colors[0], colors[1], smoothstep(colorStops.x, colorStops.y, vNormalLife));
@@ -102,8 +84,24 @@ void main() {
     // mix color and shader
     vec4 finalMix = vec4(rgb.r, rgb.g, rgb.b, gradient.a);
 
+    // sprite sheet section
+    int spriteIndex = int(vNormalLife * spriteSheet * spriteSheet);
+    vec2 rotateAround = vec2(0.5, 0.5);
+    if(spriteSheet > 1.0) {
+        rotateAround = grid[spriteIndex];
+    }
+    vec2 section = vec2((gl_PointCoord.x - 0.5) / spriteSheet, (1.0 - gl_PointCoord.y - 0.5) / spriteSheet);
+
+    // rotate
+    vec2 coords = section * mat2(vRotation.x, vRotation.y, -vRotation.y, vRotation.x) + rotateAround;
+
     if(useAlphaMap == 1.) {
-        finalMix = vec4(finalMix.r, finalMix.g, finalMix.b, texture2D(alphaMap, coords).r * finalMix.a);
+        finalMix = vec4(finalMix.r, finalMix.g, finalMix.b, texture2D(alphaMap, vec2(coords.x, coords.y)).r * finalMix.a);
+    }
+
+    if(useMap == 1.) {
+        vec4 mapTexture = texture2D(map, vec2(coords.x, coords.y));
+        finalMix = vec4(mapTexture.r, mapTexture.g, mapTexture.b, finalMix.a);
     }
 
     gl_FragColor = toLinear(finalMix);
