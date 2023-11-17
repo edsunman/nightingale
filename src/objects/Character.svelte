@@ -302,7 +302,7 @@
 </T.Mesh>
 
 {#if isHologram}
-    <T.PointLight position={[position.x, 1, position.z]} distance={3} color={'#03d3fc'} intensity={hologramOpacity * 2} />
+    <T.PointLight position={[position.x, position.y + 1, position.z]} distance={3} color={'#03d3fc'} intensity={hologramOpacity * 8} />
     <PositionalAudio
         loop
         refDistance={1}

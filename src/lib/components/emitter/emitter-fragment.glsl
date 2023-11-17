@@ -13,7 +13,8 @@ varying float vLightnessRandom;
 
 vec3 hue2rgb(float hue) {
     hue = fract(hue);
-    return saturate(vec3(abs(hue * 6. - 3.) - 1., 2. - abs(hue * 6. - 2.), 2. - abs(hue * 6. - 4.)));
+    //return saturate(vec3(abs(hue * 6. - 3.) - 1., 2. - abs(hue * 6. - 2.), 2. - abs(hue * 6. - 4.)));
+    return clamp(vec3(abs(hue * 6. - 3.) - 1., 2. - abs(hue * 6. - 2.), 2. - abs(hue * 6. - 4.)), 0.0, 1.0);
 }
 
 vec3 rgb2hsl(vec3 c) {
@@ -76,11 +77,6 @@ void main() {
     vec3 alteredHue = vec3(hsv.x + vColorRandom, hsv.y, hsv.z + vLightnessRandom);
     vec3 rgb = hsl2rgb(alteredHue);
 
-    // make sure particle is not visible before it is born or after it has died
-    if(vNormalLife < 0.0 || vNormalLife > 0.9999) {
-        gradient.a = 0.0;
-    }
-
     // mix color and shader
     vec4 finalMix = vec4(rgb.r, rgb.g, rgb.b, gradient.a);
 
@@ -99,10 +95,17 @@ void main() {
         finalMix = vec4(finalMix.r, finalMix.g, finalMix.b, texture2D(alphaMap, vec2(coords.x, coords.y)).r * finalMix.a);
     }
 
+    finalMix = vec4(finalMix.r, finalMix.g, finalMix.b, clamp(round(finalMix.a + (1.0 - vNormalLife) - 0.5), 0.0, 1.0));
+
     if(useMap == 1.) {
         vec4 mapTexture = texture2D(map, vec2(coords.x, coords.y));
         finalMix = vec4(mapTexture.r, mapTexture.g, mapTexture.b, finalMix.a);
     }
 
-    gl_FragColor = toLinear(finalMix);
+    // make sure particle is not visible before it is born or after it has died
+    if(vNormalLife < 0.0 || vNormalLife > 0.9999) {
+        finalMix.a = 0.0;
+    }
+
+    gl_FragColor = finalMix;
 }

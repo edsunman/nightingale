@@ -101,7 +101,7 @@
     position={[selectedGridSpace.x, 0.05, selectedGridSpace.z]}
 >
     <T.RingGeometry args={[0.4, 0.5]} />
-    <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} emissive={selectedColour} transparent={true} />
+    <T.MeshToonMaterial color={selectedColour} opacity={selectedOpacity} transparent={true} />
 </T.Mesh>
 
 {#if $gameState.dev.grid}

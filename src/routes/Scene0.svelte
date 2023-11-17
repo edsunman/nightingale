@@ -13,7 +13,7 @@
     export let gameData: GameData
     const scene = gameData.scenes.find((s) => s.id === 0) as Scene
 
-    const t = useTexture('/texture/bang.png')
+    const t = useTexture('/texture/noise.png')
 
     let start: any
     let stop: any
@@ -58,20 +58,19 @@
         position={emmitPosition}
         rotation={0}
         scale={new Vector3(0.1, 0.1, 0.1)}
-        spriteSheet={3}
-        count={1000}
-        life={1}
-        spread={180}
-        velocity={3}
-        dampen={10}
-        wind={new Vector3(0, 0, 0)}
-        gravity={new Vector3(0, -1, 0)}
+        count={200}
+        life={3}
+        spread={10}
+        velocity={5}
+        dampen={0}
+        wind={new Vector3(2, 0, 1)}
+        gravity={new Vector3(0, 0, 0)}
         direction={new Vector3(0, 1, 0)}
-        sizeRandom={1}
-        explosiveness={0.6}
-        color={'rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%'}
-        size={'size(3) 0%, size(3) 100%'}
-        rotationRandom={5}
+        sizeRandom={2}
+        explosiveness={0}
+        color={'rgba(255,205,0,0) 0%, rgba(255,124,9,1) 15%, rgba(73,73,73,1) 50%, rgba(0,0,0,1) 100%'}
+        size={'size(1) 0%, size(5) 30%, size(10) 100%'}
+        rotationRandom={3}
         driftAmount={0}
         driftSpeed={0}
         alphaMap={t}

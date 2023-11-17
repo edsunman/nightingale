@@ -2,7 +2,7 @@
     import { gameState, gamePosition, gameSelectedCharacterPosition, gameLoaded, gameCameraPosition, gameZoom } from '$lib/stores'
     import { useGltf, useGltfAnimations, useTexture } from '@threlte/extras'
     import { T, useFrame, forwardEventHandlers } from '@threlte/core'
-    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, Path, MeshBasicMaterial } from 'three'
+    import { Vector3, Matrix4, Group, Quaternion, SRGBColorSpace, LinearSRGBColorSpace, Path, MeshBasicMaterial } from 'three'
     import RunningAudio from './audio/RunningAudio.svelte'
 
     import type { PlayerState } from '$lib/types'
@@ -164,7 +164,7 @@
                     <T.SkinnedMesh castShadow name="Mesh" geometry={gltf.nodes.Mesh.geometry} skeleton={gltf.nodes.Mesh.skeleton}>
                         {#await texture then t}
                             <T.MeshToonMaterial color="#ffffff">
-                                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+                                <T is={t} attach="map" flipY={false} />
                             </T.MeshToonMaterial>
                         {/await}
                     </T.SkinnedMesh>
@@ -172,7 +172,7 @@
                     <T.SkinnedMesh castShadow name="Box" geometry={gltf.nodes.Box.geometry} skeleton={gltf.nodes.Box.skeleton}>
                         {#await texture then t}
                             <T.MeshToonMaterial color="#ffffff">
-                                <T is={t} attach="map" flipY={false} colorSpace={SRGBColorSpace} />
+                                <T is={t} attach="map" flipY={false} />
                             </T.MeshToonMaterial>
                         {/await}
                     </T.SkinnedMesh>

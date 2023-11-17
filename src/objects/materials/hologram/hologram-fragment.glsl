@@ -4,10 +4,19 @@ uniform float time;
 uniform float opacity;
 uniform float dotSize;
 
+vec4 toLinear(vec4 sRGB) {
+    bvec3 cutoff = lessThan(sRGB.rgb, vec3(0.04045));
+    vec3 higher = pow((sRGB.rgb + vec3(0.055)) / vec3(1.055), vec3(2.4));
+    vec3 lower = sRGB.rgb / vec3(12.92);
+
+    return vec4(mix(higher, lower, cutoff), sRGB.a);
+}
+
 void main() {
 
     vec4 baseColor = vec4(0.11, 0.91, 0.91, opacity / 8.); // transparent base color
-    vec4 texColor = vec4(0.11, 1.3, 1.4, opacity); // blue color
+   // vec4 texColor = vec4(9.11, 0.3, 9.4, opacity); // pink color
+    vec4 texColor = vec4(0.11, 3.3, 3.4, opacity); // blue color
     vec2 uv = vUv;
     float offset = texture(texture1, uv * 5. + vec2(time * 1. + sin(time) * .1, 0)).x;
     uv *= dotSize;

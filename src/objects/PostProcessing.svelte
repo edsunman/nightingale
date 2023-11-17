@@ -1,15 +1,29 @@
 <script lang="ts">
     import { gameOutlineObjects, gameState } from '$lib/stores'
     import { useThrelte, useRender } from '@threlte/core'
-    import { EffectComposer, EffectPass, RenderPass, BloomEffect, OutlineEffect, BlendFunction, Selection } from 'postprocessing'
-    import { HalfFloatType } from 'three'
+    import {
+        EffectComposer,
+        EffectPass,
+        RenderPass,
+        BloomEffect,
+        OutlineEffect,
+        BlendFunction,
+        Selection,
+        ToneMappingEffect
+    } from 'postprocessing'
+    import { HalfFloatType, NoToneMapping } from 'three'
 
     const { renderer, scene, size, camera } = useThrelte()
+    //  renderer.toneMapping = NoToneMapping
     const composer = new EffectComposer(renderer, { multisampling: 4, frameBufferType: HalfFloatType })
     const outlineSelection = new Selection()
 
     let bloomEffect: any
     let outlineEffect: any
+
+    //console.log(renderer.toneMapping)
+
+    //renderer.toneMapping =
 
     const setupEffects = (camera: any) => {
         outlineEffect = new OutlineEffect(scene, camera, {
@@ -24,8 +38,8 @@
         })
 
         bloomEffect = new BloomEffect({
-            intensity: 1,
-            luminanceThreshold: 1,
+            intensity: 0.5,
+            luminanceThreshold: 2,
             radius: 0.5
         })
     }
@@ -43,6 +57,7 @@
         outlineEffect.selection = outlineSelection
 
         composer.addPass(new EffectPass(camera, outlineEffect))
+        composer.addPass(new EffectPass(camera, new ToneMappingEffect()))
     }
 
     $: composer.setSize($size.width, $size.height)

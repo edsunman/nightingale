@@ -1,15 +1,19 @@
 <script lang="ts">
-    import { T } from '@threlte/core'
+    import { T, useThrelte } from '@threlte/core'
     import Door from '../objects/Door.svelte'
-    import { useTexture } from '@threlte/extras'
+    import { useTexture, Portal } from '@threlte/extras'
     import Character from '../objects/Character.svelte'
     import FloorStones from '../objects/scene2/FloorStones.svelte'
     import Pillar from '../objects/scene2/Pillar.svelte'
     import DustParticles from '../objects/scene2/DustParticles.svelte'
     import Item from '../objects/Item.svelte'
     import SceneData from '../objects/SceneData.svelte'
+    import Emitter from '$lib/components/emitter/Emitter.svelte'
+    import { Vector3 } from 'three'
 
     import type { GameData, Scene } from '$lib/types'
+
+    const { scene: s } = useThrelte()
 
     export let gameData: GameData
     const scene = gameData.scenes.find((s) => s.id === 2) as Scene
@@ -89,9 +93,33 @@
     ]}
 />
 
+<Emitter
+    scale={new Vector3(2, 2.5, 4)}
+    position={new Vector3(2.5, 2.5, 1.5)}
+    size={'size(0.4) 0%'}
+    color={'rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 80%,rgba(255,255,255,0) 100%'}
+    life={10}
+    count={8}
+    driftAmount={1}
+    driftSpeed={0.5}
+    transparent
+/>
+
+<Emitter
+    scale={new Vector3(2, 2.5, 4)}
+    position={new Vector3(-4, 2.5, 1.5)}
+    size={'size(0.4) 0%'}
+    color={'rgba(255,255,255,0) 0%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 80%,rgba(255,255,255,0) 100%'}
+    life={10}
+    count={8}
+    driftAmount={1}
+    driftSpeed={0.5}
+    transparent
+/>
+<!--
 <DustParticles position={[1.5, 0, -2]} />
 <DustParticles position={[-5, 0, -2]} />
-
+-->
 <FloorStones />
 <Item
     id={1}
@@ -101,8 +129,8 @@
     url="/objects/item_cardboardBox-transformed.glb"
 />
 
-<T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
-<T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={1.5} />
+<T.PointLight name={'window bounce light'} position={[3, 4, 0]} distance={10} color={'#ffffff'} intensity={30} />
+<T.PointLight name={'window bounce light'} position={[-4, 4, 0]} distance={10} color={'#ffffff'} intensity={30} />
 
 {#await windowTexture then t}
     <T.SpotLight
@@ -119,8 +147,8 @@
         position={[2.5, 50, 40]}
         angle={0.04}
         penumbra={0}
+        intensity={80000}
         map={t}
-        intensity={5}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
     </T.SpotLight>
@@ -140,7 +168,7 @@
         angle={0.04}
         penumbra={0.5}
         map={t}
-        intensity={5}
+        intensity={80000}
     >
         <T.Mesh name={'window light target'} attach={'target'} visible={false} position={[0, -1, -0.8]} />
     </T.SpotLight>

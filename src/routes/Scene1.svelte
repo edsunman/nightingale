@@ -3,7 +3,7 @@
     import { useTexture } from '@threlte/extras'
     import { onDestroy } from 'svelte'
     import { Vector3 } from 'three'
-    import { gamePosition } from '$lib/stores'
+    import { gameCameraPosition } from '$lib/stores'
     import Character from '../objects/Character.svelte'
     import Rocks from '../objects/scene1/Rocks.svelte'
     import Door from '../objects/Door.svelte'
@@ -35,7 +35,7 @@
         emmitPosition.z = gp.z + 15
     }
 
-    $: updateP($gamePosition)
+    $: updateP($gameCameraPosition)
 
     onDestroy(() => {
         scene.fog = null
@@ -44,18 +44,17 @@
 
 {#await t then t}
     <Emitter
-        debug
         position={emmitPosition}
         scale={new Vector3(20, 2, 1)}
         count={35}
         life={3}
         wind={new Vector3(0, 0, -50)}
-        color={'rgba(188, 115, 63, 1) 0%'}
-        size={'size(3) 0%'}
-        sizeRandom={5}
+        color={'rgba(196, 115, 57, 1) 0%'}
+        size={'size(2) 0%'}
+        sizeRandom={3}
         lightnessRandom={0.2}
         driftAmount={4}
-        driftSpeed={1}
+        driftSpeed={1.2}
         alphaMap={t}
     />
 {/await}

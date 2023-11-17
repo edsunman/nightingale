@@ -54,7 +54,7 @@
     position={[0.5, 4, 0]}
     distance={8}
     color={'#ffffff'}
-    intensity={lightBrightness * 4}
+    intensity={lightBrightness * 50}
     castShadow
     shadow.mapSize.width={500}
     shadow.mapSize.height={500}
@@ -65,4 +65,4 @@
     shadow.radius={5}
 />
 
-<T.AmbientLight intensity={0.15} />
+<T.AmbientLight intensity={0.5} />

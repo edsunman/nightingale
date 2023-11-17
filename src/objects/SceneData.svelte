@@ -15,7 +15,7 @@
     startingRotation={{ x: scene.startingRotation_x, z: scene.startingRotation_z }}
     levelSize={{ x: scene.levelSize_x, z: scene.levelSize_z }}
     {cameraOffset}
-    sunIntensity={scene.sunIntensity}
+    sunIntensity={scene.sunIntensity * 3.3}
     floorType={scene.floorType}
 />
 
